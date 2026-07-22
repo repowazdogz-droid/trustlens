@@ -10,12 +10,16 @@ readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "Apache-2.0" }
 
-# Phase 0 depends only on a JSON Schema validator. Analysis engines are added by the
-# phase that integrates them, so that a clean clone can verify the evidence model
-# without installing a scanner.
+# The evidence model needs only a JSON Schema validator; the Phase 1 scanner adds a YAML
+# parser because it parses untrusted configuration itself rather than shelling out. No
+# external analysis engine is a dependency: none is wired into a FOUND/NOT_FOUND claim.
 dependencies = [
     "jsonschema>=4.20",
+    "PyYAML>=6.0",
 ]
+
+[project.scripts]
+trustlens = "trustlens.cli:main"
 
 [project.optional-dependencies]
 dev = [

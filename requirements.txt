@@ -1,3 +1,4 @@
 # Phase 0 runtime dependency set. Pinned lower bounds only; the exact resolved
 # versions used for a run are recorded in each evidence record's tool.external_tools.
 jsonschema>=4.20
+PyYAML>=6.0

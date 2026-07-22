@@ -298,3 +298,36 @@ not achieved by declining to look.
 
 Stored control-run evidence is compared against a fresh scan on every test run, so it
 cannot silently go stale.
+
+## Rule-target coverage — the audit run one level below rule liveness
+
+`test_rule_liveness.py` proves each rule fires on *a* trigger. That left each rule's other
+targets unproven: a measurement found **60 of 212 targets (28%)** had ever been matched. A
+mistyped target string would sit in the rule set forever, matching nothing, and producing
+output identical to a target that was checked and absent.
+
+`tests/scanner/test_target_coverage.py` generates a trigger per target from the target's own
+shape and asserts the rule fires. Coverage is now **178 of 201 targets (88%)** by generation,
+with 23 excluded and a stated reason for each — all of them bare method or builtin names
+(`extractall`, `bind`, `eval`) that cannot be expressed as an import and are exercised
+through the hand-written liveness triggers instead. A test asserts the exclusion list stays
+below 20% so the check cannot be hollowed out, and another asserts no exclusion names a
+target that no longer exists.
+
+All 210 generated targets matched on the first run: no mistyped targets were found. The
+security-relevant outcome is that the metadata-endpoint rule's IPv6, GCP, ECS, Alibaba and
+Oracle forms — which the brief asks for explicitly and which had **never** been exercised —
+now each have a test.
+
+**One level further down is deliberately not covered.** Within a single target, the
+interaction between a predicate and an unusual call shape (a target invoked through
+`functools.partial`, a keyword passed via `**kwargs`) is untested. That is stated here as a
+deferral rather than left silent; the blind spots are already recorded per rule.
+
+## Exit codes are part of the evidence
+
+The CLI's exit code is what a pipeline reads instead of the report, so it carries the same
+discipline: `0` clean, `1` findings, **`2` analysis did not complete**, `3` usage error. An
+incomplete scan deliberately does not exit `0`, because a caller that treats it as clean
+reproduces the false-clean failure at the process boundary, where none of the in-process
+guards can see it.
