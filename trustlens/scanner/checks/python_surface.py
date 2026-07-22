@@ -725,6 +725,14 @@ FAMILIES = tuple(dict.fromkeys(r.family for r in RULES))
 #: about them.
 DERIVED_CAPABILITIES = ("env.credential_pattern_read",)
 
+#: Which rule actually evaluates each derived capability. Without this a derived
+#: capability's clean result would report that zero rules ran, which is indistinguishable
+#: from never having been checked — the exact confusion the five-state taxonomy exists to
+#: prevent, reappearing one level below the capability.
+DERIVED_CAPABILITY_SOURCES = {
+    "env.credential_pattern_read": ("env-subscript",),
+}
+
 #: String rules are reusable outside Python source — a metadata endpoint in a YAML file is
 #: the same finding as one in a .py file.
 STRING_RULES = tuple(r for r in RULES if r.kind == "string")
@@ -953,7 +961,13 @@ def run(
         else:
             status = "NOT_FOUND_WITHIN_ANALYSED_SCOPE"
 
+        # A derived capability has no rule of its own. Attributing it to the rule that
+        # actually produces it stops a clean result reading "evaluated by 0 rules", which
+        # is 'not checked' wearing the clothes of 'checked and found nothing'.
         cap_rules = [r for r in rules if r.capability == capability]
+        if not cap_rules:
+            source_ids = DERIVED_CAPABILITY_SOURCES.get(capability, ())
+            cap_rules = [r for r in rules if r.rule_id in source_ids]
         limitations = [
             "Establishes that the construct appears in parsed source; does not establish "
             "that it executes at runtime.",

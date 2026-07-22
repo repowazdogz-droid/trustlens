@@ -464,6 +464,15 @@ def run(
         failed=failed,
     )
 
+    # Detector inventories per capability, so a clean result can state what was evaluated
+    # rather than only which files were read. A capability reporting clean with no stated
+    # detector count is indistinguishable from one that has no detectors at all.
+    surface_detectors = [
+        d for d in DETECTORS if not d.escalated and d.rule_id != "yaml-python-tag"
+    ]
+    eval_detectors = [d for d in DETECTORS if d.escalated and d.rule_id != "yaml-python-tag"]
+    tag_detectors = [d for d in DETECTORS if d.rule_id == "yaml-python-tag"]
+
     surface = [m for m in matches if not m.detector.escalated]
     escalated = [m for m in matches if m.detector.escalated and m.detector.rule_id != "yaml-python-tag"]
     yaml_tags = [m for m in matches if m.detector.rule_id == "yaml-python-tag"]
@@ -508,7 +517,7 @@ def run(
             )
             if surface
             else (
-                f"No conventional template or interpolation syntax matched in "
+                f"None of the {len(surface_detectors)} surface detector(s) matched in "
                 f"{len(analysed)} parsed configuration file(s)." + suppressed_note
             ),
             limitations=common_limits
@@ -550,8 +559,9 @@ def run(
             )
             if eval_hits
             else (
-                f"No expression-evaluating construct and no intra-function configuration-to-sink "
-                f"flow were found across {len(analysed_all)} analysed file(s)."
+                f"None of the {len(eval_detectors)} expression-evaluating detector(s) matched, "
+                f"and no intra-function configuration-to-sink flow was found, across "
+                f"{len(analysed_all)} analysed file(s)."
             ),
             limitations=common_limits
             + [
@@ -579,8 +589,8 @@ def run(
             )
             if yaml_tags
             else (
-                f"No arbitrary-object YAML tags were found in {len(analysed)} parsed "
-                "configuration file(s)."
+                f"The {len(tag_detectors)} YAML object-tag detector(s) found no "
+                f"arbitrary-object tags in {len(analysed)} parsed configuration file(s)."
             ),
             limitations=common_limits
             + [

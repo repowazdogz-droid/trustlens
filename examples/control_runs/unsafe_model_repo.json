@@ -26,14 +26,14 @@
         "Constructs cited at the recorded positions are present in the artifact."
       ]
     },
-    "content_hash": "8ca866ec66bcd32a7ed7bc31cfae40aa811ee63f90c2bdeb43d3064045425e1b",
+    "content_hash": "70136e18cad7b602b01b12e8dbb4519e0154b30a3f8b4bc68dd4fa112ab9722f",
     "contradictions": [],
     "declared_capabilities": [],
     "environment_description_ref": null,
     "findings": [
       {
         "capability": "template.injection_surface",
-        "confidence_basis": "No conventional template or interpolation syntax matched in 2 parsed configuration file(s). 2 conventional-template match(es) were suppressed inside known template fields and are not counted here.",
+        "confidence_basis": "None of the 4 surface detector(s) matched in 2 parsed configuration file(s). 2 conventional-template match(es) were suppressed inside known template fields and are not counted here.",
         "derived_from": [],
         "detection_method": "static_ast",
         "environment_description_ref": null,
@@ -134,7 +134,7 @@
       },
       {
         "capability": "execution.deserialization",
-        "confidence_basis": "No arbitrary-object YAML tags were found in 2 parsed configuration file(s).",
+        "confidence_basis": "The 1 YAML object-tag detector(s) found no arbitrary-object tags in 2 parsed configuration file(s).",
         "derived_from": [],
         "detection_method": "static_ast",
         "environment_description_ref": null,
@@ -380,7 +380,8 @@
         },
         "limitations": [
           "Establishes that the construct appears in parsed source; does not establish that it executes at runtime.",
-          "Analysis is per-file and syntactic. A call assembled dynamically or reached through an indirection is not matched."
+          "Analysis is per-file and syntactic. A call assembled dynamically or reached through an indirection is not matched.",
+          "A computed key is recorded as a read without the name."
         ],
         "notes": null,
         "rule_id": "python-surface:env.credential_pattern_read",
@@ -1573,7 +1574,7 @@
     "generic_advice": [],
     "input_records": [],
     "mitigations": [],
-    "record_id": "e1a317f5c3ba10e39d614d4cee5a0147",
+    "record_id": "b5595cd3432edf40df1f927f6953a8a1",
     "residual_uncertainty": "Every declared capability was reported on and every analysed path completed. Runtime reachability of every finding remains unestablished, and capabilities outside the implemented rules were not examined.",
     "run": {
       "completed_at": "2026-07-22T00:00:01+00:00",

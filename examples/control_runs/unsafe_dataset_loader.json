@@ -26,14 +26,14 @@
         "Constructs cited at the recorded positions are present in the artifact."
       ]
     },
-    "content_hash": "74bdf5b9e02d8e651a8209e8d099b262e7f378c91f0812d6d96eb59b155641fb",
+    "content_hash": "0b26d279b702b138a90974c5bb53937d18771384690e453b850c591049d36bb1",
     "contradictions": [],
     "declared_capabilities": [],
     "environment_description_ref": null,
     "findings": [
       {
         "capability": "template.injection_surface",
-        "confidence_basis": "No conventional template or interpolation syntax matched in 1 parsed configuration file(s).",
+        "confidence_basis": "None of the 4 surface detector(s) matched in 1 parsed configuration file(s).",
         "derived_from": [],
         "detection_method": "static_ast",
         "environment_description_ref": null,
@@ -141,7 +141,7 @@
       },
       {
         "capability": "execution.deserialization",
-        "confidence_basis": "No arbitrary-object YAML tags were found in 1 parsed configuration file(s).",
+        "confidence_basis": "The 1 YAML object-tag detector(s) found no arbitrary-object tags in 1 parsed configuration file(s).",
         "derived_from": [],
         "detection_method": "static_ast",
         "environment_description_ref": null,
@@ -367,7 +367,7 @@
       },
       {
         "capability": "env.credential_pattern_read",
-        "confidence_basis": "No call site matched any of the 0 rule(s) for this capability across 2 parsed Python file(s).",
+        "confidence_basis": "No call site matched any of the 1 rule(s) for this capability across 2 parsed Python file(s).",
         "derived_from": [],
         "detection_method": "static_ast",
         "environment_description_ref": null,
@@ -382,7 +382,8 @@
         },
         "limitations": [
           "Establishes that the construct appears in parsed source; does not establish that it executes at runtime.",
-          "Analysis is per-file and syntactic. A call assembled dynamically or reached through an indirection is not matched."
+          "Analysis is per-file and syntactic. A call assembled dynamically or reached through an indirection is not matched.",
+          "A computed key is recorded as a read without the name."
         ],
         "notes": null,
         "rule_id": "python-surface:env.credential_pattern_read",
@@ -1571,7 +1572,7 @@
     "generic_advice": [],
     "input_records": [],
     "mitigations": [],
-    "record_id": "3bcd067b3f43dc3133343d1f88c955be",
+    "record_id": "2223c44fa72d33bc6051ec3854e89eba",
     "residual_uncertainty": "Every declared capability was reported on and every analysed path completed. Runtime reachability of every finding remains unestablished, and capabilities outside the implemented rules were not examined.",
     "run": {
       "completed_at": "2026-07-22T00:00:01+00:00",

@@ -26,14 +26,14 @@
         "Constructs cited at the recorded positions are present in the artifact."
       ]
     },
-    "content_hash": "9fadec56e8a2ab9a64e873dd9d6b6cf1678c66ea490261d2e1878efa2dfb7c16",
+    "content_hash": "84b3bee13d499ea06d5e71c031b8deee4f3382c23afcd5c87bd695af0ccec72b",
     "contradictions": [],
     "declared_capabilities": [],
     "environment_description_ref": null,
     "findings": [
       {
         "capability": "template.injection_surface",
-        "confidence_basis": "No conventional template or interpolation syntax matched in 1 parsed configuration file(s).",
+        "confidence_basis": "None of the 4 surface detector(s) matched in 1 parsed configuration file(s).",
         "derived_from": [],
         "detection_method": "static_ast",
         "environment_description_ref": null,
@@ -82,7 +82,7 @@
       },
       {
         "capability": "template.expression_evaluation",
-        "confidence_basis": "No expression-evaluating construct and no intra-function configuration-to-sink flow were found across 1 analysed file(s).",
+        "confidence_basis": "None of the 2 expression-evaluating detector(s) matched, and no intra-function configuration-to-sink flow was found, across 1 analysed file(s).",
         "derived_from": [],
         "detection_method": "static_ast",
         "environment_description_ref": null,
@@ -132,7 +132,7 @@
       },
       {
         "capability": "execution.deserialization",
-        "confidence_basis": "No arbitrary-object YAML tags were found in 1 parsed configuration file(s).",
+        "confidence_basis": "The 1 YAML object-tag detector(s) found no arbitrary-object tags in 1 parsed configuration file(s).",
         "derived_from": [],
         "detection_method": "static_ast",
         "environment_description_ref": null,
@@ -374,7 +374,7 @@
       },
       {
         "capability": "env.credential_pattern_read",
-        "confidence_basis": "No call site matched any of the 0 rule(s) for this capability across 1 parsed Python file(s).",
+        "confidence_basis": "No call site matched any of the 1 rule(s) for this capability across 1 parsed Python file(s).",
         "derived_from": [],
         "detection_method": "static_ast",
         "environment_description_ref": null,
@@ -389,7 +389,8 @@
         },
         "limitations": [
           "Establishes that the construct appears in parsed source; does not establish that it executes at runtime.",
-          "Analysis is per-file and syntactic. A call assembled dynamically or reached through an indirection is not matched."
+          "Analysis is per-file and syntactic. A call assembled dynamically or reached through an indirection is not matched.",
+          "A computed key is recorded as a read without the name."
         ],
         "notes": null,
         "rule_id": "python-surface:env.credential_pattern_read",
@@ -1608,7 +1609,7 @@
     "generic_advice": [],
     "input_records": [],
     "mitigations": [],
-    "record_id": "2e8af640ee5fceb59eef75d7880d9166",
+    "record_id": "6b5313e990a92fabd26030f65f3f816a",
     "residual_uncertainty": "1 path(s) or check(s) could not be analysed; 30 capability result(s) are incomplete. No result in this record establishes that a capability is absent from the artifact.",
     "run": {
       "completed_at": "2026-07-22T00:00:01+00:00",
