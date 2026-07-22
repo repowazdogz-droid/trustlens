@@ -119,3 +119,127 @@ projector, and the upstream authorizer itself.
   load-bearing questions myself. Their Phase 0 classifications stand as **single-verified**,
   and given that two of Phase 0's classifications in this exact area turned out to be wrong,
   they should be re-checked before any of them is relied on.
+
+---
+
+# Round 2: source-level re-verification and two spikes (2026-07-22)
+
+All four remaining tools were treated as presumptively unverified and re-checked from
+**source**, not documentation — the standard that caught the two earlier errors. It caught a
+third.
+
+## Correction 3 — `rbac-tool` is NOT cluster-only. Phase 0 was wrong again.
+
+**[V] `cmd/visualize_cmd.go:73`:**
+
+```go
+flags.StringVarP(&opts.Infile, "file", "f", "", "Input File - use '-' to read from stdin")
+```
+
+with `--outformat` accepting `dot` (line 76). `rbac-tool viz` therefore builds an RBAC graph
+from a **file or stdin**, with no cluster. Phase 0 recorded it as "DO-NOT-USE for offline
+manifests" after reading the README's flag list, which does not surface `-f`.
+
+This is the **third** Phase 0 classification in this area to fail source-level re-check. The
+instruction to treat the remainder as presumptively unverified was correct.
+
+`rbac-tool` is a better candidate than `rback`: same offline capability, Apache-2.0,
+v1.20.0 (2024-10) versus rback's 2021, and DOT output is an explicit documented flag rather
+than the only output shape.
+
+## Re-verification results
+
+| Tool | Verified from | Offline from files? | Graph? | Verdict |
+|---|---|---|---|---|
+| **rbac-tool** | `visualize_cmd.go:73,76` | **YES** — `-f`, `-` for stdin | DOT or HTML | **VIABLE — Phase 0 corrected** |
+| **rbac-police** | `cmd/eval.go:83` — `utils.ReadFile(args[1])` | **YES for `eval`** — reads a collected-state file | policy findings, not a graph | Viable for evaluation; collector step is cluster-based |
+| **audit2rbac** | `cmd/audit2rbac/audit2rbac.go:63,208,354-356` | **YES** — `--filename` required, `os.Stdin`/`os.Open` | n/a | **Not applicable.** It *synthesises* RBAC from audit logs; it does not analyse manifests. File-based, wrong function. |
+| **kubescape** | repo metadata + `cmd/scan/` listing only | scans files (control/framework/workload) | **not verified** | **PARTIALLY VERIFIED** — Apache-2.0, very active (pushed 2026-07-22, 11.5k stars), but I did **not** confirm from source that it builds an RBAC graph. Do not rely on it until that is checked. |
+
+---
+
+## Spike 1 — is `rback`'s DOT output stable enough to parse? **NO, not as bytes.**
+
+Built from source (commit `98e7f72`, Apache-2.0, Go 1.12 module) and run against RBAC JSON
+assembled from manifests, with no cluster.
+
+| Measurement | Result |
+|---|---|
+| Runs of **identical** input | 20 |
+| **Distinct byte outputs** | **4** |
+| Distinct canonical edge sets (IDs resolved to labels, sorted) | **1** |
+| Edge count | 12, every run |
+| Distinct label sets | 1 |
+
+The variance is node-ID assignment — `n17/n16/n18` in one run, `n13/n12/n14` in another —
+which is Go map iteration order. **The graph is stable; the text is not.**
+
+**Verdict.** TrustLens rests on byte-identical regeneration and deterministic content
+hashes. Output that differs across four forms for the same input cannot be hashed, diffed,
+or stored as control evidence. `rback` is therefore usable only behind a canonicalisation
+layer that resolves node IDs to labels and sorts the edges.
+
+And that observation is decisive: **to feed `rback` at all, TrustLens must already have
+parsed the RBAC objects into JSON.** Having done that, constructing the edge set directly is
+less work than parsing non-deterministic DOT back into a graph — and it yields the typed
+edges the Phase 0 schema wants rather than presentation nodes mixed with legend nodes (the
+rendered graph interleaves both). `rback`'s value is visualisation, not graph construction.
+
+## Spike 2 — can upstream `RBACAuthorizer` be satisfied from decoded YAML? **Yes. The cost is now measured, not assumed.**
+
+**[V] The interfaces are trivial.** From `pkg/registry/rbac/validation/rule.go`
+(release-1.31), the four parameters of `New()` are:
+
+```go
+RoleGetter               { GetRole(namespace, name string) (*rbacv1.Role, error) }
+RoleBindingLister        { ListRoleBindings(namespace string) ([]*rbacv1.RoleBinding, error) }
+ClusterRoleGetter        { GetClusterRole(name string) (*rbacv1.ClusterRole, error) }
+ClusterRoleBindingLister { ListClusterRoleBindings() ([]*rbacv1.ClusterRoleBinding, error) }
+```
+
+Four lookup methods over in-memory maps. No cluster client, no informers, no caches. The
+"satisfiable from decoded YAML" half of the earlier claim **holds fully**.
+
+**[V] The import cost is real and was previously unmeasured.** A module importing
+`k8s.io/kubernetes/plugin/pkg/auth/authorizer/rbac` **fails outright**:
+
+```
+k8s.io/api/rbac/v1alpha1: reading k8s.io/api/go.mod at revision v0.0.0: unknown revision v0.0.0
+```
+
+`k8s.io/kubernetes` publishes its staging repositories as `v0.0.0` placeholders that resolve
+only through its own `replace` block. It builds only after adding **28 `replace` directives**
+pinned to one Kubernetes minor (`v1.31.4` / `v0.31.4`). The resulting binary — for a program
+whose entire body prints a type name — is **44 MB**.
+
+**Verdict.** The conclusion survives, with two qualifications that were not in the earlier
+report:
+
+1. **28 replace directives pinned to a single Kubernetes minor.** Upgrading Kubernetes means
+   regenerating the whole block. That is recurring maintenance, and it is the kind of cost
+   that is invisible until it bites.
+2. **A 44 MB binary.** Acceptable *only* because the placement decision of 2026-07-22 puts
+   this in a separate, optional `trustlens rbac` command. Had external analysis gone
+   in-process, this weight would have landed in TrustLens's core and the clean-clone property
+   would have been lost. The placement decision is what makes this viable.
+
+**Neither spike was inconclusive.** Spike 1 rules `rback` out as a graph source. Spike 2
+keeps the upstream authorizer in, at a now-known price.
+
+## Revised Phase 2 position
+
+| Need | Decision |
+|---|---|
+| RBAC graph construction | **Build.** TrustLens parses manifests itself; feeding a graph tool requires that work anyway, and both graph tools emit presentation output rather than typed edges. |
+| RBAC decision semantics | **Reuse upstream** via a separate, optional `trustlens rbac` Go command. |
+| RBAC visualisation | **`rbac-tool viz -f -`** (Apache-2.0, maintained) if a rendered view is wanted. Not on the evidence path. |
+| Cross-domain K8s→IAM edges | **Build.** Unchanged; still the real gap. |
+
+## Still not verified
+
+- **[?]** kubescape's RBAC-graph capability — metadata only, not source.
+- **[?]** Whether the 28-replace approach survives a Kubernetes minor upgrade without manual
+  repair. Assumed to need it; not tested.
+- **[?]** Whether `rbac-tool viz`'s DOT output is deterministic. It was **not** subjected to
+  the 20-run test applied to `rback`, and given that `rback` failed it, assuming `rbac-tool`
+  passes would repeat exactly the mistake this round was called to correct.
