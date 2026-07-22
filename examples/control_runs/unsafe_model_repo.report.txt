@@ -1,0 +1,155 @@
+TrustLens scan report
+======================================================================
+Artifact        : unsafe_model_repo  (local_directory)
+Source          : examples/repos/unsafe_model_repo
+Immutable ref   : none recorded — acquisition is not reproducible
+Artifact hash   : b016e350ae9596d6a89757c3fe95e9de2ae1ee55c6a09ad453bba91d8a00f848
+Record          : dbfa6431529881346b96d8462c34cf93  (schema trustlens/1.0.0)
+Record hash     : 2f01f76c0ecf4d03de021364c80576472be6caca8d6eee92d26b7d5f1e52ff57
+Tool            : trustlens 0.1.0
+
+Declared:
+  No declaration was found in any conventional card or manifest location.
+  This is an absence of a declaration, NOT a declaration of absence.
+
+Actually reachable within analysed scope:
+  [FOUND] env.credential_pattern_read
+      Evidence: modeling_tiny.py:13
+      Mechanism: rule=env-subscript-credential-shaped resolved=os.environ['HF_TOKEN']
+      Excerpt: key = os.environ["HF_TOKEN"]
+  [FOUND] execution.deserialization
+      Evidence: modeling_tiny.py:15
+      Mechanism: rule=torch-load-weights-only-false resolved=torch.load
+      Excerpt: return torch.load(path, weights_only=False), key
+  [FOUND] execution.dynamic_import
+      Evidence: config.json:4
+      Mechanism: rule=auto-map-remote-code auto_map entry /auto_map/AutoModelForCausalLM names repository module 'modeling_tiny', which transformers executes when trust_remote_code is enabled
+      Excerpt: modeling_tiny.TinyForCausalLM
+  [FOUND] execution.loader_script
+      Evidence: modeling_tiny.py
+      Mechanism: rule=custom-code-entry-point file name matches a documented custom-code entry point (arXiv 2601.14163 §5.2)
+      Excerpt: modeling_tiny.py
+  [FOUND] k8s.serviceaccount_token_access
+      Evidence: modeling_tiny.py:7
+      Mechanism: rule=k8s-serviceaccount-path resolved=/var/run/secrets/kubernetes.io/serviceaccount
+      Excerpt: /var/run/secrets/kubernetes.io/serviceaccount/token
+  [FOUND] process.shell
+      Evidence: modeling_tiny.py:14
+      Mechanism: rule=subprocess-shell-true resolved=subprocess.Popen
+      Excerpt: subprocess.Popen("curl -s $ENDPOINT", shell=True)
+  [FOUND] process.subprocess
+      Evidence: modeling_tiny.py:14
+      Mechanism: rule=subprocess-invocation resolved=subprocess.Popen
+      Excerpt: subprocess.Popen("curl -s $ENDPOINT", shell=True)
+  [FOUND] template.expression_evaluation
+      Evidence: tokenizer_config.json:3 /chat_template
+      Mechanism: detector=ssti-gadget
+      Excerpt: …ages %}{{ m['content'] }}{% endfor %}{{ cycler.__init__.__globals__ }}
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] cloud.credential_file_access
+      Analysed: 3 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:cloud.credential_file_access v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] cloud.metadata_endpoint
+      Analysed: 3 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:cloud.metadata_endpoint v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] cloud.sdk_credential_discovery
+      Analysed: 3 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:cloud.sdk_credential_discovery v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] container.docker_socket
+      Analysed: 3 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:container.docker_socket v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] env.enumeration
+      Analysed: 3 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:env.enumeration v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] env.named_read
+      Analysed: 3 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:env.named_read v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] execution.build_hook
+      Analysed: 3 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:execution.build_hook v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] execution.build_hook
+      Analysed: 3 file(s); languages: python, json
+      Rules: loader-scripts:execution.build_hook v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] execution.deserialization
+      Analysed: 3 file(s); languages: yaml, json, toml, python
+      Rules: template-injection-config v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] execution.dynamic_eval
+      Analysed: 3 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:execution.dynamic_eval v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] execution.dynamic_import
+      Analysed: 3 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:execution.dynamic_import v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] filesystem.archive_extraction
+      Analysed: 3 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:filesystem.archive_extraction v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] filesystem.delete
+      Analysed: 3 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:filesystem.delete v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] filesystem.path_traversal
+      Analysed: 3 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:filesystem.path_traversal v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] filesystem.permission_change
+      Analysed: 3 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:filesystem.permission_change v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] filesystem.read_sensitive_path
+      Analysed: 3 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:filesystem.read_sensitive_path v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] filesystem.write
+      Analysed: 3 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:filesystem.write v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] k8s.api_access
+      Analysed: 3 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:k8s.api_access v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] network.dns
+      Analysed: 3 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:network.dns v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] network.listen
+      Analysed: 3 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:network.listen v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] network.outbound
+      Analysed: 3 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:network.outbound v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] network.package_fetch
+      Analysed: 3 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:network.package_fetch v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] package.install_at_runtime
+      Analysed: 3 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:package.install_at_runtime v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] package.manager_invocation
+      Analysed: 3 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:package.manager_invocation v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] template.injection_surface
+      Analysed: 3 file(s); languages: yaml, json, toml, python
+      Rules: template-injection-config v0.1.0
+
+Structural discrepancy:
+  No contradiction was found between the declarations and the findings.
+
+Scope:
+  Analysed : 4 file(s)
+  No path in the recorded scope failed to analyse.
+
+Unknowns:
+  Declared capabilities of the artifact
+      No card, metadata or manifest declaration was found among the 15 conventional locations examined. The artifact has not declared what it requires; this
+
+Structural discrepancy level: MEDIUM
+  Basis: execution-capable constructs were found, with no declaration contradicting them
+  Derived from:
+    - scanner:template.expression_evaluation:a02d85dad2169608
+    - scanner:execution.deserialization:3519350dc0fc32bb
+    - scanner:process.shell:e4dec27177ad621d
+    - scanner:process.subprocess:32b0376e6018279a
+    - scanner:execution.loader_script:9aa16d2693deddc8
+    - scanner:execution.dynamic_import:e0f401c75d1e0e12
+  This label is a summary of the identifiers above and does not replace them.
+
+What this establishes:
+  - The listed static checks ran over the recorded scope at the recorded rule versions.
+  - Constructs cited at the recorded positions are present in the artifact.
+
+What this does NOT establish:
+  - That any construct executes at runtime.
+  - That the artifact is malicious, or that any finding is exploitable.
+  - That capabilities outside the analysed rules are absent.
+
+Residual uncertainty: Every declared capability was reported on and every analysed path completed. Runtime reachability of every finding remains unestablished, and capabilities outside the implemented rules were not examined.

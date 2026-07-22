@@ -22,6 +22,7 @@ import json
 from pathlib import Path
 
 from trustlens.scanner.assemble import scan, summarise
+from trustlens.scanner.report import render
 
 REPOS = Path("examples/repos")
 OUT = Path("examples/control_runs")
@@ -45,6 +46,12 @@ def main() -> None:
             "summary": summary,
             "record": result.record,
         }
+        # The rendered report is stored too, as the human-facing half of the control-run
+        # evidence. It is derived from the record, so it is deterministic for a
+        # deterministic record and a drift between the two shows up as a diff.
+        (OUT / f"{repo.name}.report.txt").write_text(
+            render(result.record, summary) + "\n", encoding="utf-8"
+        )
         path = OUT / f"{repo.name}.json"
         path.write_text(
             json.dumps(payload, indent=2, ensure_ascii=False, sort_keys=True) + "\n",

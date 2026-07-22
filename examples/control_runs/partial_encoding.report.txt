@@ -1,0 +1,171 @@
+TrustLens scan report
+======================================================================
+Artifact        : partial_encoding  (local_directory)
+Source          : examples/repos/partial_encoding
+Immutable ref   : none recorded — acquisition is not reproducible
+Artifact hash   : f328ae9f8bcbfc9ca3bf8f10439fd301210bfcf20841a79527ec9c2dc6a96f14
+Record          : af360d1a44d22e74176b40a53eebc644  (schema trustlens/1.0.0)
+Record hash     : a6c6342b757b3746368f80b0ccfe30fa7f833e6038cd3ebfd70eb5a4cba4cd4e
+Tool            : trustlens 0.1.0
+
+Declared:
+  No declaration was found in any conventional card or manifest location.
+  This is an absence of a declaration, NOT a declaration of absence.
+
+Actually reachable within analysed scope:
+  [PARTIAL] cloud.credential_file_access
+      Analysed: 1 file(s)
+      NOT analysed: legacy.yaml (decode_error: UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid )
+  [PARTIAL] cloud.metadata_endpoint
+      Analysed: 1 file(s)
+      NOT analysed: legacy.yaml (decode_error: UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid )
+  [PARTIAL] cloud.sdk_credential_discovery
+      Analysed: 1 file(s)
+      NOT analysed: legacy.yaml (decode_error: UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid )
+  [PARTIAL] container.docker_socket
+      Analysed: 1 file(s)
+      NOT analysed: legacy.yaml (decode_error: UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid )
+  [PARTIAL] env.credential_pattern_read
+      Analysed: 1 file(s)
+      NOT analysed: legacy.yaml (decode_error: UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid )
+  [PARTIAL] env.enumeration
+      Analysed: 1 file(s)
+      NOT analysed: legacy.yaml (decode_error: UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid )
+  [PARTIAL] env.named_read
+      Analysed: 1 file(s)
+      NOT analysed: legacy.yaml (decode_error: UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid )
+  [PARTIAL] execution.build_hook
+      Analysed: 1 file(s)
+      NOT analysed: legacy.yaml (decode_error: UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid )
+  [PARTIAL] execution.deserialization
+      Analysed: 1 file(s)
+      NOT analysed: legacy.yaml (decode_error: UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid )
+  [PARTIAL] execution.deserialization
+      Analysed: 1 file(s)
+      NOT analysed: legacy.yaml (decode_error: UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid )
+  [PARTIAL] execution.dynamic_eval
+      Analysed: 1 file(s)
+      NOT analysed: legacy.yaml (decode_error: UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid )
+  [PARTIAL] execution.dynamic_import
+      Analysed: 1 file(s)
+      NOT analysed: legacy.yaml (decode_error: UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid )
+  [PARTIAL] filesystem.archive_extraction
+      Analysed: 1 file(s)
+      NOT analysed: legacy.yaml (decode_error: UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid )
+  [PARTIAL] filesystem.delete
+      Analysed: 1 file(s)
+      NOT analysed: legacy.yaml (decode_error: UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid )
+  [PARTIAL] filesystem.path_traversal
+      Analysed: 1 file(s)
+      NOT analysed: legacy.yaml (decode_error: UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid )
+  [PARTIAL] filesystem.permission_change
+      Analysed: 1 file(s)
+      NOT analysed: legacy.yaml (decode_error: UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid )
+  [PARTIAL] filesystem.read_sensitive_path
+      Analysed: 1 file(s)
+      NOT analysed: legacy.yaml (decode_error: UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid )
+  [PARTIAL] filesystem.write
+      Analysed: 1 file(s)
+      NOT analysed: legacy.yaml (decode_error: UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid )
+  [PARTIAL] k8s.api_access
+      Analysed: 1 file(s)
+      NOT analysed: legacy.yaml (decode_error: UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid )
+  [PARTIAL] k8s.serviceaccount_token_access
+      Analysed: 1 file(s)
+      NOT analysed: legacy.yaml (decode_error: UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid )
+  [PARTIAL] network.dns
+      Analysed: 1 file(s)
+      NOT analysed: legacy.yaml (decode_error: UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid )
+  [PARTIAL] network.listen
+      Analysed: 1 file(s)
+      NOT analysed: legacy.yaml (decode_error: UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid )
+  [PARTIAL] network.outbound
+      Analysed: 1 file(s)
+      NOT analysed: legacy.yaml (decode_error: UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid )
+  [PARTIAL] network.package_fetch
+      Analysed: 1 file(s)
+      NOT analysed: legacy.yaml (decode_error: UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid )
+  [PARTIAL] package.install_at_runtime
+      Analysed: 1 file(s)
+      NOT analysed: legacy.yaml (decode_error: UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid )
+  [PARTIAL] package.manager_invocation
+      Analysed: 1 file(s)
+      NOT analysed: legacy.yaml (decode_error: UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid )
+  [PARTIAL] process.shell
+      Analysed: 1 file(s)
+      NOT analysed: legacy.yaml (decode_error: UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid )
+  [PARTIAL] process.subprocess
+      Analysed: 1 file(s)
+      NOT analysed: legacy.yaml (decode_error: UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid )
+  [PARTIAL] template.expression_evaluation
+      Analysed: 1 file(s)
+      NOT analysed: legacy.yaml (decode_error: UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid )
+  [PARTIAL] template.injection_surface
+      Analysed: 1 file(s)
+      NOT analysed: legacy.yaml (decode_error: UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid )
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] execution.build_hook
+      Analysed: 0 file(s); languages: python, json
+      Rules: loader-scripts:execution.build_hook v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] execution.dynamic_import
+      Analysed: 0 file(s); languages: python, json
+      Rules: loader-scripts:execution.dynamic_import v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] execution.loader_script
+      Analysed: 0 file(s); languages: python, json
+      Rules: loader-scripts:execution.loader_script v0.1.0
+
+Structural discrepancy:
+  No contradiction was found between the declarations and the findings.
+
+Scope:
+  Analysed : 2 file(s)
+  FAILED   : legacy.yaml — decode_error: UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte
+
+Unknowns:
+  Declared capabilities of the artifact
+      No card, metadata or manifest declaration was found among the 15 conventional locations examined. The artifact has not declared what it requires; this
+
+Structural discrepancy level: UNDETERMINED
+  Basis: no capability was found, but analysis did not complete over the intended scope
+  Derived from:
+    - scanner:template.injection_surface:be696ff0eb47f8f4
+    - scanner:template.expression_evaluation:e66453ddc1882e89
+    - scanner:execution.deserialization:d25a8e8017ca7d31
+    - scanner:cloud.credential_file_access:dc6e694d3420a99f
+    - scanner:cloud.metadata_endpoint:41f91230b96a3bf8
+    - scanner:cloud.sdk_credential_discovery:e921217668470c08
+    - scanner:container.docker_socket:e898246b21d4e16a
+    - scanner:env.credential_pattern_read:540e0b82baba75f5
+    - scanner:env.enumeration:9d59625b35e71d1d
+    - scanner:env.named_read:d38280a4cce5cff5
+    - scanner:execution.build_hook:f0ed09a23059f2fa
+    - scanner:execution.deserialization:b6cc41db72020c24
+    - scanner:execution.dynamic_eval:00415a65cb2dfeff
+    - scanner:execution.dynamic_import:4366368dcf6a46db
+    - scanner:filesystem.archive_extraction:bb6023c34c005d29
+    - scanner:filesystem.delete:c344ea6333a8fb1e
+    - scanner:filesystem.path_traversal:70f7993211f7939a
+    - scanner:filesystem.permission_change:8386ebe964469d8d
+    - scanner:filesystem.read_sensitive_path:4ac28504ea14e148
+    - scanner:filesystem.write:2f1848b17fc7d65e
+    - scanner:k8s.api_access:9570ed1ef626ec65
+    - scanner:k8s.serviceaccount_token_access:fccab8ad3a9e5324
+    - scanner:network.dns:9d74b85731ec254c
+    - scanner:network.listen:6df0df422c916272
+    - scanner:network.outbound:4062fa58357dd616
+    - scanner:network.package_fetch:9f15dba0bad202a1
+    - scanner:package.install_at_runtime:9a38e8abf7c2ee1d
+    - scanner:package.manager_invocation:76090a1255fbd3fe
+    - scanner:process.shell:3424d4469d893c25
+    - scanner:process.subprocess:08e07d848412f00e
+  This label is a summary of the identifiers above and does not replace them.
+
+What this establishes:
+  - The listed static checks ran over the recorded scope at the recorded rule versions.
+  - Constructs cited at the recorded positions are present in the artifact.
+
+What this does NOT establish:
+  - That any construct executes at runtime.
+  - That the artifact is malicious, or that any finding is exploitable.
+  - That capabilities outside the analysed rules are absent.
+
+Residual uncertainty: 1 path(s) or check(s) could not be analysed; 30 capability result(s) are incomplete. No result in this record establishes that a capability is absent from the artifact.

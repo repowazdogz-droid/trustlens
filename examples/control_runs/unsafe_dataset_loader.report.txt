@@ -1,0 +1,174 @@
+TrustLens scan report
+======================================================================
+Artifact        : unsafe_dataset_loader  (local_directory)
+Source          : examples/repos/unsafe_dataset_loader
+Immutable ref   : none recorded — acquisition is not reproducible
+Artifact hash   : 9f76f98bb0632a5fa8ef7762952ba1a5653d86f27e68824a558132249ed93189
+Record          : c956ff54a201708eeae2d6bf1ddf5a38  (schema trustlens/1.0.0)
+Record hash     : d356a0e8a7c1baa2d5a13f450e51498287e14c1e42a2ab57bf432826092ba87b
+Tool            : trustlens 0.1.0
+
+Declared:
+  [explicitly_absent] execution.loader_script
+      Stated at: README.md:5
+      Verbatim: no custom code
+  [not_required] execution.loader_script
+      Stated at: README.md:5
+      Verbatim: passive tabular data
+
+Actually reachable within analysed scope:
+  [FOUND] cloud.metadata_endpoint
+      Evidence: loader_config.yaml:3
+      Mechanism: rule=cloud-metadata-endpoint resolved=169.254.169.254
+      Excerpt: http://169.254.169.254/latest/meta-data/
+  [FOUND] execution.deserialization
+      Evidence: unsafe_dataset_loader.py:16
+      Mechanism: rule=yaml-unsafe-load resolved=yaml.load
+      Excerpt: cfg = yaml.load(open("loader_config.yaml").read())      # no Loader
+      Evidence: unsafe_dataset_loader.py:20
+      Mechanism: rule=pickle-load resolved=pickle.loads
+      Excerpt: return pickle.loads(blob), mod
+  [FOUND] execution.dynamic_import
+      Evidence: unsafe_dataset_loader.py:17
+      Mechanism: rule=dynamic-import resolved=importlib.import_module
+      Excerpt: mod = importlib.import_module(cfg["builder_module"])
+  [FOUND] execution.loader_script
+      Evidence: unsafe_dataset_loader.py
+      Mechanism: rule=dataset-loader-script-by-name a top-level Python file named after the repository directory (unsafe_dataset_loader.py) is the dataset loading-script convention
+      Excerpt: unsafe_dataset_loader.py
+      Evidence: unsafe_dataset_loader.py:11
+      Mechanism: rule=dataset-builder-class class SensorReadings subclasses GeneratorBasedBuilder
+      Excerpt: class SensorReadings(GeneratorBasedBuilder)
+  [FOUND] filesystem.path_traversal
+      Evidence: loader_config.yaml:4
+      Mechanism: rule=path-traversal-literal resolved=../../
+      Excerpt: ../../tmp/payload.tar
+  [FOUND] network.outbound
+      Evidence: unsafe_dataset_loader.py:18
+      Mechanism: rule=http-client resolved=urllib.request.urlopen
+      Excerpt: blob = urllib.request.urlopen(cfg["remote"]).read()
+  [FOUND] process.shell
+      Evidence: unsafe_dataset_loader.py:19
+      Mechanism: rule=subprocess-shell-true resolved=subprocess.run
+      Excerpt: subprocess.run(f"tar xf {cfg['archive']}", shell=True)
+  [FOUND] process.subprocess
+      Evidence: unsafe_dataset_loader.py:19
+      Mechanism: rule=subprocess-invocation resolved=subprocess.run
+      Excerpt: subprocess.run(f"tar xf {cfg['archive']}", shell=True)
+  [FOUND] template.expression_evaluation
+      Evidence: loader_config.yaml:2 /builder_module
+      Mechanism: detector=ssti-gadget
+      Excerpt: ${eval:__import__('os').name}
+      Evidence: loader_config.yaml:2 /builder_module
+      Mechanism: detector=resolver-eval
+      Excerpt: ${eval:__import__('os').name}
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] cloud.credential_file_access
+      Analysed: 2 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:cloud.credential_file_access v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] cloud.sdk_credential_discovery
+      Analysed: 2 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:cloud.sdk_credential_discovery v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] container.docker_socket
+      Analysed: 2 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:container.docker_socket v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] env.credential_pattern_read
+      Analysed: 2 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:env.credential_pattern_read v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] env.enumeration
+      Analysed: 2 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:env.enumeration v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] env.named_read
+      Analysed: 2 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:env.named_read v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] execution.build_hook
+      Analysed: 2 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:execution.build_hook v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] execution.build_hook
+      Analysed: 1 file(s); languages: python, json
+      Rules: loader-scripts:execution.build_hook v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] execution.deserialization
+      Analysed: 2 file(s); languages: yaml, json, toml, python
+      Rules: template-injection-config v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] execution.dynamic_eval
+      Analysed: 2 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:execution.dynamic_eval v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] execution.dynamic_import
+      Analysed: 1 file(s); languages: python, json
+      Rules: loader-scripts:execution.dynamic_import v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] filesystem.archive_extraction
+      Analysed: 2 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:filesystem.archive_extraction v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] filesystem.delete
+      Analysed: 2 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:filesystem.delete v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] filesystem.permission_change
+      Analysed: 2 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:filesystem.permission_change v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] filesystem.read_sensitive_path
+      Analysed: 2 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:filesystem.read_sensitive_path v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] filesystem.write
+      Analysed: 2 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:filesystem.write v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] k8s.api_access
+      Analysed: 2 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:k8s.api_access v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] k8s.serviceaccount_token_access
+      Analysed: 2 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:k8s.serviceaccount_token_access v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] network.dns
+      Analysed: 2 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:network.dns v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] network.listen
+      Analysed: 2 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:network.listen v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] network.package_fetch
+      Analysed: 2 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:network.package_fetch v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] package.install_at_runtime
+      Analysed: 2 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:package.install_at_runtime v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] package.manager_invocation
+      Analysed: 2 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:package.manager_invocation v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] template.injection_surface
+      Analysed: 2 file(s); languages: yaml, json, toml, python
+      Rules: template-injection-config v0.1.0
+
+Structural discrepancy:
+  [DVR-execution.loader_script] The artifact declares execution.loader_script as explicitly_absent, but it was found in the analysed scope.
+      declared: no custom code
+      static: execution.loader_script FOUND at unsafe_dataset_loader.py:None
+      Recorded, not reconciled.
+  [DVR-execution.loader_script] The artifact declares execution.loader_script as not_required, but it was found in the analysed scope.
+      declared: passive tabular data
+      static: execution.loader_script FOUND at unsafe_dataset_loader.py:None
+      Recorded, not reconciled.
+
+Scope:
+  Analysed : 3 file(s)
+  No path in the recorded scope failed to analyse.
+
+Structural discrepancy level: HIGH
+  Basis: the artifact declares a capability it does not have, and that capability was found
+  Derived from:
+    - DVR-execution.loader_script
+    - DVR-execution.loader_script
+    - scanner:template.expression_evaluation:0be97130e625951b
+    - scanner:execution.deserialization:0af63bf5e030d11e
+    - scanner:execution.dynamic_import:8a2d94db1b122637
+    - scanner:process.shell:9efe31187c2f9864
+    - scanner:process.subprocess:a32fdb474476d935
+    - scanner:execution.loader_script:99d667ac7aa127ec
+  This label is a summary of the identifiers above and does not replace them.
+
+What this establishes:
+  - The listed static checks ran over the recorded scope at the recorded rule versions.
+  - Constructs cited at the recorded positions are present in the artifact.
+
+What this does NOT establish:
+  - That any construct executes at runtime.
+  - That the artifact is malicious, or that any finding is exploitable.
+  - That capabilities outside the analysed rules are absent.
+
+Residual uncertainty: Every declared capability was reported on and every analysed path completed. Runtime reachability of every finding remains unestablished, and capabilities outside the implemented rules were not examined.

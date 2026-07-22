@@ -1,0 +1,144 @@
+TrustLens scan report
+======================================================================
+Artifact        : clean_tabular  (local_directory)
+Source          : examples/repos/clean_tabular
+Immutable ref   : none recorded — acquisition is not reproducible
+Artifact hash   : 4697629409cbf1bd43c313d58528e7f436a52829b1690a004bf4bd04deea700c
+Record          : cdf64b221f86c838823aa33ea05be604  (schema trustlens/1.0.0)
+Record hash     : 8b2111f2c066ae57fcf1371b0a732f6d4fa45d610da3ddc9e4afcc75abc1ff29
+Tool            : trustlens 0.1.0
+
+Declared:
+  [explicitly_absent] execution.loader_script
+      Stated at: README.md:6
+      Verbatim: No custom code
+  [explicitly_absent] network.outbound
+      Stated at: README.md:6
+      Verbatim: No custom code, no network
+  [not_required] execution.loader_script
+      Stated at: README.md:6
+      Verbatim: Passive CSV data
+
+Actually reachable within analysed scope:
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] cloud.credential_file_access
+      Analysed: 1 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:cloud.credential_file_access v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] cloud.metadata_endpoint
+      Analysed: 1 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:cloud.metadata_endpoint v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] cloud.sdk_credential_discovery
+      Analysed: 1 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:cloud.sdk_credential_discovery v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] container.docker_socket
+      Analysed: 1 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:container.docker_socket v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] env.credential_pattern_read
+      Analysed: 1 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:env.credential_pattern_read v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] env.enumeration
+      Analysed: 1 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:env.enumeration v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] env.named_read
+      Analysed: 1 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:env.named_read v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] execution.build_hook
+      Analysed: 1 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:execution.build_hook v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] execution.build_hook
+      Analysed: 0 file(s); languages: python, json
+      Rules: loader-scripts:execution.build_hook v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] execution.deserialization
+      Analysed: 1 file(s); languages: yaml, json, toml, python
+      Rules: template-injection-config v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] execution.deserialization
+      Analysed: 1 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:execution.deserialization v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] execution.dynamic_eval
+      Analysed: 1 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:execution.dynamic_eval v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] execution.dynamic_import
+      Analysed: 1 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:execution.dynamic_import v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] execution.dynamic_import
+      Analysed: 0 file(s); languages: python, json
+      Rules: loader-scripts:execution.dynamic_import v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] execution.loader_script
+      Analysed: 0 file(s); languages: python, json
+      Rules: loader-scripts:execution.loader_script v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] filesystem.archive_extraction
+      Analysed: 1 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:filesystem.archive_extraction v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] filesystem.delete
+      Analysed: 1 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:filesystem.delete v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] filesystem.path_traversal
+      Analysed: 1 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:filesystem.path_traversal v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] filesystem.permission_change
+      Analysed: 1 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:filesystem.permission_change v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] filesystem.read_sensitive_path
+      Analysed: 1 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:filesystem.read_sensitive_path v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] filesystem.write
+      Analysed: 1 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:filesystem.write v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] k8s.api_access
+      Analysed: 1 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:k8s.api_access v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] k8s.serviceaccount_token_access
+      Analysed: 1 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:k8s.serviceaccount_token_access v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] network.dns
+      Analysed: 1 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:network.dns v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] network.listen
+      Analysed: 1 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:network.listen v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] network.outbound
+      Analysed: 1 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:network.outbound v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] network.package_fetch
+      Analysed: 1 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:network.package_fetch v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] package.install_at_runtime
+      Analysed: 1 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:package.install_at_runtime v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] package.manager_invocation
+      Analysed: 1 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:package.manager_invocation v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] process.shell
+      Analysed: 1 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:process.shell v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] process.subprocess
+      Analysed: 1 file(s); languages: python, yaml, json, toml
+      Rules: python-surface:process.subprocess v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] template.expression_evaluation
+      Analysed: 1 file(s); languages: yaml, json, toml, python
+      Rules: template-injection-config v0.1.0
+  [NOT_FOUND_WITHIN_ANALYSED_SCOPE] template.injection_surface
+      Analysed: 1 file(s); languages: yaml, json, toml, python
+      Rules: template-injection-config v0.1.0
+
+Structural discrepancy:
+  No contradiction was found between the declarations and the findings.
+
+Scope:
+  Analysed : 2 file(s)
+  No path in the recorded scope failed to analyse.
+
+Structural discrepancy level: LOW
+  Basis: no capability was found and every check completed over its recorded scope
+  Derived from: no finding or contradiction raised the level.
+  This label is a summary of the identifiers above and does not replace them.
+
+What this establishes:
+  - The listed static checks ran over the recorded scope at the recorded rule versions.
+  - Constructs cited at the recorded positions are present in the artifact.
+
+What this does NOT establish:
+  - That any construct executes at runtime.
+  - That the artifact is malicious, or that any finding is exploitable.
+  - That capabilities outside the analysed rules are absent.
+
+Residual uncertainty: Every declared capability was reported on and every analysed path completed. Runtime reachability of every finding remains unestablished, and capabilities outside the implemented rules were not examined.
