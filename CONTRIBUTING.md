@@ -93,3 +93,9 @@ committed separately. Do not merge phases.
   where a value would otherwise appear.
 - Never dispatch a parser on a file extension. Sniff content. Extension-based dispatch is
   a documented, exploited evasion against existing ML artifact scanners.
+- **Never bundle, vendor, or `--config`-reference a Semgrep registry rule.** The engine is
+  LGPL-2.1 and is invoked as a subprocess; the registry rules are under the Semgrep Rules
+  License v1.0, which permits internal business use only and explicitly excludes vendors.
+  Ship TrustLens-authored rules only. This is one flag away and looks like reuse.
+- Do not claim `STATIC_DATAFLOW` for a flow crossing functions or files. Semgrep CE is
+  intra-procedural; interfile taint is a proprietary feature TrustLens does not use.

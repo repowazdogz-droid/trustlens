@@ -73,9 +73,13 @@ not reimplement the analysis.
 | Pickle opcode / unsafe-globals scan | picklescan | 1.0.5 | MIT | [L] |
 | Broader model formats (H5, Keras v3, TF SavedModel) | modelscan | 0.8.8 | Apache-2.0 | [L] |
 | Pickle symbolic execution + allowlist mode | fickling | 0.1.12 | **LGPL-3.0** | [L] |
-| Python security checks | Bandit | — | **Apache-2.0** | **[V]** licence read from `LICENSE`; plugin entry points read from `setup.cfg` |
-| Pattern + taint rules, offline with local rules | Semgrep (OSS engine) | — | **LGPL-2.1** | **[V]** licence read from `LICENSE` |
-| Python parsing | stdlib `ast` | 3.14.4 | PSF | **[E]** |
+| Python security checks | Bandit | 1.9.4 | **Apache-2.0** | **[V]** licence read from `LICENSE`; plugin entry points read from `setup.cfg`; [L] version and test IDs |
+| Pattern + taint rules, **TrustLens-authored rules only** | Semgrep CE (engine) | 1.170.0 | **LGPL-2.1** engine / rules see warning below | **[V]** engine licence read from `LICENSE`; [L] rules licence |
+| Python parsing, happy path | stdlib `ast` | 3.14.4 | PSF | **[E]** |
+| Python parsing, failure path → `PARTIAL` | tree-sitter + tree-sitter-python | 0.26.0 / 0.25.0 | MIT | [L] |
+| Dependency vulnerabilities, genuinely offline | osv-scanner | v2.4.0 | Apache-2.0 | [L] |
+| SBOM from a directory | syft | v1.49.0 | Apache-2.0 | [L] |
+| Secrets in the repo tree | gitleaks | v8.30.1 | MIT | [L] |
 | AWS action / access-level / ARN metadata, offline | policy_sentry | 0.16.0 | MIT | [L] |
 | IAM policy lint and grammar validation | Parliament | 1.64 | BSD-3-Clause | [L] |
 | Per-policy IAM risk classification, offline | Cloudsplaining | 0.9.1 | BSD-3-Clause | [L] |
@@ -107,11 +111,45 @@ parsing. `ast.parse` never returns a partial tree. Each failure maps to one
 older dataset repositories, so `PARTIAL` will fire on realistic inputs rather than
 contrived ones.
 
-**Licence positions taken deliberately.** Semgrep's OSS engine is **[V] LGPL-2.1** and
-fickling is **[L] LGPL-3.0**; both are invoked or dynamically imported, which is
-compatible with an Apache-2.0 TrustLens, but neither may be vendored or modified into the
-distribution without changing that analysis. This is recorded so the decision is revisited
-deliberately rather than discovered late.
+**[L] Bandit already ships the two ML-specific checks TrustLens most needs**, which is
+exactly the kind of thing a reuse survey exists to find before writing a rule:
+`B614 pytorch_load` ("unsafe use of `torch.load` and `torch.serialization.load`… can lead
+to arbitrary code execution", CWE-502) and `B615 huggingface_unsafe_download`
+("Downloading models, datasets, or files without specifying a revision based on an
+immutable revision (commit) can lead to supply chain attacks"). Those cover mechanisms 8
+and 11 in §5 at source level. Do not author replacements.
+
+**[L] `ast` and tree-sitter are complementary, not alternatives.** `ast` **[E]** raises and
+returns nothing; tree-sitter always returns a tree carrying queryable `(ERROR)` and
+`(MISSING)` nodes plus `Node.has_error`. That is the documented primitive for "we parsed
+some of this file but not all of it", so Phase 1 parses with `ast` first, falls back to
+tree-sitter on failure, and marks the file `PARTIAL` when `has_error` is true — recording
+which construct defeated the parse rather than only that one did.
+
+### ⚠ Licence hazards recorded deliberately
+
+**Semgrep: the engine and the rules have different licences, and the rules are the trap.**
+**[V]** The CE engine is LGPL-2.1. **[L]** The `semgrep-rules` registry is under the
+**Semgrep Rules License v1.0**, which is *not* OSI-approved and states verbatim: "You may
+use the rules **only for your own internal business purposes**. This license does not allow
+you to distribute the rules, or to make them available to others as a service." The
+documentation adds: "**Vendors cannot use Semgrep-maintained rules in competing products or
+SaaS offerings.**"
+
+Consequence, binding on Phase 1: **TrustLens invokes the Semgrep engine as a subprocess and
+ships only TrustLens-authored rules.** No registry rule is vendored, referenced by
+`--config=p/...`, or reproduced in a TrustLens rule file. This is the single most likely
+licence mistake for a future contributor, because pulling a registry rule is one flag away
+and looks like reuse.
+
+**[L] Semgrep CE is intra-procedural.** Interfile and interprocedural taint analysis is a
+Pro (proprietary) feature. Phase 1's dataflow findings are therefore bounded to
+single-function, single-file flows, and `STATIC_DATAFLOW` must not be claimed for anything
+wider.
+
+**Copyleft positions.** Semgrep engine **[V]** LGPL-2.1 and fickling **[L]** LGPL-3.0 are
+invoked or dynamically imported, which is workable for an Apache-2.0 TrustLens; neither may
+be vendored or modified into the distribution without redoing that analysis.
 
 ---
 
@@ -168,7 +206,9 @@ by resolving the identifier against a registry.
 | IAM Access Analyzer, Amazon Verified Permissions, CloudFox | [L] Network APIs. Incompatible with the offline constraint, and Access Analyzer's custom checks are billed per call. |
 | PMapper, awspx | [L] Graph *construction* requires live ingest; PMapper is AGPL-3.0 and stale since Aug 2024, awspx is GPL-3.0 and stale since 2021. Their on-disk graph layouts are worth copying as formats; their code is not. |
 | Cartography | [L] The most mature OSS cloud asset graph, but ingest is live-credential only. Schema studied, ingest not used. |
-| CodeQL | **[?]** Licence terms for use inside a general-purpose tool were not verified this session. **Not adopted**, and nothing depends on it. Must be resolved before any future integration. |
+| **CodeQL** | **[L] Verified DO-NOT-USE, on licence.** The GitHub CodeQL Terms and Conditions permit use only for academic research, demonstration, and analysis of an "Open Source Codebase" (defined as released under an OSI-approved licence). They explicitly prohibit "To otherwise or in any other context generate any CodeQL database for or during automated analysis, CI or CD", and prohibit making the software "available as a hosted solution (whether on a standalone basis or combined, incorporated or integrated with other software or services) for others to use". TrustLens performs automated analysis of untrusted repositories that are frequently not OSI-licensed, and would ship the tool integrated. All three conditions are violated. The GHAS carve-out is per-customer and cannot be relied on by a tool. |
+| trufflehog | [L] **AGPL-3.0**, a distribution hazard for a shipped or hosted TrustLens; and its headline capability is active network verification against live APIs, which an offline scanner must disable — leaving the weaker half of the tool. Use gitleaks (MIT, embedded rules, SARIF) instead. |
+| Semgrep registry rules | [L] Semgrep Rules License v1.0 — internal business use only, no distribution, vendors excluded. See the licence hazard above. The engine is used; the rules are not. |
 | krane | [L] The only offline K8s RBAC *graph* tool found, which makes it attractive — but it is v0.1.3, last released Dec 2024, and hard-depends on RedisGraph, whose lifecycle status is **[?]** unverified. Evaluate before depending on it. |
 
 ---
@@ -257,7 +297,25 @@ No surveyed tool reports that two of its inputs disagree; they reconcile silentl
 consume one source. TrustLens records contradictions as findings and pins `reconciled` to
 `false` in machine-produced records.
 
-### 4.10 Finding-specific mitigation
+### 4.10 The incident's own vector has no off-the-shelf check
+
+Worth stating on its own, because it inverts the expected result of a reuse survey.
+
+[L] Bandit's template checks — `B701 jinja2_autoescape_false`, `B702`, `B703`, `B704` — are
+**autoescape and XSS checks, not server-side template injection checks**. They do not cover
+user-controlled template *source* reaching `Template()` or `render_template_string()`.
+[L] Semgrep's registry does carry SSTI rules, but the Semgrep Rules License forbids
+TrustLens shipping them. [L] No permissively-licensed engine with an SSTI check was located,
+and **no engine at all was found documenting a check for expression evaluation in
+TOML/YAML configuration reaching a sink**.
+
+So the mechanism Hugging Face named as one of two initial vectors — "a template-injection
+in a dataset configuration" — is the one mechanism in §5 for which no existing tool can be
+reused. Phase 1 must author that rule itself, and it is the check least able to lean on
+prior art. The distribution of tooling attention and the distribution of exploited surface
+are not the same, and this is where they come apart most sharply.
+
+### 4.11 Finding-specific mitigation
 
 Surveyed tools emit rule-keyed remediation text. TrustLens ties each mitigation to the
 finding ids that triggered it, the resource affected, the path expected to be removed, the
@@ -283,7 +341,7 @@ Rows with no fetched primary source were dropped rather than carried as plausibl
 | 9 | Repo-as-CDN, private dataset as exfil sink | Flag non-model binaries and outbound `resolve/main` URLs in scripts | [L] JFrog 2026-04-23 |
 | 10 | Package build hooks in data-presenting repos | Flag `postinstall`, `setup.py`, build hooks | [L] JFrog 2026-04-23 |
 | 11 | Rug pull — clean now, malicious later | Pin and re-scan by **revision** | [L] ATLAS AML.T0109 |
-| 12 | Template injection in dataset configuration | Expression-bearing values in YAML/JSON/TOML reaching a sink | **[V]** HF incident disclosure names this vector explicitly |
+| 12 | Template injection in dataset configuration | Expression-bearing values in YAML/JSON/TOML reaching a sink — **TrustLens-authored; no reusable engine check exists (§4.10)** | **[V]** HF incident disclosure names this vector explicitly |
 | 13 | Over-flagging on import presence alone | Severity depends on **use**, not on import presence | [L] JFrog; arXiv 2508.15987 |
 
 Considered and **dropped as unsupported**: unsafe YAML deserialization in ML configs, and
@@ -336,15 +394,27 @@ than as an oracle.
 | D12 | Rule engine | **Reuse** OPA/Rego + Conftest | Evaluates rules over a graph; TrustLens supplies the graph. |
 | D13 | Blast-radius simulation | **Build** | Existing path engines require their own live collectors. |
 | D14 | Formal policy equivalence | **Defer** | Cedar-only; IAM→Cedar translation is a project in itself. |
-| D15 | CodeQL | **Defer** | **[?]** Licence terms unverified. Nothing depends on it. |
+| D15 | CodeQL | **Reject** | [L] Licence prohibits automated analysis of non-OSI codebases and prohibits integrated distribution. Verdict is settled, not deferred. |
+| D17 | Semgrep registry rules | **Reject; author our own** | [L] Semgrep Rules License v1.0 excludes vendor use and distribution. Engine reused, rules not. |
+| D18 | Parse-failure handling | **Reuse** tree-sitter as the `ast` fallback | [L] `(ERROR)`/`(MISSING)`/`has_error` is the documented primitive for `PARTIAL`. |
+| D19 | ML-specific source checks (`torch.load`, unpinned HF revision) | **Reuse** Bandit `B614`, `B615` | Already exist and are maintained; authoring replacements would be duplication. |
+| D20 | SSTI and config-borne expression evaluation | **Build** | [L] No permissively-licensed engine check exists. This is the incident's own vector. |
+| D21 | Dependency vulnerabilities | **Reuse** osv-scanner `--offline` | [L] The only surveyed scanner with a documented single-flag no-network mode. |
+| D22 | Secret detection | **Reuse** gitleaks (MIT); reject trufflehog | [L] AGPL-3.0 plus network-verification-by-default. |
 | D16 | Graph rendering | **Reuse** Powerpipe, out of process | AGPL-3.0; acceptable across a process boundary, flagged. |
 
 ---
 
 ## 8. What Phase 0 did not establish
 
-- **[?]** CodeQL's licence terms for use in a general-purpose tool.
 - **[?]** RedisGraph's lifecycle status, which gates any use of krane.
+- **[?]** The exact shape of Semgrep's JSON `errors[]` record for a Python syntax error.
+  Its existence in CE is documented; the record shape is not, and Phase 1's `PARTIAL`
+  mapping depends on it. Determine empirically.
+- **[?]** Behaviour of gitleaks, syft and osv-scanner on undecodable or malformed input
+  files. Undocumented; each must be tested before its output is trusted to distinguish
+  "nothing found" from "could not read".
+- **[?]** Whether gitleaks emits telemetry. Not documented either way.
 - **[?]** Whether Hugging Face re-scans existing blobs when its scanners are upgraded. The
   staleness conclusion is inferred from observed per-file version values, not from a
   documented policy.

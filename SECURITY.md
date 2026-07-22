@@ -32,6 +32,13 @@ An artifact under analysis is untrusted input to TrustLens itself, so:
   scanner halting on a corrupt archive entry and reporting no findings. In TrustLens a
   failure to complete is structurally incapable of being expressed as a completed clean
   scan.
+- **The parser itself is a DoS surface and is fenced.** The Python documentation states
+  that `ast.parse` can crash the interpreter: "It is possible to crash the Python
+  interpreter with a sufficiently large/complex string due to stack depth limitations in
+  Python's AST compiler." Since the input is untrusted and attacker-chosen, parsing runs
+  behind a resource fence (recursion limit and subprocess or equivalent), and a crash is
+  recorded as a `scope.failed` entry producing `PARTIAL` — never as a completed scan of
+  that file.
 - **Archive extraction is bounded** — path traversal, symlink escape, entry count,
   expansion ratio and total size are limits, not warnings.
 - **Credential-shaped values are never stored.** TrustLens records the *names* of
