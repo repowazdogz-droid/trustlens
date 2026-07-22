@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+# Reject a commit message whose claimed test count disagrees with a fresh run.
+#
+# This project stated a test count that drifted from reality twice (91 vs 84, then 316 vs
+# 525). Two instances is a pattern, and the fix for a pattern is a mechanism that removes
+# the typed path — not a resolution to be more careful.
+#
+# Enable with:  git config core.hooksPath .githooks
+#
+# Any message containing "<N> tests pass" or "<N> tests collected" must match what pytest
+# COLLECTS right now. Collected rather than passed, because the external-tool probes skip
+# when no analyser is on PATH, so `passed` differs between environments while `collected`
+# does not. A message that claims no count is unaffected.
+
+set -uo pipefail
+MSG_FILE="$1"
+ROOT="$(git rev-parse --show-toplevel)"
+
+CLAIMED="$(grep -oiE '\b[0-9]+ tests? (pass|collected)' "$MSG_FILE" | grep -oE '^[0-9]+' | head -1)"
+
+if [ -z "${CLAIMED}" ]; then
+  exit 0   # no numeric claim to verify
+fi
+
+ACTUAL="$(cd "$ROOT" && python3 scripts/stats.py --tests 2>/dev/null)"
+
+if [ -z "${ACTUAL}" ]; then
+  echo "commit-msg hook: could not read a test count from the runner." >&2
+  echo "  The message claims ${CLAIMED}. Refusing the commit rather than trusting a" >&2
+  echo "  number that could not be verified. Run: python3 scripts/stats.py" >&2
+  exit 1
+fi
+
+if [ "${CLAIMED}" != "${ACTUAL}" ]; then
+  cat >&2 <<EOF
+commit-msg hook: REJECTED — the test count in this message is wrong.
+
+  message claims : ${CLAIMED} tests
+  pytest collects: ${ACTUAL} tests
+
+This has happened twice before (91 vs 84, 316 vs 525). Do not edit the number by hand
+from memory; take it from the runner:
+
+  python3 scripts/stats.py
+
+EOF
+  exit 1
+fi
+
+exit 0

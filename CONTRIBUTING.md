@@ -99,3 +99,23 @@ committed separately. Do not merge phases.
   Ship TrustLens-authored rules only. This is one flag away and looks like reuse.
 - Do not claim `STATIC_DATAFLOW` for a flow crossing functions or files. Semgrep CE is
   intra-procedural; interfile taint is a proprietary feature TrustLens does not use.
+
+## Reported numbers come from the tools, never from memory
+
+A stated test count drifted from reality twice in this project — a commit claimed 91 when
+the suite ran 84, then 316 when it ran 525. Two instances is a pattern, and a pattern needs
+a mechanism.
+
+```bash
+python3 scripts/stats.py          # verified stats block; nothing in it is typed
+python3 scripts/stats.py --tests  # the collected count alone
+git config core.hooksPath .githooks   # required once per clone
+```
+
+`.githooks/commit-msg` rejects any commit message whose claimed test count disagrees with a
+fresh run. Quote **collected**, not passed: the external-tool probes skip when no analyser
+is on `PATH`, so `passed` differs between environments while `collected` does not.
+
+`core.hooksPath` is a per-clone git setting that the repository cannot carry, so
+`tests/test_stats_mechanism.py` asserts it is configured. A failure there means the
+mechanism is present but inactive.
