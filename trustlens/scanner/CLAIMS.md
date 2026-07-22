@@ -357,7 +357,13 @@ Terraform and Kubernetes RBAC ingesters, the cross-domain K8s→IAM join via the
 condition, and the optional `trustlens rbac` Go helper wrapping the upstream Kubernetes
 authorizer.
 
-Not built, and recorded rather than dropped: IAM condition evaluation (a deliberate
-documented gap — see `docs/SPEC_phase2_credential_mapper.md` for why a partial
-implementation would be worse than none), `policy_sentry` integration, and network-policy
-reachability. **Phase 2 is partially complete.**
+Not built, and carried forward as named items in **`docs/DEFERRED.md`** (D1 IAM condition
+evaluation, D2 `policy_sentry`, D3 network-policy reachability, D4 external analysers) —
+each with its reason, its candidate phase, and what stands in its place. They are deferred,
+not forgotten, and the register exists so the two stay distinguishable.
+
+**Phase 2 is partial-but-closed against its stated scope.** The mapper, both ingesters, the
+cross-domain join and the optional RBAC helper are built, tested and clean-clone verified.
+One honest cost is recorded in D3: because network-policy reachability is unbuilt, the
+Phase 0 illustrative contradiction — description says metadata access is blocked while a
+NetworkPolicy permits link-local — is not yet detectable end to end.

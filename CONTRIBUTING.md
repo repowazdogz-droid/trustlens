@@ -150,3 +150,48 @@ authoritative decision procedure — passes. `picklescan` passes: TrustLens hand
 and gets back opcode analysis it could not produce itself. The upstream Kubernetes
 `RBACAuthorizer` passes: TrustLens hands it decoded objects and gets back authorisation
 semantics it would otherwise approximate badly.
+
+## Required: verify every parser against real tool-generated input
+
+**Any new parser or ingester must be verified against input produced by the real tool,
+format, or ecosystem it targets — before a hand-written fixture is trusted for anything.**
+This is a required step, not a matter of diligence. It has caught something every single
+time it has been applied, and its absence has caused every parser defect this project has
+shipped and then had to fix.
+
+The record, which is why this is a rule and not a habit:
+
+| Parser | Input used | What it caught |
+|---|---|---|
+| Declared-surface extractor | hand-written fixtures **only** | Four bugs, including false contradictions manufactured on perfectly consistent cards |
+| Terraform plan ingester | **real** `tofu plan -out` + `show -json` | `format_version` is 1.2, not the 1.0 in the grounding note |
+| Terraform plan ingester | same | `policy` is a JSON **string** needing double-decode, not a nested object |
+| Kubernetes RBAC helper | **real** cert-manager release + kubectl `--dry-run=client` | `creationTimestamp: null`, real `nonResourceURLs` rules |
+
+Three confirmed instances is enough. The pattern is that hand-written fixtures encode *what
+the author believes the format to be*, so they cannot surface a belief that is wrong — which
+is precisely the failure mode a parser test is supposed to catch.
+
+### What counts as real input
+
+In descending order of preference:
+
+1. **Output from the actual tool**, generated locally and committed with provenance —
+   `tofu plan`, `kubectl --dry-run=client -o yaml`, `pip download`, a real export.
+2. **A released artifact from a real project** — cert-manager's shipped manifests,
+   kube-prometheus's ClusterRoles. Real-world quirks included.
+3. **A hand-written fixture**, only for cases the above cannot produce: malformed input,
+   adversarial input, and deliberately unreachable states. These are legitimate and
+   necessary — a corrupt file is easier to write than to obtain — but they may not be the
+   *only* input a parser was ever tested against.
+
+### Required with it
+
+- **Record provenance.** Every real-input fixture directory carries a `PROVENANCE.md` naming
+  the tool, its version, the exact command, and the date. A fixture whose origin is unknown
+  is a hand-written fixture with extra steps.
+- **State what the real input caught.** If it caught nothing, say so — that is a real result
+  and worth knowing.
+- **Never contact anything live to generate it.** Mock credentials, `--dry-run`, published
+  release artifacts. The Terraform fixture was generated with `access_key = "mock"` and was
+  never applied.

@@ -28,6 +28,10 @@ class NodeKind(str, Enum):
 
     PROCESS = "process"
     SERVICE_ACCOUNT = "service_account"
+    #: An external identity provider named in a trust policy. NOT a service
+    #: account: typing an OIDC provider ARN as one would let a cross-domain join
+    #: match on a name that means something else.
+    FEDERATED_PRINCIPAL = "federated_principal"
     ENV_VAR = "environment_variable"
     FILE = "file"
     SECRET = "secret"

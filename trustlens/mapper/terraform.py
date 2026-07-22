@@ -198,7 +198,7 @@ def ingest_plan(
                         for p in _as_list(pval):
                             graph.add(
                                 Edge(
-                                    source=Node(NodeKind.SERVICE_ACCOUNT, p),
+                                    source=Node(NodeKind.FEDERATED_PRINCIPAL, p),
                                     target=node,
                                     kind=EdgeKind.CAN_ASSUME,
                                     reachability=Reachability.CONFIGURED,
