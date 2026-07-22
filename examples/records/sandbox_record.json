@@ -1,0 +1,204 @@
+{
+  "artifact": {
+    "acquired_at": "2026-07-20T09:00:00+00:00",
+    "acquisition_authorised_by": null,
+    "acquisition_method": "already_local",
+    "artifact_id": "example-dataset-repo",
+    "artifact_type": "huggingface_dataset_repository",
+    "content_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "content_hash_method": "directory_manifest_v1",
+    "declared_kind": "dataset",
+    "file_count": 23,
+    "immutable_reference": "9f2c1a4e5b6d7c8f9a0b1c2d3e4f5a6b7c8d9e0f",
+    "source": "https://huggingface.co/datasets/example-org/example-tabular",
+    "total_bytes": 184320
+  },
+  "claims": {
+    "does_not_establish": [
+      "Absence of dormant, delayed or conditionally triggered behavior.",
+      "Safety under different inputs.",
+      "Resistance to unknown sandbox escapes.",
+      "That the artifact is safe to run in production.",
+      "That the observed behavior matches behavior outside the sandbox."
+    ],
+    "establishes": [
+      "The artifact exhibited the recorded behaviors during this recorded execution.",
+      "The configured sandbox blocked or allowed the recorded operations as recorded.",
+      "The exact sandbox profile and environment used are preserved in this record."
+    ]
+  },
+  "content_hash": "50eda7b44a1545a76f2c3b866b4e096170088a212fae36c2e0f5b236f87007b5",
+  "contradictions": [],
+  "declared_capabilities": [],
+  "environment_description_ref": null,
+  "findings": [
+    {
+      "capability": "cloud.metadata_endpoint",
+      "confidence_basis": "The process attempted a connection to the IPv4 cloud metadata address and the configured egress policy blocked it. Both the attempt and the block were recorded during this run.",
+      "derived_from": [],
+      "detection_method": "dynamic_blocked_observation",
+      "environment_description_ref": null,
+      "evidence": [
+        {
+          "detail": "connect() to 169.254.169.254:80 — blocked by sandbox egress policy",
+          "excerpt": "tcp 169.254.169.254:80 EPERM",
+          "kind": "network_event",
+          "line": null,
+          "path": null,
+          "redacted": false
+        }
+      ],
+      "evidence_strength": "DIRECT_OBSERVATION",
+      "evidence_unavailable_reason": null,
+      "finding_id": "sandbox:cloud.metadata_endpoint:25ec88dd220af633",
+      "independently_reproduced": {
+        "by": [],
+        "records": [],
+        "reproduced": false
+      },
+      "limitations": [
+        "Establishes what happened in this one execution, under this profile, with these inputs. It does not establish behavior under other inputs.",
+        "Does not establish that the block would hold outside this sandbox.",
+        "Absence of further attempts does not establish absence of dormant behavior."
+      ],
+      "notes": null,
+      "rule_id": "observed-metadata-attempt",
+      "rule_version": "1.0.0",
+      "scope": {
+        "analysed": [
+          "loader.py"
+        ],
+        "excluded": [],
+        "failed": [],
+        "languages": [
+          "python"
+        ],
+        "vacuous": false
+      },
+      "source_component": "sandbox",
+      "status": "FOUND",
+      "unknown_reason": null,
+      "unsupported_construct": null
+    },
+    {
+      "capability": "filesystem.write",
+      "confidence_basis": "A write to the allowed scratch mount was observed and permitted.",
+      "derived_from": [],
+      "detection_method": "dynamic_observation",
+      "environment_description_ref": null,
+      "evidence": [
+        {
+          "detail": "openat(O_WRONLY|O_CREAT) succeeded — inside the allowed scratch mount",
+          "excerpt": null,
+          "kind": "filesystem_event",
+          "line": null,
+          "path": "/workspace/scratch/part-0000.arrow",
+          "redacted": false
+        }
+      ],
+      "evidence_strength": "DIRECT_OBSERVATION",
+      "evidence_unavailable_reason": null,
+      "finding_id": "sandbox:filesystem.write:e13ddc442778291e",
+      "independently_reproduced": {
+        "by": [],
+        "records": [],
+        "reproduced": false
+      },
+      "limitations": [
+        "Establishes only what this execution did.",
+        "Permitted here by design; this is a positive control for the allow path."
+      ],
+      "notes": null,
+      "rule_id": "observed-file-write",
+      "rule_version": "1.0.0",
+      "scope": {
+        "analysed": [
+          "loader.py"
+        ],
+        "excluded": [],
+        "failed": [],
+        "languages": [
+          "python"
+        ],
+        "vacuous": false
+      },
+      "source_component": "sandbox",
+      "status": "FOUND",
+      "unknown_reason": null,
+      "unsupported_construct": null
+    }
+  ],
+  "generic_advice": [],
+  "input_records": [],
+  "mitigations": [],
+  "record_id": "90882adcf981d306553a85206c5f61eb",
+  "residual_uncertainty": "This record describes one execution under an EXPERIMENTAL sandbox whose isolation boundary has not been reviewed. It carries no containment claim.",
+  "run": {
+    "completed_at": "2026-07-20T11:00:31+00:00",
+    "config_hash": null,
+    "execution_mode": "sandboxed_execution",
+    "invocation": "trustlens sandbox-run ./example-tabular --profile fixture-only",
+    "reasoning_notes": [
+      "EXPERIMENTAL — DO NOT USE FOR SUSPECTED ZERO-DAY OR HOSTILE ARTIFACTS",
+      "Sandbox status EXPERIMENTAL: no validated security review record is present, so no hostile-input profile is available.",
+      "This example record is illustrative of the schema. The isolation mechanism is chosen in Phase 3 and is a placeholder here."
+    ],
+    "started_at": "2026-07-20T11:00:00+00:00"
+  },
+  "sandbox": {
+    "approved_profiles": [],
+    "banner": "EXPERIMENTAL — DO NOT USE FOR SUSPECTED ZERO-DAY OR HOSTILE ARTIFACTS",
+    "command": "python -c 'import loader; loader.build()'",
+    "environment_allowlist": [
+      "PATH",
+      "HOME"
+    ],
+    "host_kernel": "unset",
+    "image_or_vm_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+    "isolation_mechanism": "PLACEHOLDER — selected in Phase 3, not in Phase 0",
+    "isolation_version": "unset",
+    "mounted_paths": [
+      "/workspace/scratch:rw"
+    ],
+    "network_rules": [
+      "deny-all-egress (illustrative)"
+    ],
+    "policy_hashes": {},
+    "profile_used": "fixture-only",
+    "resource_limits": {
+      "memory_bytes": 536870912,
+      "pids": 64
+    },
+    "review_record_hash": null,
+    "sandbox_status": "EXPERIMENTAL",
+    "security_review_complete": false,
+    "termination_reason": "completed",
+    "timeout_seconds": 30
+  },
+  "schema_version": "trustlens/1.0.0",
+  "scope": {
+    "analysed": [
+      "loader.py"
+    ],
+    "excluded": [],
+    "failed": [],
+    "languages": [
+      "python"
+    ],
+    "vacuous": false
+  },
+  "tool": {
+    "commit": "0000000000000000000000000000000000000000",
+    "component": "sandbox",
+    "name": "trustlens",
+    "version": "0.1.0"
+  },
+  "unknowns": [
+    {
+      "reason": "Only one execution with one input was performed.",
+      "subject": "Behavior under inputs other than the one supplied",
+      "would_be_resolved_by": "Further executions; note that no finite set of executions establishes absence of conditionally triggered behavior."
+    }
+  ],
+  "unsupported": []
+}

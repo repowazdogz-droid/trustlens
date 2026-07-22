@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "trustlens"
+version = "0.1.0"
+description = "Compare what an ML dataset or repository is declared to be with what static analysis, deployment configuration, and controlled execution show it can actually do."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Apache-2.0" }
+
+# Phase 0 depends only on a JSON Schema validator. Analysis engines are added by the
+# phase that integrates them, so that a clean clone can verify the evidence model
+# without installing a scanner.
+dependencies = [
+    "jsonschema>=4.20",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+]
+
+[tool.setuptools.packages.find]
+include = ["trustlens*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

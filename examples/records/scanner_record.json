@@ -1,0 +1,524 @@
+{
+  "artifact": {
+    "acquired_at": "2026-07-20T09:00:00+00:00",
+    "acquisition_authorised_by": null,
+    "acquisition_method": "already_local",
+    "artifact_id": "example-dataset-repo",
+    "artifact_type": "huggingface_dataset_repository",
+    "content_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "content_hash_method": "directory_manifest_v1",
+    "declared_kind": "dataset",
+    "file_count": 23,
+    "immutable_reference": "9f2c1a4e5b6d7c8f9a0b1c2d3e4f5a6b7c8d9e0f",
+    "source": "https://huggingface.co/datasets/example-org/example-tabular",
+    "total_bytes": 184320
+  },
+  "claims": {
+    "does_not_establish": [
+      "That any construct executes at runtime, in this or any workflow.",
+      "That the artifact is malicious, or that any finding is exploitable.",
+      "That the artifact is free of capabilities the analysed rules do not cover.",
+      "That config/legacy.yaml is free of template-injection surface — it was not analysed."
+    ],
+    "establishes": [
+      "The listed static checks ran over the recorded scope at the recorded rule versions.",
+      "The constructs cited at the recorded file and line positions are present in the artifact.",
+      "The dataset card's declarations conflict with two constructs found in loader.py."
+    ]
+  },
+  "content_hash": "aeace266e3a7cff2a950177d4735ed8ad6bf4f1a3ddd01d5e1213011ac63d28a",
+  "contradictions": [
+    {
+      "between": [
+        {
+          "assertion": "dataset card declares custom code not required",
+          "evidence_kind": "declared",
+          "ref": "0"
+        },
+        {
+          "assertion": "importlib.import_module reached at loader.py:14",
+          "evidence_kind": "static",
+          "ref": "scanner:execution.dynamic_import:55faed8bd7e9c6d2"
+        }
+      ],
+      "capability": "execution.dynamic_import",
+      "contradiction_id": "C-001",
+      "reconciled": false,
+      "summary": "The dataset card states no custom code is required, while a dynamic import driven by repository configuration is present in loader.py."
+    },
+    {
+      "between": [
+        {
+          "assertion": "dataset card declares no download step",
+          "evidence_kind": "declared",
+          "ref": "1"
+        },
+        {
+          "assertion": "urllib.request.urlopen reached at loader.py:31",
+          "evidence_kind": "static",
+          "ref": "scanner:network.outbound:2f3223e743a76b5c"
+        }
+      ],
+      "capability": "network.outbound",
+      "contradiction_id": "C-002",
+      "reconciled": false,
+      "summary": "The dataset card states no download step is needed, while an outbound HTTP call is present in loader.py."
+    }
+  ],
+  "declared_capabilities": [
+    {
+      "capability": "execution.dynamic_import",
+      "declaration": "not_required",
+      "declared_by": "dataset_card",
+      "extraction_rule_id": "declared-dataset-card",
+      "extraction_rule_version": "1.0.0",
+      "source": {
+        "excerpt": "This dataset contains tabular records only and requires no custom code.",
+        "kind": "declaration_text",
+        "line": 8,
+        "path": "README.md",
+        "redacted": false
+      },
+      "verbatim": "This dataset contains tabular records only and requires no custom code."
+    },
+    {
+      "capability": "network.outbound",
+      "declaration": "not_required",
+      "declared_by": "dataset_card",
+      "extraction_rule_id": "declared-dataset-card",
+      "extraction_rule_version": "1.0.0",
+      "source": {
+        "excerpt": "All data is bundled in the repository; no download step is needed.",
+        "kind": "declaration_text",
+        "line": 9,
+        "path": "README.md",
+        "redacted": false
+      },
+      "verbatim": "All data is bundled in the repository; no download step is needed."
+    }
+  ],
+  "environment_description_ref": null,
+  "findings": [
+    {
+      "capability": "execution.dynamic_import",
+      "confidence_basis": "A call to importlib.import_module was found in a parsed syntax tree, with its module argument read from repository configuration rather than a literal. The construct exists in the file; whether the enclosing function runs during dataset loading is not established by this check.",
+      "derived_from": [],
+      "detection_method": "static_ast",
+      "environment_description_ref": null,
+      "evidence": [
+        {
+          "excerpt": "mod = importlib.import_module(cfg['builder_module'])",
+          "kind": "file_line",
+          "line": 14,
+          "path": "loader.py",
+          "redacted": false
+        }
+      ],
+      "evidence_strength": "STATIC_MATCH",
+      "evidence_unavailable_reason": null,
+      "finding_id": "scanner:execution.dynamic_import:55faed8bd7e9c6d2",
+      "independently_reproduced": {
+        "by": [],
+        "records": [],
+        "reproduced": false
+      },
+      "limitations": [
+        "Does not establish that the import executes during any particular workflow.",
+        "Does not resolve the imported module name, which comes from configuration.",
+        "Syntactic match only — no data-flow analysis was performed by this rule."
+      ],
+      "notes": null,
+      "rule_id": "exec-dynamic-import",
+      "rule_version": "1.0.0",
+      "scope": {
+        "analysed": [
+          "loader.py",
+          "src/mod_1.py",
+          "src/mod_2.py",
+          "src/mod_3.py",
+          "src/mod_4.py",
+          "src/mod_5.py",
+          "src/mod_6.py",
+          "src/mod_7.py",
+          "src/mod_8.py",
+          "src/mod_9.py",
+          "src/mod_10.py",
+          "src/mod_11.py",
+          "src/mod_12.py",
+          "src/mod_13.py",
+          "src/mod_14.py",
+          "src/mod_15.py",
+          "src/mod_16.py"
+        ],
+        "excluded": [],
+        "failed": [],
+        "languages": [
+          "python"
+        ],
+        "vacuous": false
+      },
+      "source_component": "scanner",
+      "status": "FOUND",
+      "unknown_reason": null,
+      "unsupported_construct": null
+    },
+    {
+      "capability": "network.outbound",
+      "confidence_basis": "urllib.request.urlopen is called on a name bound earlier in the same function. The destination is not a literal and was not resolved.",
+      "derived_from": [],
+      "detection_method": "static_ast",
+      "environment_description_ref": null,
+      "evidence": [
+        {
+          "excerpt": "with urllib.request.urlopen(remote_url) as resp:",
+          "kind": "file_line",
+          "line": 31,
+          "path": "loader.py",
+          "redacted": false
+        }
+      ],
+      "evidence_strength": "STATIC_MATCH",
+      "evidence_unavailable_reason": null,
+      "finding_id": "scanner:network.outbound:2f3223e743a76b5c",
+      "independently_reproduced": {
+        "by": [],
+        "records": [],
+        "reproduced": false
+      },
+      "limitations": [
+        "Destination host is not resolved; the URL is constructed at runtime.",
+        "Does not establish that the call is reached during dataset loading."
+      ],
+      "notes": null,
+      "rule_id": "net-urlopen",
+      "rule_version": "1.1.0",
+      "scope": {
+        "analysed": [
+          "loader.py",
+          "src/mod_1.py",
+          "src/mod_2.py",
+          "src/mod_3.py",
+          "src/mod_4.py",
+          "src/mod_5.py",
+          "src/mod_6.py",
+          "src/mod_7.py",
+          "src/mod_8.py",
+          "src/mod_9.py",
+          "src/mod_10.py",
+          "src/mod_11.py",
+          "src/mod_12.py",
+          "src/mod_13.py",
+          "src/mod_14.py",
+          "src/mod_15.py",
+          "src/mod_16.py"
+        ],
+        "excluded": [],
+        "failed": [],
+        "languages": [
+          "python"
+        ],
+        "vacuous": false
+      },
+      "source_component": "scanner",
+      "status": "FOUND",
+      "unknown_reason": null,
+      "unsupported_construct": null
+    },
+    {
+      "capability": "process.shell",
+      "confidence_basis": "All 17 Python files parsed successfully and no shell-invoking construct matched process-shell v1.2.0 in any of them.",
+      "derived_from": [],
+      "detection_method": "static_ast",
+      "environment_description_ref": null,
+      "evidence": [],
+      "evidence_strength": "STATIC_MATCH",
+      "evidence_unavailable_reason": null,
+      "finding_id": "scanner:process.shell:cfdce0d1033c9670",
+      "independently_reproduced": {
+        "by": [],
+        "records": [],
+        "reproduced": false
+      },
+      "limitations": [
+        "States only that no match was found in the 17 files listed, under this rule set.",
+        "vendor/ was excluded and was not examined at all.",
+        "Shell invocation reached through an unanalysed language or a dynamically constructed call would not be matched."
+      ],
+      "notes": null,
+      "rule_id": "process-shell",
+      "rule_version": "1.2.0",
+      "scope": {
+        "analysed": [
+          "loader.py",
+          "src/mod_1.py",
+          "src/mod_2.py",
+          "src/mod_3.py",
+          "src/mod_4.py",
+          "src/mod_5.py",
+          "src/mod_6.py",
+          "src/mod_7.py",
+          "src/mod_8.py",
+          "src/mod_9.py",
+          "src/mod_10.py",
+          "src/mod_11.py",
+          "src/mod_12.py",
+          "src/mod_13.py",
+          "src/mod_14.py",
+          "src/mod_15.py",
+          "src/mod_16.py"
+        ],
+        "excluded": [
+          {
+            "kind": "policy_exclusion",
+            "path": "vendor/",
+            "reason": "default policy exclusion for vendored third-party code"
+          }
+        ],
+        "failed": [],
+        "languages": [
+          "python"
+        ],
+        "vacuous": false
+      },
+      "source_component": "scanner",
+      "status": "NOT_FOUND_WITHIN_ANALYSED_SCOPE",
+      "unknown_reason": null,
+      "unsupported_construct": null
+    },
+    {
+      "capability": "template.injection_surface",
+      "confidence_basis": "Four of five configuration files were parsed and checked for expression-bearing values. The fifth could not be decoded, so the check did not cover the intended scope.",
+      "derived_from": [],
+      "detection_method": "static_ast",
+      "environment_description_ref": null,
+      "evidence": [],
+      "evidence_strength": "STATIC_MATCH",
+      "evidence_unavailable_reason": null,
+      "finding_id": "scanner:template.injection_surface:d9f93fff40c5e425",
+      "independently_reproduced": {
+        "by": [],
+        "records": [],
+        "reproduced": false
+      },
+      "limitations": [
+        "config/legacy.yaml was not analysed at all; it may contain the very construct this rule looks for.",
+        "This result must not be read as 'no template injection surface'. Analysis of the intended scope did not complete."
+      ],
+      "notes": null,
+      "rule_id": "template-jinja-config",
+      "rule_version": "0.9.0",
+      "scope": {
+        "analysed": [
+          "config/dataset_infos.yaml",
+          "config/features.yaml",
+          "config/splits.yaml",
+          "config/builder.toml"
+        ],
+        "excluded": [],
+        "failed": [
+          {
+            "kind": "decode_error",
+            "path": "config/legacy.yaml",
+            "reason": "UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0 — file is not valid UTF-8"
+          }
+        ],
+        "languages": [
+          "yaml",
+          "toml"
+        ],
+        "vacuous": false
+      },
+      "source_component": "scanner",
+      "status": "PARTIAL",
+      "unknown_reason": null,
+      "unsupported_construct": null
+    },
+    {
+      "capability": "filesystem.write_outside_scratch",
+      "confidence_basis": "A write-mode open() receives a path built by joining the declared cache directory with parent-directory traversal segments, so the resulting path escapes the declared cache root. Source-to-sink flow was traced within the function.",
+      "derived_from": [],
+      "detection_method": "static_ast_dataflow",
+      "environment_description_ref": null,
+      "evidence": [
+        {
+          "excerpt": "open(os.path.join(cache_dir, '..', '..', target), 'w')",
+          "kind": "file_line",
+          "line": 52,
+          "path": "loader.py",
+          "redacted": false
+        }
+      ],
+      "evidence_strength": "STATIC_DATAFLOW",
+      "evidence_unavailable_reason": null,
+      "finding_id": "scanner:filesystem.write_outside_scratch:4130dd9c02601ae8",
+      "independently_reproduced": {
+        "by": [],
+        "records": [],
+        "reproduced": false
+      },
+      "limitations": [
+        "The final destination depends on the runtime value of cache_dir and target, neither of which is resolved statically.",
+        "Does not establish that this line executes."
+      ],
+      "notes": null,
+      "rule_id": "fs-write-outside-declared-cache",
+      "rule_version": "1.0.0",
+      "scope": {
+        "analysed": [
+          "loader.py",
+          "src/mod_1.py",
+          "src/mod_2.py",
+          "src/mod_3.py",
+          "src/mod_4.py",
+          "src/mod_5.py",
+          "src/mod_6.py",
+          "src/mod_7.py",
+          "src/mod_8.py",
+          "src/mod_9.py",
+          "src/mod_10.py",
+          "src/mod_11.py",
+          "src/mod_12.py",
+          "src/mod_13.py",
+          "src/mod_14.py",
+          "src/mod_15.py",
+          "src/mod_16.py"
+        ],
+        "excluded": [],
+        "failed": [],
+        "languages": [
+          "python"
+        ],
+        "vacuous": false
+      },
+      "source_component": "scanner",
+      "status": "FOUND",
+      "unknown_reason": null,
+      "unsupported_construct": null
+    },
+    {
+      "capability": "execution.native_extension",
+      "confidence_basis": "The scanner has no analyser for compiled native code. This is recorded as an unassessed construct rather than omitted from the report.",
+      "derived_from": [],
+      "detection_method": "static_ast",
+      "environment_description_ref": null,
+      "evidence": [],
+      "evidence_strength": "STATIC_MATCH",
+      "evidence_unavailable_reason": null,
+      "finding_id": "scanner:execution.native_extension:50612c4fe303eb69",
+      "independently_reproduced": {
+        "by": [],
+        "records": [],
+        "reproduced": false
+      },
+      "limitations": [
+        "The scanner cannot assess compiled extensions at all — this is not a clean result for that file, it is an absence of any result."
+      ],
+      "notes": null,
+      "rule_id": "native-extension",
+      "rule_version": "0.1.0",
+      "scope": {
+        "analysed": [],
+        "excluded": [],
+        "failed": [],
+        "languages": [],
+        "vacuous": true
+      },
+      "source_component": "scanner",
+      "status": "UNSUPPORTED",
+      "unknown_reason": null,
+      "unsupported_construct": "Compiled extension module (data/_fast_parse.cpython-311-x86_64-linux-gnu.so)"
+    }
+  ],
+  "generic_advice": [],
+  "input_records": [],
+  "mitigations": [],
+  "record_id": "54c98992496e12c44c3e67bf51fc7f36",
+  "residual_uncertainty": "One configuration file could not be decoded and was not analysed, so the template-injection check is incomplete. One compiled extension is present and cannot be assessed at all. Runtime reachability of every static finding is unestablished.",
+  "run": {
+    "completed_at": "2026-07-20T09:00:07+00:00",
+    "config_hash": null,
+    "execution_mode": "static_analysis",
+    "invocation": "trustlens scan ./example-tabular --format json",
+    "reasoning_notes": [
+      "Acquisition skipped: artifact already present locally.",
+      "Enumerated 23 files; 17 Python, 5 config, 1 markdown.",
+      "Excluded vendor/ (4 files) by default policy exclusion.",
+      "config/legacy.yaml failed to decode as UTF-8; recorded as a scope failure, which forces the template check to PARTIAL rather than clean."
+    ],
+    "started_at": "2026-07-20T09:00:01+00:00"
+  },
+  "sandbox": null,
+  "schema_version": "trustlens/1.0.0",
+  "scope": {
+    "analysed": [
+      "loader.py",
+      "src/mod_1.py",
+      "src/mod_2.py",
+      "src/mod_3.py",
+      "src/mod_4.py",
+      "src/mod_5.py",
+      "src/mod_6.py",
+      "src/mod_7.py",
+      "src/mod_8.py",
+      "src/mod_9.py",
+      "src/mod_10.py",
+      "src/mod_11.py",
+      "src/mod_12.py",
+      "src/mod_13.py",
+      "src/mod_14.py",
+      "src/mod_15.py",
+      "src/mod_16.py",
+      "config/dataset_infos.yaml",
+      "config/features.yaml",
+      "config/splits.yaml",
+      "config/builder.toml",
+      "README.md"
+    ],
+    "excluded": [
+      {
+        "kind": "policy_exclusion",
+        "path": "vendor/",
+        "reason": "default policy exclusion for vendored third-party code"
+      }
+    ],
+    "failed": [
+      {
+        "kind": "decode_error",
+        "path": "config/legacy.yaml",
+        "reason": "UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0 — file is not valid UTF-8"
+      }
+    ],
+    "languages": [
+      "python",
+      "yaml",
+      "toml",
+      "markdown"
+    ],
+    "vacuous": false
+  },
+  "tool": {
+    "commit": "0000000000000000000000000000000000000000",
+    "component": "scanner",
+    "name": "trustlens",
+    "version": "0.1.0"
+  },
+  "unknowns": [
+    {
+      "reason": "The URL is assembled at runtime from configuration values.",
+      "subject": "Destination host of the outbound request at loader.py:31",
+      "would_be_resolved_by": "A sandboxed execution recording the connection attempt."
+    },
+    {
+      "reason": "No declaration of a writable working directory was found in the dataset card or configuration.",
+      "subject": "Whether the repository declares a scratch or cache path",
+      "would_be_resolved_by": "An operator-supplied declared cache path."
+    }
+  ],
+  "unsupported": [
+    {
+      "construct": "Compiled native extension module",
+      "reason": "No analyser for compiled code is implemented.",
+      "where": "data/_fast_parse.cpython-311-x86_64-linux-gnu.so"
+    }
+  ]
+}

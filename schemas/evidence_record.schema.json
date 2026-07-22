@@ -1,0 +1,317 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:trustlens:1.0.0:evidence_record",
+  "title": "TrustLens evidence record",
+  "description": "One record per component run. Every TrustLens component emits records conforming to this schema, so that static, configured and dynamic evidence about the same artifact can be compared without a translation layer.",
+  "type": "object",
+  "properties": {
+    "schema_version": { "$ref": "urn:trustlens:1.0.0:common#/$defs/schema_version" },
+    "record_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{32}$",
+      "description": "Identifies this particular run: first 32 hex of SHA-256 over (content_hash || run.started_at). Distinct from content_hash — two runs producing identical evidence share a content_hash but not a record_id. Derivation in SCHEMA.md."
+    },
+    "content_hash": {
+      "$ref": "urn:trustlens:1.0.0:common#/$defs/sha256",
+      "description": "SHA-256 over the canonical body — the record with record_id, content_hash and run.completed_at removed, keys sorted, UTF-8, no whitespace. Two runs producing identical evidence produce identical content_hash."
+    },
+    "tool": { "$ref": "urn:trustlens:1.0.0:common#/$defs/tool_identity" },
+    "artifact": { "$ref": "urn:trustlens:1.0.0:common#/$defs/artifact_identity" },
+
+    "run": {
+      "type": "object",
+      "properties": {
+        "started_at": { "$ref": "urn:trustlens:1.0.0:common#/$defs/timestamp" },
+        "completed_at": { "$ref": "urn:trustlens:1.0.0:common#/$defs/timestamp" },
+        "execution_mode": {
+          "type": "string",
+          "enum": ["dry_run", "static_analysis", "offline_modelling", "sandboxed_execution"],
+          "description": "`dry_run` performs no analysis and no acquisition — it reports what WOULD be fetched and analysed. It is the default for any operation with a remote or executing component."
+        },
+        "invocation": { "type": "string", "description": "Argv used, so the run can be repeated." },
+        "config_hash": {
+          "oneOf": [{ "$ref": "urn:trustlens:1.0.0:common#/$defs/sha256" }, { "type": "null" }],
+          "description": "SHA-256 of the configuration file used, or null if none."
+        },
+        "reasoning_notes": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Chronological trace of what the run did, including every decision to skip, exclude or abort. Read by a human reconstructing why a scope ended where it did."
+        }
+      },
+      "required": ["started_at", "completed_at", "execution_mode", "invocation", "config_hash", "reasoning_notes"],
+      "additionalProperties": false
+    },
+
+    "scope": {
+      "$ref": "urn:trustlens:1.0.0:common#/$defs/scope",
+      "description": "Record-level scope: the union across all checks. Per-check scope lives on each finding and may be narrower."
+    },
+
+    "input_records": {
+      "type": "array",
+      "description": "Records this one was composed from. Empty for a component that reads an artifact directly; non-empty for any component that combines earlier evidence. A finding, contradiction or mitigation may reference an identifier belonging to one of these records; without a declared input, an unresolvable reference is an error rather than an external reference.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "record_id": { "type": "string", "pattern": "^[0-9a-f]{32}$" },
+          "content_hash": { "$ref": "urn:trustlens:1.0.0:common#/$defs/sha256" },
+          "component": { "$ref": "urn:trustlens:1.0.0:common#/$defs/component" }
+        },
+        "required": ["record_id", "content_hash", "component"],
+        "additionalProperties": false
+      }
+    },
+
+    "declared_capabilities": {
+      "type": "array",
+      "description": "What the artifact SAYS about itself. Declarations are recorded verbatim with their location. An artifact that declares nothing produces an empty array AND a corresponding unknown — never an assumed-safe default.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "capability": { "$ref": "urn:trustlens:1.0.0:enums:capability" },
+          "declaration": {
+            "type": "string",
+            "enum": ["required", "optional", "not_required", "explicitly_absent", "ambiguous"],
+            "description": "What the artifact claims about this capability. `explicitly_absent` means the artifact states it does not do this; `not_required` means it is not listed among requirements. These are different claims."
+          },
+          "declared_by": {
+            "type": "string",
+            "enum": ["readme", "dataset_card", "model_card", "metadata_yaml", "config_file", "package_manifest", "install_instructions", "operator_statement"]
+          },
+          "source": { "$ref": "urn:trustlens:1.0.0:common#/$defs/evidence_location" },
+          "verbatim": {
+            "type": "string",
+            "maxLength": 1024,
+            "description": "The exact text supporting this declaration. Required so a reader can check TrustLens's reading of the document against the document."
+          },
+          "extraction_rule_id": { "type": "string" },
+          "extraction_rule_version": { "type": "string" }
+        },
+        "required": ["capability", "declaration", "declared_by", "source", "verbatim", "extraction_rule_id", "extraction_rule_version"],
+        "additionalProperties": false
+      }
+    },
+
+    "findings": {
+      "type": "array",
+      "items": { "$ref": "urn:trustlens:1.0.0:finding" }
+    },
+
+    "contradictions": {
+      "type": "array",
+      "description": "Conflicts between declared, configured, static and dynamic evidence. Recorded, never silently reconciled. A contradiction is a finding about the evidence set, not an error to be cleaned up.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "contradiction_id": { "type": "string" },
+          "summary": { "type": "string", "minLength": 1 },
+          "between": {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "type": "object",
+              "properties": {
+                "evidence_kind": { "type": "string", "enum": ["declared", "static", "configured", "dynamic"] },
+                "ref": { "type": "string", "description": "finding_id, or an index into declared_capabilities." },
+                "assertion": { "type": "string", "minLength": 1 }
+              },
+              "required": ["evidence_kind", "ref", "assertion"],
+              "additionalProperties": false
+            }
+          },
+          "reconciled": {
+            "type": "boolean",
+            "const": false,
+            "description": "Always false in a machine-produced record. TrustLens does not resolve contradictions between supplied inputs; a human does, outside the record."
+          },
+          "capability": { "$ref": "urn:trustlens:1.0.0:enums:capability" }
+        },
+        "required": ["contradiction_id", "summary", "between", "reconciled", "capability"],
+        "additionalProperties": false
+      }
+    },
+
+    "mitigations": {
+      "type": "array",
+      "description": "Finding-specific mitigations. Every entry names the findings that triggered it and the path it is expected to remove.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "mitigation_id": { "type": "string" },
+          "triggering_finding_ids": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+          "affected_resource": { "type": "string", "minLength": 1 },
+          "proposed_change": { "type": "string", "minLength": 1 },
+          "expected_path_removed": { "type": "string", "minLength": 1 },
+          "trade_offs": { "type": "string", "minLength": 1 },
+          "evidence_basis": { "type": "string", "minLength": 1 },
+          "dynamically_verified": { "type": "boolean" },
+          "residual_risk": { "type": "string", "minLength": 1 },
+          "environment_description_ref": {
+            "oneOf": [{ "$ref": "urn:trustlens:1.0.0:common#/$defs/environment_description_ref" }, { "type": "null" }],
+            "description": "Present when the mitigation targets a resource known only from an environment description, so its capture time is shown alongside the recommendation."
+          }
+        },
+        "required": ["mitigation_id", "triggering_finding_ids", "affected_resource", "proposed_change", "expected_path_removed", "trade_offs", "evidence_basis", "dynamically_verified", "residual_risk", "environment_description_ref"],
+        "additionalProperties": false
+      }
+    },
+
+    "generic_advice": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Non-specific guidance. Permitted only alongside at least one specific mitigation — enforced below — so that generic advice can never stand in for finding-specific output."
+    },
+
+    "unknowns": { "type": "array", "items": { "$ref": "urn:trustlens:1.0.0:common#/$defs/unknown_item" } },
+    "unsupported": { "type": "array", "items": { "$ref": "urn:trustlens:1.0.0:common#/$defs/unsupported_item" } },
+
+    "residual_uncertainty": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Prose statement of what remains unresolved after this run. Required and non-empty on every record: there is no run of any TrustLens component that leaves nothing unresolved."
+    },
+
+    "environment_description_ref": {
+      "oneOf": [{ "$ref": "urn:trustlens:1.0.0:common#/$defs/environment_description_ref" }, { "type": "null" }],
+      "description": "The environment description this whole run was based on, when applicable. Required non-null for credential_mapper records."
+    },
+
+    "sandbox": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "sandbox_status": {
+              "type": "string",
+              "enum": ["EXPERIMENTAL", "REVIEWED"],
+              "description": "EXPERIMENTAL until a validated review record authorises a specific profile. Recorded in the evidence, not only in documentation."
+            },
+            "security_review_complete": { "type": "boolean" },
+            "review_record_hash": { "oneOf": [{ "$ref": "urn:trustlens:1.0.0:common#/$defs/sha256" }, { "type": "null" }] },
+            "approved_profiles": { "type": "array", "items": { "type": "string" } },
+            "profile_used": { "type": "string" },
+            "isolation_mechanism": { "type": "string" },
+            "isolation_version": { "type": "string" },
+            "host_kernel": { "type": "string" },
+            "image_or_vm_hash": { "type": "string" },
+            "policy_hashes": { "type": "object", "additionalProperties": { "type": "string" } },
+            "network_rules": { "type": "array", "items": { "type": "string" } },
+            "environment_allowlist": { "type": "array", "items": { "type": "string" } },
+            "mounted_paths": { "type": "array", "items": { "type": "string" } },
+            "resource_limits": { "type": "object", "additionalProperties": true },
+            "timeout_seconds": {
+              "type": "integer",
+              "description": "Integer, not float: the canonical hash rejects floating-point values so that record hashes are reproducible across languages and platforms."
+            },
+            "command": { "type": "string" },
+            "termination_reason": { "type": "string" },
+            "banner": {
+              "type": "string",
+              "description": "Machine-readable warning banner. Must be present in every sandbox record and rendered in every downstream report."
+            }
+          },
+          "required": ["sandbox_status", "security_review_complete", "review_record_hash", "approved_profiles", "profile_used", "isolation_mechanism", "isolation_version", "image_or_vm_hash", "command", "banner"],
+          "additionalProperties": false,
+          "allOf": [
+            {
+              "$comment": "An EXPERIMENTAL sandbox must carry the warning banner verbatim, in the evidence record itself.",
+              "if": { "properties": { "sandbox_status": { "const": "EXPERIMENTAL" } }, "required": ["sandbox_status"] },
+              "then": {
+                "properties": {
+                  "banner": { "const": "EXPERIMENTAL — DO NOT USE FOR SUSPECTED ZERO-DAY OR HOSTILE ARTIFACTS" },
+                  "security_review_complete": { "const": false },
+                  "review_record_hash": { "type": "null" },
+                  "approved_profiles": { "maxItems": 0 }
+                }
+              }
+            },
+            {
+              "$comment": "REVIEWED requires a review record hash and at least one approved profile; documentation alone cannot produce this state.",
+              "if": { "properties": { "sandbox_status": { "const": "REVIEWED" } }, "required": ["sandbox_status"] },
+              "then": {
+                "properties": {
+                  "security_review_complete": { "const": true },
+                  "review_record_hash": { "$ref": "urn:trustlens:1.0.0:common#/$defs/sha256" },
+                  "approved_profiles": { "minItems": 1 }
+                }
+              }
+            }
+          ]
+        },
+        { "type": "null" }
+      ]
+    },
+
+    "claims": {
+      "type": "object",
+      "description": "Machine-readable statement of what this record does and does not establish, carried with the evidence so that the boundary travels with the data rather than living only in a document a reader may not open.",
+      "properties": {
+        "establishes": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "does_not_establish": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }
+      },
+      "required": ["establishes", "does_not_establish"],
+      "additionalProperties": false
+    }
+  },
+
+  "required": [
+    "schema_version",
+    "record_id",
+    "content_hash",
+    "tool",
+    "artifact",
+    "run",
+    "scope",
+    "input_records",
+    "declared_capabilities",
+    "findings",
+    "contradictions",
+    "mitigations",
+    "generic_advice",
+    "unknowns",
+    "unsupported",
+    "residual_uncertainty",
+    "environment_description_ref",
+    "sandbox",
+    "claims"
+  ],
+  "additionalProperties": false,
+
+  "allOf": [
+    {
+      "$comment": "LOAD-BEARING. Generic advice may accompany specific mitigations but may never stand in for them.",
+      "if": { "properties": { "generic_advice": { "minItems": 1 } }, "required": ["generic_advice"] },
+      "then": { "properties": { "mitigations": { "minItems": 1 } } }
+    },
+    {
+      "$comment": "A credential-mapper record without a dated environment description would have no way to show its own staleness.",
+      "if": {
+        "properties": { "tool": { "properties": { "component": { "const": "credential_mapper" } }, "required": ["component"] } },
+        "required": ["tool"]
+      },
+      "then": { "properties": { "environment_description_ref": { "type": "object" } } }
+    },
+    {
+      "$comment": "A blast-radius record is by definition a composition, so it must name the records it composed. A simulation with no declared inputs has no traceable evidence base.",
+      "if": {
+        "properties": { "tool": { "properties": { "component": { "const": "blast_radius" } }, "required": ["component"] } },
+        "required": ["tool"]
+      },
+      "then": { "properties": { "input_records": { "minItems": 1 } } }
+    },
+    {
+      "$comment": "A sandbox record must carry its sandbox block; nothing else may.",
+      "if": {
+        "properties": { "tool": { "properties": { "component": { "const": "sandbox" } }, "required": ["component"] } },
+        "required": ["tool"]
+      },
+      "then": { "properties": { "sandbox": { "type": "object" } } }
+    },
+    {
+      "$comment": "Only a sandbox run may claim sandboxed_execution mode.",
+      "if": { "properties": { "run": { "properties": { "execution_mode": { "const": "sandboxed_execution" } }, "required": ["execution_mode"] } }, "required": ["run"] },
+      "then": { "properties": { "sandbox": { "type": "object" } } }
+    }
+  ]
+}

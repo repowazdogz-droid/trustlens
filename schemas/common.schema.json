@@ -1,0 +1,284 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:trustlens:1.0.0:common",
+  "title": "TrustLens shared definitions",
+  "description": "Definitions shared by every TrustLens evidence record. Referenced by finding.schema.json and evidence_record.schema.json.",
+  "$defs": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^trustlens/[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "description": "Version of the shared evidence schema this record conforms to. See SCHEMA.md for the compatibility rules governing MAJOR/MINOR/PATCH."
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "Lowercase hex SHA-256."
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 with an explicit offset. UTC is preferred. A timestamp without an offset is not accepted, because a stale-input warning that cannot be ordered is not a warning."
+    },
+    "component": {
+      "type": "string",
+      "enum": [
+        "scanner",
+        "credential_mapper",
+        "sandbox",
+        "blast_radius",
+        "harness"
+      ],
+      "description": "Which TrustLens component produced the record or finding."
+    },
+    "tool_identity": {
+      "type": "object",
+      "description": "Identity of the code that produced this record. Required for reproducibility: a record whose producing version is unknown cannot be re-derived.",
+      "properties": {
+        "name": { "type": "string", "const": "trustlens" },
+        "version": { "type": "string", "description": "Release version of TrustLens." },
+        "commit": {
+          "type": ["string", "null"],
+          "description": "Git commit of the working tree that produced this record, or null if not obtainable. Never fabricate a commit."
+        },
+        "commit_dirty": {
+          "type": ["boolean", "null"],
+          "description": "True if the working tree had uncommitted changes at run time. A dirty tree means the record is not reproducible from the recorded commit alone."
+        },
+        "component": { "$ref": "#/$defs/component" },
+        "external_tools": {
+          "type": "array",
+          "description": "Third-party analysers invoked for this run, with the versions actually executed. Populated from the tool's own version output, not from a pinned expectation.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "version": { "type": "string" },
+              "invocation": { "type": "string", "description": "Argv actually used, with any local paths preserved so the run can be repeated." },
+              "version_source": {
+                "type": "string",
+                "enum": ["reported_by_tool", "declared_in_lockfile", "unknown"],
+                "description": "How the version was established. `unknown` is permitted and is more honest than a guess."
+              }
+            },
+            "required": ["name", "version", "version_source"],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": ["name", "version", "commit", "component"],
+      "additionalProperties": false
+    },
+    "artifact_identity": {
+      "type": "object",
+      "description": "What was analysed, where it came from, and how it was obtained.",
+      "properties": {
+        "artifact_id": { "type": "string", "description": "Stable local identifier for this artifact within a TrustLens run set." },
+        "artifact_type": {
+          "type": "string",
+          "enum": [
+            "local_directory",
+            "local_archive",
+            "git_repository",
+            "huggingface_dataset_repository",
+            "huggingface_model_repository",
+            "single_file",
+            "environment_description",
+            "unknown"
+          ]
+        },
+        "declared_kind": {
+          "type": ["string", "null"],
+          "description": "What the artifact presents itself as (e.g. 'dataset'). Verbatim from its metadata. Null when the artifact makes no such claim — which is itself reportable, and is NOT to be defaulted to 'dataset' or to anything else."
+        },
+        "source": {
+          "type": ["string", "null"],
+          "description": "Original source reference (URL, remote, or local path). Null only when genuinely unknown."
+        },
+        "immutable_reference": {
+          "type": ["string", "null"],
+          "description": "Commit SHA, revision, or content digest pinning the exact state acquired. Null when the source could not supply one — in which case the acquisition is not reproducible and that must be stated in the record's limitations."
+        },
+        "acquisition_method": {
+          "type": "string",
+          "enum": [
+            "already_local",
+            "user_supplied_path",
+            "git_clone",
+            "huggingface_snapshot_download",
+            "archive_extraction",
+            "http_download"
+          ]
+        },
+        "acquisition_authorised_by": {
+          "type": ["string", "null"],
+          "description": "Record of the explicit user initiation for any remote acquisition. Null is only valid when acquisition_method is `already_local` or `user_supplied_path`."
+        },
+        "acquired_at": { "$ref": "#/$defs/timestamp" },
+        "content_hash": { "$ref": "#/$defs/sha256" },
+        "content_hash_method": {
+          "type": "string",
+          "enum": ["file_bytes", "directory_manifest_v1"],
+          "description": "`directory_manifest_v1` = SHA-256 over a sorted newline-delimited list of `<relative_path>\\0<sha256>` for every included file. Defined in SCHEMA.md so a third party can recompute it."
+        },
+        "file_count": { "type": "integer", "minimum": 0 },
+        "total_bytes": { "type": "integer", "minimum": 0 }
+      },
+      "required": [
+        "artifact_id",
+        "artifact_type",
+        "declared_kind",
+        "source",
+        "immutable_reference",
+        "acquisition_method",
+        "acquired_at",
+        "content_hash",
+        "content_hash_method",
+        "file_count"
+      ],
+      "additionalProperties": false
+    },
+    "excluded_item": {
+      "type": "object",
+      "description": "A path deliberately not analysed, by policy or configuration. Distinct from a failure: an exclusion is a choice, and choices do not invalidate a NOT_FOUND_WITHIN_ANALYSED_SCOPE result — they bound it.",
+      "properties": {
+        "path": { "type": "string" },
+        "reason": { "type": "string", "minLength": 1 },
+        "kind": {
+          "type": "string",
+          "enum": ["policy_exclusion", "user_exclusion", "size_limit", "binary", "not_applicable_type", "symlink_outside_root"]
+        }
+      },
+      "required": ["path", "reason", "kind"],
+      "additionalProperties": false
+    },
+    "failed_item": {
+      "type": "object",
+      "description": "A path that analysis intended to cover but could not complete. Any non-empty list of these forces PARTIAL. This is the structural mechanism that prevents a parse failure being reported as a clean scan.",
+      "properties": {
+        "path": { "type": "string" },
+        "reason": { "type": "string", "minLength": 1, "description": "Concrete reason, including the underlying error text where available. 'error' alone is not an acceptable reason." },
+        "kind": {
+          "type": "string",
+          "enum": ["parse_error", "unsupported_syntax", "decode_error", "timeout", "io_error", "resource_limit", "external_tool_error", "internal_error"]
+        }
+      },
+      "required": ["path", "reason", "kind"],
+      "additionalProperties": false
+    },
+    "scope": {
+      "type": "object",
+      "description": "The exact scope over which a check ran. Every status claim is a claim about THIS scope and nothing wider.",
+      "properties": {
+        "analysed": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Paths (or node identifiers, for graph components) successfully analysed in full."
+        },
+        "excluded": { "type": "array", "items": { "$ref": "#/$defs/excluded_item" } },
+        "failed": { "type": "array", "items": { "$ref": "#/$defs/failed_item" } },
+        "languages": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Languages/formats the check is able to parse. A file in an unlisted language is out of scope even if present in the artifact."
+        },
+        "vacuous": {
+          "type": "boolean",
+          "description": "True when `analysed` is empty — the check ran but had nothing applicable to examine. A vacuous clean result carries no information and MUST be rendered distinctly from a non-vacuous one. Required to be true whenever `analysed` is empty."
+        }
+      },
+      "required": ["analysed", "excluded", "failed", "languages", "vacuous"],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": { "properties": { "analysed": { "maxItems": 0 } }, "required": ["analysed"] },
+          "then": { "properties": { "vacuous": { "const": true } } },
+          "else": { "properties": { "vacuous": { "const": false } } }
+        }
+      ]
+    },
+    "evidence_location": {
+      "type": "object",
+      "description": "Where the behavior becomes visible. Evidence is anchored at the point the capability becomes reachable, not at the top of the file.",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "file_line",
+            "file_range",
+            "archive_member",
+            "serialized_opcode",
+            "config_key",
+            "policy_statement",
+            "graph_edge",
+            "process_event",
+            "network_event",
+            "filesystem_event",
+            "declaration_text"
+          ]
+        },
+        "path": { "type": ["string", "null"], "description": "Artifact-relative path. Never an absolute host path." },
+        "line": { "type": ["integer", "null"], "minimum": 1 },
+        "end_line": { "type": ["integer", "null"], "minimum": 1 },
+        "column": { "type": ["integer", "null"], "minimum": 0 },
+        "pointer": { "type": ["string", "null"], "description": "JSON Pointer or dotted key for structured formats." },
+        "excerpt": {
+          "type": ["string", "null"],
+          "maxLength": 512,
+          "description": "Minimal excerpt showing the construct. Bounded so records do not become artifact copies."
+        },
+        "redacted": {
+          "type": "boolean",
+          "description": "True if the excerpt was redacted. TrustLens records the NAMES of credential-shaped variables and paths, never their values; when a value would have appeared it is replaced and this flag set."
+        },
+        "detail": { "type": ["string", "null"], "description": "Free text for locations with no file coordinate, e.g. a pickle opcode offset or a policy statement id." }
+      },
+      "required": ["kind", "path", "line", "excerpt", "redacted"],
+      "additionalProperties": false
+    },
+    "environment_description_ref": {
+      "type": "object",
+      "description": "Reference to the offline environment description a config-derived or graph-derived record depends on. `description_captured_at` travels with every record and every edge derived from it; it is surfaced in reports rather than kept in metadata, because staleness here is structural rather than incidental.",
+      "properties": {
+        "description_id": { "type": "string" },
+        "description_captured_at": {
+          "$ref": "#/$defs/timestamp",
+          "description": "When the described environment was actually observed — NOT when the file was written or parsed. Supplied by the operator and unverifiable by TrustLens."
+        },
+        "captured_at_basis": {
+          "type": "string",
+          "enum": ["operator_asserted", "exported_by_tool", "unknown"],
+          "description": "How the capture time was established. `operator_asserted` means a human typed it and TrustLens cannot check it."
+        },
+        "description_hash": { "$ref": "#/$defs/sha256" },
+        "source_format": {
+          "type": "string",
+          "enum": ["trustlens_env_v1", "kubernetes_manifest", "iam_policy_json", "terraform_plan", "terraform_state", "docker_compose", "helm_rendered", "manual"]
+        }
+      },
+      "required": ["description_id", "description_captured_at", "captured_at_basis", "description_hash", "source_format"],
+      "additionalProperties": false
+    },
+    "unknown_item": {
+      "type": "object",
+      "description": "Something TrustLens could not determine. Recorded positively rather than omitted, so that a report's silence is never mistaken for a clean result.",
+      "properties": {
+        "subject": { "type": "string" },
+        "reason": { "type": "string", "minLength": 1 },
+        "would_be_resolved_by": { "type": ["string", "null"], "description": "The concrete input or capability that would turn this unknown into a determination." }
+      },
+      "required": ["subject", "reason", "would_be_resolved_by"],
+      "additionalProperties": false
+    },
+    "unsupported_item": {
+      "type": "object",
+      "description": "A construct the component cannot assess at all.",
+      "properties": {
+        "construct": { "type": "string" },
+        "where": { "type": ["string", "null"] },
+        "reason": { "type": "string", "minLength": 1 }
+      },
+      "required": ["construct", "where", "reason"],
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+*.egg-info/
+build/
+dist/
+
+# Analysis output is regenerable and may describe a user's private infrastructure.
+reports/*.json
+!reports/.gitkeep
+
+# Acquired artifacts are never committed: they are untrusted third-party content.
+workdir/
+acquired/

@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:trustlens:1.0.0:enums:detection_method",
+  "title": "TrustLens detection method",
+  "description": "How a finding was produced. This is the mechanical method, not the confidence. Confidence is carried separately by evidence_strength, because a weak method can produce a strong finding and vice versa.",
+  "type": "string",
+  "enum": [
+    "declared_metadata",
+    "static_ast",
+    "static_ast_dataflow",
+    "static_pattern",
+    "static_external_tool",
+    "archive_inspection",
+    "config_derivation",
+    "policy_evaluation",
+    "graph_derivation",
+    "dynamic_observation",
+    "dynamic_blocked_observation",
+    "manual_assertion"
+  ],
+  "x-trustlens-semantics": {
+    "declared_metadata": "Read from a README, dataset card, manifest or metadata file. Records what the artifact SAYS, never what it does.",
+    "static_ast": "Derived from a parsed syntax tree of the artifact's own source. Syntactic match only — no reachability claim.",
+    "static_ast_dataflow": "Derived from a parsed syntax tree WITH a source-to-sink data flow. Stronger than static_ast; still no runtime-reachability claim.",
+    "static_pattern": "Textual or regular-expression match without a parse. Weakest static method; prone to matching strings and comments, so findings using it need a corroborating method before being treated as more than a lead.",
+    "static_external_tool": "Produced by an integrated third-party analyser. MUST record the tool name and version in the finding's rule_id/tool fields so the result is attributable and reproducible.",
+    "archive_inspection": "Derived from archive or serialized-container structure (e.g. pickle opcode stream, zip member listing) without executing it.",
+    "config_derivation": "Derived from a supplied environment description or deployment configuration. Inherits that description's description_captured_at staleness.",
+    "policy_evaluation": "Derived by evaluating a policy document (IAM, RBAC, network policy) under recorded interpretation rules.",
+    "graph_derivation": "Derived by composing two or more existing edges. Never stronger than its weakest input edge.",
+    "dynamic_observation": "Observed during a recorded sandbox execution. Establishes the behavior occurred in that run only.",
+    "dynamic_blocked_observation": "An operation was attempted and the sandbox blocked it. Establishes both the attempt and that the configured control blocked it in that run.",
+    "manual_assertion": "Entered by a human. Carries the human's identity and is never treated as machine-verified."
+  }
+}

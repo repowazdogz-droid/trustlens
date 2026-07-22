@@ -1,0 +1,250 @@
+{
+  "artifact": {
+    "acquired_at": "2026-07-20T09:00:00+00:00",
+    "acquisition_authorised_by": null,
+    "acquisition_method": "already_local",
+    "artifact_id": "example-dataset-repo",
+    "artifact_type": "huggingface_dataset_repository",
+    "content_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "content_hash_method": "directory_manifest_v1",
+    "declared_kind": "dataset",
+    "file_count": 23,
+    "immutable_reference": "9f2c1a4e5b6d7c8f9a0b1c2d3e4f5a6b7c8d9e0f",
+    "source": "https://huggingface.co/datasets/example-org/example-tabular",
+    "total_bytes": 184320
+  },
+  "claims": {
+    "does_not_establish": [
+      "That the simulation contains every attacker path.",
+      "That inferred paths are exploitable.",
+      "That blocked paths remain blocked in production.",
+      "That the mitigations are operationally safe without engineering review.",
+      "That this is a penetration test."
+    ],
+    "establishes": [
+      "The simulator combined the supplied static and configured evidence.",
+      "The displayed paths follow the recorded graph composition rules.",
+      "Each mitigation corresponds to identified findings."
+    ]
+  },
+  "content_hash": "f9841e877b0146a090e0e81c4603202f2b10f0886d323f13f0124a945a86f097",
+  "contradictions": [],
+  "declared_capabilities": [],
+  "environment_description_ref": {
+    "captured_at_basis": "operator_asserted",
+    "description_captured_at": "2026-06-01T00:00:00+00:00",
+    "description_hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "description_id": "prod-dataset-processing-v3",
+    "source_format": "trustlens_env_v1"
+  },
+  "findings": [
+    {
+      "capability": "reachability.resource_access",
+      "confidence_basis": "Composed from one static finding and two configuration-derived findings. The weakest input is CONFIG_DERIVED and the composition is INFERRED, so this path is a modelled path, not an observed one.",
+      "derived_from": [
+        "scanner:execution.dynamic_import:55faed8bd7e9c6d2",
+        "credential_mapper:env.credential_pattern_read:97abae3d2c5afbeb",
+        "credential_mapper:reachability.resource_access:cfe99ccafe88ec37"
+      ],
+      "detection_method": "graph_derivation",
+      "environment_description_ref": {
+        "captured_at_basis": "operator_asserted",
+        "description_captured_at": "2026-06-01T00:00:00+00:00",
+        "description_hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "description_id": "prod-dataset-processing-v3",
+        "source_format": "trustlens_env_v1"
+      },
+      "evidence": [
+        {
+          "detail": "dataset worker -> Python execution (static, loader.py:14) -> AWS credential readable (configured, captured 2026-06-01) -> s3:GetObject on prod-data (configured, captured 2026-06-01)",
+          "excerpt": null,
+          "kind": "graph_edge",
+          "line": null,
+          "path": null,
+          "redacted": false
+        }
+      ],
+      "evidence_strength": "INFERRED",
+      "evidence_unavailable_reason": null,
+      "finding_id": "blast_radius:reachability.resource_access:bff78ba7e3848668",
+      "independently_reproduced": {
+        "by": [],
+        "records": [],
+        "reproduced": false
+      },
+      "limitations": [
+        "No edge in this path was dynamically observed.",
+        "The credential and policy edges rest on a description captured 2026-06-01 and may be stale.",
+        "Composition does not establish that the path is traversable end to end.",
+        "This is a simulation, not a penetration test."
+      ],
+      "notes": null,
+      "rule_id": "path-exec-to-credential-to-resource",
+      "rule_version": "1.0.0",
+      "scope": {
+        "analysed": [
+          "scanner:execution.dynamic_import:55faed8bd7e9c6d2",
+          "credential_mapper:env.credential_pattern_read:97abae3d2c5afbeb",
+          "credential_mapper:reachability.resource_access:cfe99ccafe88ec37"
+        ],
+        "excluded": [],
+        "failed": [],
+        "languages": [
+          "trustlens_evidence"
+        ],
+        "vacuous": false
+      },
+      "source_component": "blast_radius",
+      "status": "FOUND",
+      "unknown_reason": null,
+      "unsupported_construct": null
+    },
+    {
+      "capability": "template.injection_surface",
+      "confidence_basis": "The upstream template-injection check did not complete over its intended scope, so this entry point can be neither confirmed nor excluded. The incompleteness propagates rather than being discharged here.",
+      "derived_from": [
+        "scanner:template.injection_surface:d9f93fff40c5e425"
+      ],
+      "detection_method": "graph_derivation",
+      "environment_description_ref": null,
+      "evidence": [],
+      "evidence_strength": "INFERRED",
+      "evidence_unavailable_reason": null,
+      "finding_id": "blast_radius:template.injection_surface:e754f3aa19ec6c38",
+      "independently_reproduced": {
+        "by": [],
+        "records": [],
+        "reproduced": false
+      },
+      "limitations": [
+        "This path must not be rendered with the confidence of a fully evidenced path.",
+        "It must equally not be dropped from the report; a silently omitted incomplete path reads as an excluded path."
+      ],
+      "notes": null,
+      "rule_id": "path-template-injection-entry",
+      "rule_version": "1.0.0",
+      "scope": {
+        "analysed": [
+          "scanner:template.injection_surface:d9f93fff40c5e425"
+        ],
+        "excluded": [],
+        "failed": [
+          {
+            "kind": "parse_error",
+            "path": "config/legacy.yaml",
+            "reason": "Upstream scanner finding is PARTIAL: this file was never analysed, so no entry-point conclusion can be drawn from it."
+          }
+        ],
+        "languages": [
+          "trustlens_evidence"
+        ],
+        "vacuous": false
+      },
+      "source_component": "blast_radius",
+      "status": "PARTIAL",
+      "unknown_reason": null,
+      "unsupported_construct": null
+    }
+  ],
+  "generic_advice": [
+    "Review whether dataset-processing workloads need any standing cloud credentials at all, after the specific changes above are applied."
+  ],
+  "input_records": [
+    {
+      "component": "scanner",
+      "content_hash": "aeace266e3a7cff2a950177d4735ed8ad6bf4f1a3ddd01d5e1213011ac63d28a",
+      "record_id": "54c98992496e12c44c3e67bf51fc7f36"
+    },
+    {
+      "component": "credential_mapper",
+      "content_hash": "024cf7621d4c8abb3266427e6f648b4002c1817f2728e36113bbb1d0393d16df",
+      "record_id": "d3a3ffec747649ae90b56c790b279c09"
+    }
+  ],
+  "mitigations": [
+    {
+      "affected_resource": "IAM role dataset-worker-role",
+      "dynamically_verified": false,
+      "environment_description_ref": {
+        "captured_at_basis": "operator_asserted",
+        "description_captured_at": "2026-06-01T00:00:00+00:00",
+        "description_hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "description_id": "prod-dataset-processing-v3",
+        "source_format": "trustlens_env_v1"
+      },
+      "evidence_basis": "Statement 0 of the attached role policy, from an environment description captured 2026-06-01T00:00:00+00:00.",
+      "expected_path_removed": "dataset worker -> AWS credential -> s3:GetObject on prod-data",
+      "mitigation_id": "M-001",
+      "proposed_change": "Remove the s3:GetObject Allow on arn:aws:s3:::prod-data/* from dataset-worker-role, or scope it to the specific prefixes the loader requires.",
+      "residual_risk": "Other roles assumable by the worker were not supplied and were not modelled; removing this grant does not address them.",
+      "trade_offs": "Any legitimate loader path that reads prod-data will fail until the required prefixes are enumerated and re-granted.",
+      "triggering_finding_ids": [
+        "credential_mapper:reachability.resource_access:cfe99ccafe88ec37",
+        "blast_radius:reachability.resource_access:bff78ba7e3848668"
+      ]
+    },
+    {
+      "affected_resource": "NetworkPolicy dataset-processing, egress rule 0",
+      "dynamically_verified": false,
+      "environment_description_ref": {
+        "captured_at_basis": "operator_asserted",
+        "description_captured_at": "2026-06-01T00:00:00+00:00",
+        "description_hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "description_id": "prod-dataset-processing-v3",
+        "source_format": "trustlens_env_v1"
+      },
+      "evidence_basis": "The supplied NetworkPolicy permits the link-local range, contradicting the operator's assertion that metadata access is blocked (contradiction C-101).",
+      "expected_path_removed": "dataset worker -> cloud metadata endpoint -> instance role credentials",
+      "mitigation_id": "M-002",
+      "proposed_change": "Add an except clause for 169.254.169.254/32 (and fd00:ec2::254/128 where IPv6 egress is permitted) to the 0.0.0.0/0 egress ipBlock.",
+      "residual_risk": "A CNI-level block may already exist and was not described; if so this change is redundant rather than harmful.",
+      "trade_offs": "Workloads in this namespace that legitimately read instance metadata will break; those should use projected service-account tokens instead.",
+      "triggering_finding_ids": [
+        "credential_mapper:cloud.metadata_endpoint:691d40d4757ce622"
+      ]
+    }
+  ],
+  "record_id": "d45da3c349582074981ba0fd4677303b",
+  "residual_uncertainty": "This is a simulation over declared, configured, static and inferred evidence, two edges of which rest on a description captured 2026-06-01T00:00:00+00:00. One path is incomplete because an upstream check did not finish. Paths not modelled here are not thereby excluded.",
+  "run": {
+    "completed_at": "2026-07-20T12:00:01+00:00",
+    "config_hash": null,
+    "execution_mode": "offline_modelling",
+    "invocation": "trustlens blast-radius --scan scan.json --env env.json",
+    "reasoning_notes": [
+      "Composed 1 fully-evidenced path and 1 incomplete path.",
+      "The incomplete path is retained and labelled; dropping it would read as an excluded path.",
+      "Two configuration-derived edges carry capture time 2026-06-01T00:00:00+00:00."
+    ],
+    "started_at": "2026-07-20T12:00:00+00:00"
+  },
+  "sandbox": null,
+  "schema_version": "trustlens/1.0.0",
+  "scope": {
+    "analysed": [
+      "scanner:execution.dynamic_import:55faed8bd7e9c6d2",
+      "credential_mapper:env.credential_pattern_read:97abae3d2c5afbeb",
+      "credential_mapper:reachability.resource_access:cfe99ccafe88ec37"
+    ],
+    "excluded": [],
+    "failed": [],
+    "languages": [
+      "trustlens_evidence"
+    ],
+    "vacuous": false
+  },
+  "tool": {
+    "commit": "0000000000000000000000000000000000000000",
+    "component": "blast_radius",
+    "name": "trustlens",
+    "version": "0.1.0"
+  },
+  "unknowns": [
+    {
+      "reason": "No edge in the path was dynamically observed.",
+      "subject": "Whether the modelled path is traversable end to end",
+      "would_be_resolved_by": "A sandboxed execution under a reviewed profile."
+    }
+  ],
+  "unsupported": []
+}

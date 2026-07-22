@@ -1,0 +1,196 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:trustlens:1.0.0:finding",
+  "title": "TrustLens finding",
+  "description": "One check result about one capability. A finding is always a statement about a recorded scope under a recorded rule; it is never a statement about the artifact as a whole.",
+  "type": "object",
+  "properties": {
+    "finding_id": {
+      "type": "string",
+      "pattern": "^[a-z_]+:[a-z0-9_.]+:[0-9a-f]{16}$",
+      "description": "`<component>:<capability>:<16 hex>` where the hex is the deterministic digest defined in SCHEMA.md. Same inputs must yield the same id across runs, so that two runs can be diffed."
+    },
+    "capability": { "$ref": "urn:trustlens:1.0.0:enums:capability" },
+    "status": { "$ref": "urn:trustlens:1.0.0:enums:status" },
+    "detection_method": { "$ref": "urn:trustlens:1.0.0:enums:detection_method" },
+    "evidence_strength": { "$ref": "urn:trustlens:1.0.0:enums:evidence_strength" },
+    "rule_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Identifier of the rule, analysis, or external check that produced this finding. Every finding has one, including declared-surface extractions."
+    },
+    "rule_version": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Version of that rule. Changing a rule's behavior requires changing this, otherwise two incomparable results can share an identifier."
+    },
+    "source_component": { "$ref": "urn:trustlens:1.0.0:common#/$defs/component" },
+    "scope": { "$ref": "urn:trustlens:1.0.0:common#/$defs/scope" },
+    "evidence": {
+      "type": "array",
+      "items": { "$ref": "urn:trustlens:1.0.0:common#/$defs/evidence_location" }
+    },
+    "evidence_unavailable_reason": {
+      "type": ["string", "null"],
+      "description": "Only for a FOUND result where no location can be produced (e.g. a behavior observed by a monitor with no file coordinate). Null otherwise. A FOUND finding with neither evidence nor this reason is invalid."
+    },
+    "confidence_basis": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Why this finding is believed to the degree claimed, in the analyst-readable sense: what the rule matched and what that does and does not imply. Not a numeric score."
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 },
+      "description": "What this specific finding does not establish. Required and non-empty: every check has a blind spot, and a finding claiming none is a finding whose blind spot has not been examined."
+    },
+    "unsupported_construct": {
+      "type": ["string", "null"],
+      "description": "Required (non-null) when status is UNSUPPORTED."
+    },
+    "unknown_reason": {
+      "type": ["string", "null"],
+      "description": "Required (non-null) when status is UNKNOWN."
+    },
+    "independently_reproduced": {
+      "type": "object",
+      "description": "Whether a second, independent method reached the same result. Absence of reproduction is normal and is recorded as such rather than left blank.",
+      "properties": {
+        "reproduced": { "type": "boolean" },
+        "by": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Independent methods or tools that reproduced it. Empty when reproduced is false."
+        },
+        "records": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Record ids of the corroborating runs."
+        }
+      },
+      "required": ["reproduced", "by", "records"],
+      "additionalProperties": false
+    },
+    "derived_from": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "finding_ids this finding was composed from. Required non-empty for graph_derivation. A derived finding is never stronger than its weakest input."
+    },
+    "environment_description_ref": {
+      "oneOf": [
+        { "$ref": "urn:trustlens:1.0.0:common#/$defs/environment_description_ref" },
+        { "type": "null" }
+      ],
+      "description": "Required (non-null) for config_derivation and policy_evaluation findings, so the capture timestamp travels with the finding rather than living only in the run header."
+    },
+    "notes": { "type": ["string", "null"] }
+  },
+  "required": [
+    "finding_id",
+    "capability",
+    "status",
+    "detection_method",
+    "evidence_strength",
+    "rule_id",
+    "rule_version",
+    "source_component",
+    "scope",
+    "evidence",
+    "evidence_unavailable_reason",
+    "confidence_basis",
+    "limitations",
+    "unsupported_construct",
+    "unknown_reason",
+    "independently_reproduced",
+    "derived_from",
+    "environment_description_ref"
+  ],
+  "additionalProperties": false,
+
+  "allOf": [
+    {
+      "$comment": "LOAD-BEARING. A clean-scope result may not coexist with an incomplete scope. Any failed item forces PARTIAL, so a parse failure can never be reported as a completed clean scan.",
+      "if": { "properties": { "status": { "const": "NOT_FOUND_WITHIN_ANALYSED_SCOPE" } }, "required": ["status"] },
+      "then": {
+        "properties": {
+          "scope": { "properties": { "failed": { "maxItems": 0 } } }
+        }
+      }
+    },
+    {
+      "$comment": "LOAD-BEARING. PARTIAL must name what failed and why, otherwise it degrades into an unfalsifiable hedge.",
+      "if": { "properties": { "status": { "const": "PARTIAL" } }, "required": ["status"] },
+      "then": {
+        "properties": {
+          "scope": { "properties": { "failed": { "minItems": 1 } } }
+        }
+      }
+    },
+    {
+      "$comment": "A FOUND result needs a location, or an explicit statement that no location is obtainable.",
+      "if": { "properties": { "status": { "const": "FOUND" } }, "required": ["status"] },
+      "then": {
+        "anyOf": [
+          { "properties": { "evidence": { "minItems": 1 } } },
+          { "properties": { "evidence_unavailable_reason": { "type": "string", "minLength": 1 } } }
+        ]
+      }
+    },
+    {
+      "if": { "properties": { "status": { "const": "UNSUPPORTED" } }, "required": ["status"] },
+      "then": { "properties": { "unsupported_construct": { "type": "string", "minLength": 1 } } }
+    },
+    {
+      "if": { "properties": { "status": { "const": "UNKNOWN" } }, "required": ["status"] },
+      "then": { "properties": { "unknown_reason": { "type": "string", "minLength": 1 } } }
+    },
+    {
+      "$comment": "Method and strength must agree. This prevents a configuration-derived path being recorded with the strength of an observation.",
+      "if": { "properties": { "detection_method": { "enum": ["dynamic_observation", "dynamic_blocked_observation"] } }, "required": ["detection_method"] },
+      "then": { "properties": { "evidence_strength": { "const": "DIRECT_OBSERVATION" } } }
+    },
+    {
+      "if": { "properties": { "detection_method": { "const": "declared_metadata" } }, "required": ["detection_method"] },
+      "then": { "properties": { "evidence_strength": { "const": "DECLARED_ONLY" } } }
+    },
+    {
+      "if": { "properties": { "detection_method": { "enum": ["config_derivation", "policy_evaluation"] } }, "required": ["detection_method"] },
+      "then": {
+        "properties": {
+          "evidence_strength": { "const": "CONFIG_DERIVED" },
+          "environment_description_ref": { "type": "object" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "detection_method": { "enum": ["static_ast", "static_pattern", "archive_inspection"] } }, "required": ["detection_method"] },
+      "then": { "properties": { "evidence_strength": { "const": "STATIC_MATCH" } } }
+    },
+    {
+      "if": { "properties": { "detection_method": { "const": "static_ast_dataflow" } }, "required": ["detection_method"] },
+      "then": { "properties": { "evidence_strength": { "const": "STATIC_DATAFLOW" } } }
+    },
+    {
+      "if": { "properties": { "detection_method": { "const": "static_external_tool" } }, "required": ["detection_method"] },
+      "then": { "properties": { "evidence_strength": { "enum": ["STATIC_MATCH", "STATIC_DATAFLOW"] } } }
+    },
+    {
+      "if": { "properties": { "detection_method": { "const": "graph_derivation" } }, "required": ["detection_method"] },
+      "then": {
+        "properties": {
+          "evidence_strength": { "const": "INFERRED" },
+          "derived_from": { "minItems": 1 }
+        }
+      }
+    },
+    {
+      "$comment": "Reproduction claims must name the reproducing method.",
+      "if": {
+        "properties": { "independently_reproduced": { "properties": { "reproduced": { "const": true } }, "required": ["reproduced"] } },
+        "required": ["independently_reproduced"]
+      },
+      "then": { "properties": { "independently_reproduced": { "properties": { "by": { "minItems": 1 } } } } }
+    }
+  ]
+}

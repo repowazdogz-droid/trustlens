@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:trustlens:1.0.0:enums:evidence_strength",
+  "title": "TrustLens evidence strength",
+  "description": "How far the evidence behind a finding reaches. Ordered weakest to strongest for the purpose of graph-edge composition ONLY (a derived edge takes the MINIMUM strength of its inputs). This ordering is not a risk ranking and must not be rendered as one.",
+  "type": "string",
+  "enum": [
+    "DECLARED_ONLY",
+    "INFERRED",
+    "CONFIG_DERIVED",
+    "STATIC_MATCH",
+    "STATIC_DATAFLOW",
+    "DIRECT_OBSERVATION"
+  ],
+  "x-trustlens-ordering": [
+    "DECLARED_ONLY",
+    "INFERRED",
+    "CONFIG_DERIVED",
+    "STATIC_MATCH",
+    "STATIC_DATAFLOW",
+    "DIRECT_OBSERVATION"
+  ],
+  "x-trustlens-semantics": {
+    "DECLARED_ONLY": "The artifact or operator says so. No independent check.",
+    "INFERRED": "Concluded by TrustLens from other records rather than read from evidence. Must name what it was inferred from.",
+    "CONFIG_DERIVED": "Read from a supplied configuration or environment description, which may be stale or wrong.",
+    "STATIC_MATCH": "A construct was found in parsed source. It exists in the file; whether it executes is not established.",
+    "STATIC_DATAFLOW": "A source-to-sink flow was found in parsed source. Stronger, still not a runtime claim.",
+    "DIRECT_OBSERVATION": "Recorded during an actual execution under a recorded sandbox profile. Establishes what happened in that run, and nothing about other runs or other inputs."
+  }
+}

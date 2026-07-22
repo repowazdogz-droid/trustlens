@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:trustlens:1.0.0:enums:status",
+  "title": "TrustLens finding status",
+  "description": "The five-state analysis status taxonomy. These five states are NOT interchangeable and MUST NOT be collapsed. In particular NOT_FOUND_WITHIN_ANALYSED_SCOPE and PARTIAL make different claims and are structurally distinguished by the `scope.failed` constraint in finding.schema.json.",
+  "type": "string",
+  "enum": [
+    "FOUND",
+    "NOT_FOUND_WITHIN_ANALYSED_SCOPE",
+    "PARTIAL",
+    "UNSUPPORTED",
+    "UNKNOWN"
+  ],
+  "x-trustlens-semantics": {
+    "FOUND": {
+      "means": "Evidence matching a supported rule, or an observed behavior, exists.",
+      "does_not_mean": "That the capability is reachable at runtime, that it is malicious, or that it is exploitable.",
+      "requires": "At least one evidence location, where a location is obtainable."
+    },
+    "NOT_FOUND_WITHIN_ANALYSED_SCOPE": {
+      "means": "No matching path was found among the files, languages, rules, configurations and execution paths actually analysed, AND analysis of that scope completed successfully over every item.",
+      "does_not_mean": "That the capability is absent from the artifact. It is a statement about the analysed scope, not about the world.",
+      "requires": "scope.failed MUST be empty. A single parse failure invalidates this status for that check."
+    },
+    "PARTIAL": {
+      "means": "Analysis of the intended scope started but did not complete over all of it.",
+      "does_not_mean": "Anything about whether the capability is present. It is strictly weaker than NOT_FOUND_WITHIN_ANALYSED_SCOPE and MUST NEVER be merged into it.",
+      "requires": "scope.analysed MUST be present, scope.failed MUST be non-empty, and every entry in scope.failed MUST carry a reason."
+    },
+    "UNSUPPORTED": {
+      "means": "The component cannot assess the relevant construct at all — no rule, no parser, no observation channel exists for it.",
+      "does_not_mean": "That the construct is absent or that it was examined and cleared.",
+      "requires": "An `unsupported_construct` description."
+    },
+    "UNKNOWN": {
+      "means": "Analysis was not attempted, was ambiguous, or required information was unavailable.",
+      "does_not_mean": "Anything about presence or absence.",
+      "requires": "A stated reason."
+    }
+  },
+  "x-trustlens-absence-rule": "Only NOT_FOUND_WITHIN_ANALYSED_SCOPE may be read as scoped absence, and even then only within the recorded scope. No status in this enum ever establishes that a capability is absent from the artifact."
+}
