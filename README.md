@@ -8,20 +8,30 @@ containment.**
 
 ---
 
-## Status: Phase 0 complete. No scanning yet.
+## Status: Phases 0 and 1 complete.
 
 | Phase | Component | Status |
 |---|---|---|
 | 0 | Grounding + shared evidence model | **complete** |
-| 1 | Dataset and repository trust scanner | not started |
+| 1 | Dataset and repository trust scanner | **complete** — 10 check families, CLI, verified from a clean clone |
 | 2 | Credential reachability mapper | not started |
 | 3 | Sandboxed dry run | not started — `EXPERIMENTAL` by construction when it lands |
 | 4 | Blast radius simulator and mitigation engine | not started |
 
-Nothing in this repository currently scans an artifact, models an environment, executes
-anything, or simulates a blast radius. What exists is the evidence model every component
-will emit into, its validation, and the reuse-versus-build decisions recorded in
-[`GROUNDING.md`](GROUNDING.md).
+The scanner performs static analysis only. It does not model an environment, execute
+anything, or simulate a blast radius. It spawns **no processes at all** while scanning, and
+`tests/scanner/test_inertness.py` demonstrates that by detonating live payloads to prove
+they fire, then scanning them with `subprocess`, `os.system` and `socket` replaced by
+objects that raise.
+
+```bash
+pip install -e .
+trustlens scan ./some-dataset-repo        # 0 clean · 1 findings · 2 did not complete
+trustlens plan  https://host/org/repo     # dry run; writes nothing, pins a commit
+```
+
+Exit code `2` matters: an incomplete analysis never exits `0`, because a caller reading only
+the exit code would otherwise treat "could not finish" as "found nothing".
 
 ## Why the schema came first
 
