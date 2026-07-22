@@ -28,13 +28,38 @@ EXPECTED: dict[str, dict[str, str]] = {
         "process.shell": "FOUND",
         "execution.deserialization": "FOUND",
     },
-    "partial_python": {
-        "execution.dynamic_eval": "PARTIAL",
-        "execution.dynamic_import": "PARTIAL",
-        "process.subprocess": "PARTIAL",
-        "process.shell": "PARTIAL",
-        "execution.deserialization": "PARTIAL",
+    "unsafe_network": {
+        "network.outbound": "FOUND",
+        "network.dns": "FOUND",
+        "network.package_fetch": "FOUND",
     },
+    "unsafe_env": {
+        "env.named_read": "FOUND",
+        "env.enumeration": "FOUND",
+        "env.credential_pattern_read": "FOUND",
+    },
+    "unsafe_cloud": {
+        "cloud.metadata_endpoint": "FOUND",
+        "k8s.serviceaccount_token_access": "FOUND",
+        "container.docker_socket": "FOUND",
+        "cloud.credential_file_access": "FOUND",
+        "cloud.sdk_credential_discovery": "FOUND",
+        "network.outbound": "FOUND",
+    },
+    "unsafe_filesystem": {
+        "filesystem.write": "FOUND",
+        "filesystem.delete": "FOUND",
+        "filesystem.permission_change": "FOUND",
+        "filesystem.archive_extraction": "FOUND",
+        "filesystem.read_sensitive_path": "FOUND",
+        "filesystem.path_traversal": "FOUND",
+    },
+    "unsafe_package": {
+        "package.install_at_runtime": "FOUND",
+        "process.subprocess": "FOUND",
+        "process.shell": "FOUND",
+    },
+    "partial_python": "ALL_PARTIAL",
 }
 
 
@@ -47,6 +72,10 @@ def _statuses(name: str) -> dict[str, str]:
 def test_fixture_statuses(fixture):
     statuses = _statuses(fixture)
     expected = EXPECTED[fixture]
+    if expected == "ALL_PARTIAL":
+        # One unparseable file contaminates every capability's scope, by design.
+        assert set(statuses.values()) == {"PARTIAL"}, statuses
+        return
     for capability, want in expected.items():
         assert statuses[capability] == want, f"{fixture}/{capability}"
     for capability, got in statuses.items():

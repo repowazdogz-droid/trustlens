@@ -26,6 +26,7 @@ from pathlib import Path
 from typing import Callable
 
 from ...evidence import make_evidence, make_finding, make_scope
+from ..config_parse import iter_config_files, parse_config
 from ..pysource import (
     PythonFile,
     call_names,
@@ -55,6 +56,10 @@ class Rule:
     #: When set, the rule only fires if the predicate is TRUE; otherwise a call to a
     #: matching target with the predicate false is explicitly not a finding.
     predicate_note: str = ""
+    #: "call"      — a call whose resolved callee is in `targets`
+    #: "string"    — a string literal containing one of `targets` as a substring
+    #: "subscript" — an index into a resolved name in `targets`, e.g. os.environ[...]
+    kind: str = "call"
 
 
 # --------------------------------------------------------------------------- predicates
@@ -276,7 +281,382 @@ RULES: tuple[Rule, ...] = (
     ),
 )
 
+#: Environment variable names whose value is credential-shaped. Matched against the KEY
+#: only — TrustLens records the name of a variable and never its value.
+CREDENTIAL_ENV_PATTERNS = (
+    "SECRET", "TOKEN", "PASSWORD", "PASSWD", "APIKEY", "API_KEY", "PRIVATE_KEY",
+    "ACCESS_KEY", "CREDENTIAL", "SESSION_TOKEN", "AUTH", "_PAT", "CLIENT_SECRET",
+)
+
+
+def _env_key_is_credential_shaped(key: str) -> bool:
+    upper = key.upper()
+    return any(pattern in upper for pattern in CREDENTIAL_ENV_PATTERNS)
+
+
+NETWORK_RULES: tuple[Rule, ...] = (
+    Rule(
+        rule_id="http-client",
+        family="network",
+        capability="network.outbound",
+        targets=frozenset(
+            {"urllib.request.urlopen", "urllib.request.urlretrieve", "urllib.request.Request",
+             "requests.get", "requests.post", "requests.put", "requests.delete", "requests.head",
+             "requests.patch", "requests.request", "requests.Session",
+             "httpx.get", "httpx.post", "httpx.stream", "httpx.Client", "httpx.AsyncClient",
+             "http.client.HTTPConnection", "http.client.HTTPSConnection",
+             "urllib3.PoolManager", "aiohttp.ClientSession"}
+        ),
+        what="An outbound HTTP request is issued",
+        blind_spot=(
+            "The destination is not resolved. A constant URL to a well-known host and an "
+            "attacker-controlled one are indistinguishable without dataflow."
+        ),
+    ),
+    Rule(
+        rule_id="raw-socket",
+        family="network",
+        capability="network.outbound",
+        targets=frozenset({"socket.socket", "socket.create_connection", "ssl.wrap_socket"}),
+        what="A raw network socket is created",
+        blind_spot="A socket used only to listen is reported here as well; see network.listen.",
+    ),
+    Rule(
+        rule_id="socket-listen",
+        family="network",
+        capability="network.listen",
+        targets=frozenset({"bind", "listen"}),
+        what="A socket is bound or placed in listening state",
+        blind_spot=(
+            "Matched on the bare method name, so any object with a bind() or listen() "
+            "method matches. This rule over-reports by design and is not escalated."
+        ),
+    ),
+    Rule(
+        rule_id="dns-lookup",
+        family="network",
+        capability="network.dns",
+        targets=frozenset(
+            {"socket.gethostbyname", "socket.getaddrinfo", "socket.gethostbyaddr"}
+        ),
+        what="A DNS lookup is performed",
+        blind_spot="Name resolution alone does not establish that a connection follows.",
+    ),
+    Rule(
+        rule_id="legacy-network-protocol",
+        family="network",
+        capability="network.outbound",
+        targets=frozenset({"ftplib.FTP", "telnetlib.Telnet", "smtplib.SMTP", "paramiko.SSHClient"}),
+        what="A non-HTTP network client is created",
+        blind_spot="Presence in ML dataset code is unusual and is reported as surface.",
+    ),
+    Rule(
+        rule_id="remote-artifact-fetch",
+        family="network",
+        capability="network.package_fetch",
+        targets=frozenset(
+            {"huggingface_hub.hf_hub_download", "huggingface_hub.snapshot_download",
+             "hf_hub_download", "snapshot_download",
+             "torch.hub.load", "torch.hub.load_state_dict_from_url",
+             "torch.utils.model_zoo.load_url", "gdown.download", "wget.download"}
+        ),
+        what="A remote artifact is downloaded at runtime",
+        blind_spot=(
+            "Does not check whether the download is pinned to an immutable revision; "
+            "Bandit's B615 covers the unpinned Hugging Face case and is integrated separately."
+        ),
+    ),
+)
+
+
+ENVIRONMENT_RULES: tuple[Rule, ...] = (
+    Rule(
+        rule_id="env-named-read",
+        family="environment",
+        capability="env.named_read",
+        targets=frozenset({"os.getenv", "os.environ.get", "environ.get"}),
+        what="A named environment variable is read",
+        blind_spot="The variable name is not resolved when it is computed at runtime.",
+    ),
+    Rule(
+        rule_id="env-enumeration",
+        family="environment",
+        capability="env.enumeration",
+        targets=frozenset(
+            {"os.environ.keys", "os.environ.items", "os.environ.values", "os.environ.copy",
+             "environ.keys", "environ.items", "environ.copy"}
+        ),
+        escalated=True,
+        what="The whole process environment is enumerated rather than a named variable read",
+        blind_spot=(
+            "dict(os.environ) and {**os.environ} are separate constructs; the first is "
+            "matched by the subscript rule set, the second is a known miss."
+        ),
+    ),
+    Rule(
+        rule_id="env-subscript",
+        family="environment",
+        capability="env.named_read",
+        kind="subscript",
+        targets=frozenset({"os.environ", "environ"}),
+        what="A named environment variable is read by subscript",
+        blind_spot="A computed key is recorded as a read without the name.",
+    ),
+    Rule(
+        rule_id="env-inherited-by-subprocess",
+        family="environment",
+        capability="env.enumeration",
+        targets=frozenset({"os.execve", "os.spawnve", "os.putenv"}),
+        what="The process environment is passed to or modified for a child process",
+        blind_spot="subprocess calls inherit the environment implicitly and are not matched here.",
+    ),
+)
+
+
+CLOUD_RULES: tuple[Rule, ...] = (
+    Rule(
+        rule_id="cloud-metadata-endpoint",
+        family="cloud",
+        capability="cloud.metadata_endpoint",
+        kind="string",
+        targets=frozenset(
+            {
+                "169.254.169.254",          # AWS / Azure / GCP IMDS
+                "metadata.google.internal",  # GCP
+                "metadata.goog",             # GCP alternate
+                "fd00:ec2::254",             # AWS IMDS over IPv6
+                "169.254.170.2",             # ECS task metadata
+                "100.100.100.200",           # Alibaba Cloud
+                "192.0.0.192",               # Oracle Cloud
+            }
+        ),
+        escalated=True,
+        what="A cloud instance metadata endpoint address appears as a literal",
+        blind_spot=(
+            "An address assembled at runtime, or reached via a redirect or a hostname not "
+            "in this list, is not matched. Documentation quoting the address also matches."
+        ),
+    ),
+    Rule(
+        rule_id="k8s-serviceaccount-path",
+        family="cloud",
+        capability="k8s.serviceaccount_token_access",
+        kind="string",
+        targets=frozenset({"/var/run/secrets/kubernetes.io/serviceaccount"}),
+        escalated=True,
+        what="The in-cluster service-account token mount path appears as a literal",
+        blind_spot="Reading the path does not establish that the token is used against the API.",
+    ),
+    Rule(
+        rule_id="docker-socket-path",
+        family="cloud",
+        capability="container.docker_socket",
+        kind="string",
+        targets=frozenset({"/var/run/docker.sock", "docker.sock"}),
+        escalated=True,
+        what="The Docker daemon socket path appears as a literal",
+        blind_spot="Access to this socket is generally equivalent to host root; presence is surface.",
+    ),
+    Rule(
+        rule_id="cloud-credential-file",
+        family="cloud",
+        capability="cloud.credential_file_access",
+        kind="string",
+        targets=frozenset(
+            {".aws/credentials", ".aws/config", ".config/gcloud", ".azure/credentials",
+             ".kube/config", "gcloud/application_default_credentials.json"}
+        ),
+        escalated=True,
+        what="A well-known cloud or cluster credential file path appears as a literal",
+        blind_spot="Presence of the path does not establish that the file is read.",
+    ),
+    Rule(
+        rule_id="cloud-sdk-credential-discovery",
+        family="cloud",
+        capability="cloud.sdk_credential_discovery",
+        targets=frozenset(
+            {"boto3.Session", "boto3.client", "boto3.resource", "botocore.session.get_session",
+             "google.auth.default", "azure.identity.DefaultAzureCredential",
+             "DefaultAzureCredential"}
+        ),
+        what="A cloud SDK entry point that discovers ambient credentials is constructed",
+        blind_spot=(
+            "Credential discovery is implicit in these SDKs; this reports the entry point, "
+            "not a specific credential source."
+        ),
+    ),
+    Rule(
+        rule_id="k8s-api-client",
+        family="cloud",
+        capability="k8s.api_access",
+        targets=frozenset(
+            {"kubernetes.config.load_incluster_config", "kubernetes.config.load_kube_config",
+             "load_incluster_config", "kubernetes.client.CoreV1Api"}
+        ),
+        escalated=True,
+        what="A Kubernetes API client is configured",
+        blind_spot="Does not establish which API operations are attempted or permitted.",
+    ),
+    Rule(
+        rule_id="docker-client",
+        family="cloud",
+        capability="container.docker_socket",
+        targets=frozenset({"docker.from_env", "docker.DockerClient"}),
+        escalated=True,
+        what="A Docker client is constructed, which reaches the daemon socket",
+        blind_spot="Does not establish that the daemon is reachable in the target environment.",
+    ),
+)
+
+
+def _write_mode(call: ast.Call, aliases: dict) -> bool:
+    """open() is a write only when its mode says so. Reading is not a finding."""
+    mode = keyword_of(call, "mode")
+    if mode is None and len(call.args) >= 2:
+        mode = call.args[1]
+    if mode is None:
+        return False  # default mode is 'r'
+    if not isinstance(mode, ast.Constant) or not isinstance(mode.value, str):
+        return False  # computed mode: not claimed either way
+    return any(ch in mode.value for ch in "wax+")
+
+
+FILESYSTEM_RULES: tuple[Rule, ...] = (
+    Rule(
+        rule_id="open-for-write",
+        family="filesystem",
+        capability="filesystem.write",
+        targets=frozenset({"open", "builtins.open", "io.open", "codecs.open"}),
+        predicate=_write_mode,
+        predicate_note="only when a literal mode containing w, a, x or + is supplied",
+        what="A file is opened for writing",
+        blind_spot=(
+            "A computed mode string is not claimed in either direction, so open(p, m) with "
+            "a variable mode is not reported as a write."
+        ),
+    ),
+    Rule(
+        rule_id="path-write",
+        family="filesystem",
+        capability="filesystem.write",
+        targets=frozenset({"write_text", "write_bytes", "shutil.copy", "shutil.copy2",
+                           "shutil.copyfile", "shutil.copytree", "shutil.move", "os.rename",
+                           "os.replace", "os.makedirs", "os.mkdir"}),
+        what="A filesystem write, copy or directory creation",
+        blind_spot=(
+            "write_text and write_bytes are matched on the bare method name, so any object "
+            "exposing them matches. Over-reports by design."
+        ),
+    ),
+    Rule(
+        rule_id="filesystem-delete",
+        family="filesystem",
+        capability="filesystem.delete",
+        targets=frozenset({"os.remove", "os.unlink", "os.rmdir", "os.removedirs",
+                           "shutil.rmtree", "unlink"}),
+        escalated=True,
+        what="A file or directory is deleted",
+        blind_spot="Deletion of a temporary file the code itself created is equally matched.",
+    ),
+    Rule(
+        rule_id="permission-change",
+        family="filesystem",
+        capability="filesystem.permission_change",
+        targets=frozenset({"os.chmod", "os.chown", "os.lchown", "os.fchmod"}),
+        escalated=True,
+        what="File permissions or ownership are changed",
+        blind_spot="Does not resolve the target path or the resulting mode.",
+    ),
+    Rule(
+        rule_id="archive-extraction",
+        family="filesystem",
+        capability="filesystem.archive_extraction",
+        targets=frozenset({"tarfile.open", "extractall", "extract", "shutil.unpack_archive",
+                           "zipfile.ZipFile"}),
+        escalated=True,
+        what="An archive is extracted, which can write outside the destination directory",
+        blind_spot=(
+            "Python 3.12+ supports a `filter=` argument that constrains extraction; this "
+            "rule does not yet distinguish a filtered extractall from an unfiltered one, "
+            "so it over-reports on modern, safe code. Recorded in CLAIMS.md."
+        ),
+    ),
+    Rule(
+        rule_id="sensitive-path-literal",
+        family="filesystem",
+        capability="filesystem.read_sensitive_path",
+        kind="string",
+        targets=frozenset(
+            {"/etc/passwd", "/etc/shadow", ".ssh/id_rsa", ".ssh/id_ed25519",
+             "/proc/self/environ", "/root/", ".netrc", ".git-credentials", ".npmrc",
+             ".pypirc", "id_rsa.pub"}
+        ),
+        escalated=True,
+        what="A well-known sensitive filesystem path appears as a literal",
+        blind_spot="Presence of the path does not establish that it is opened.",
+    ),
+    Rule(
+        rule_id="path-traversal-literal",
+        family="filesystem",
+        capability="filesystem.path_traversal",
+        kind="string",
+        targets=frozenset({"../../", "..\\..\\"}),
+        what="A path literal containing repeated parent-directory traversal",
+        blind_spot=(
+            "A single '..' is too common to match. Traversal assembled at runtime from "
+            "segments is not detected; the config-side case is covered by the template check."
+        ),
+    ),
+)
+
+
+PACKAGE_RULES: tuple[Rule, ...] = (
+    Rule(
+        rule_id="package-install-command",
+        family="package_build",
+        capability="package.install_at_runtime",
+        kind="string",
+        targets=frozenset(
+            {"pip install", "pip3 install", "pip.main", "conda install", "apt-get install",
+             "apt install", "npm install", "uv pip install", "poetry add"}
+        ),
+        escalated=True,
+        what="A package-installation command appears as a literal",
+        blind_spot=(
+            "Matched as text, so the same string in documentation or a README-style config "
+            "field matches. Pair with process.subprocess evidence before treating as live."
+        ),
+    ),
+    Rule(
+        rule_id="pip-internal-api",
+        family="package_build",
+        capability="package.manager_invocation",
+        targets=frozenset({"pip.main", "pip._internal.main", "pkg_resources.require"}),
+        escalated=True,
+        what="A package manager is driven through its Python API at runtime",
+        blind_spot="pip's internal API is unsupported by pip itself; presence is unusual.",
+    ),
+    Rule(
+        rule_id="setuptools-build-hook",
+        family="package_build",
+        capability="execution.build_hook",
+        targets=frozenset({"setuptools.setup", "distutils.core.setup", "setup"}),
+        what="A packaging entry point that executes at install or build time",
+        blind_spot=(
+            "Matching `setup` by bare name over-reports on any function called setup(). "
+            "The repository-shape check distinguishes an actual setup.py."
+        ),
+    ),
+)
+
+
+RULES = RULES + NETWORK_RULES + ENVIRONMENT_RULES + CLOUD_RULES + FILESYSTEM_RULES + PACKAGE_RULES
+
 FAMILIES = tuple(dict.fromkeys(r.family for r in RULES))
+
+#: String rules are reusable outside Python source — a metadata endpoint in a YAML file is
+#: the same finding as one in a .py file.
+STRING_RULES = tuple(r for r in RULES if r.kind == "string")
 
 
 # ------------------------------------------------------------------------------- engine
@@ -297,28 +677,118 @@ def scan_file(pf: PythonFile, rules: tuple[Rule, ...] = RULES) -> list[Hit]:
     hits: list[Hit] = []
     source_lines = (pf.source or "").splitlines()
 
+    def _line_text(line: int) -> str:
+        return source_lines[line - 1].strip()[:200] if 0 < line <= len(source_lines) else ""
+
+    call_rules = [r for r in rules if r.kind == "call"]
+    string_rules = [r for r in rules if r.kind == "string"]
+    subscript_rules = [r for r in rules if r.kind == "subscript"]
+
     for node in ast.walk(pf.tree):
-        if not isinstance(node, ast.Call):
-            continue
-        names = call_names(node, pf.aliases)
-        if not names:
-            continue
-        for rule in rules:
-            if not (names & rule.targets):
+        # ---- calls
+        if isinstance(node, ast.Call):
+            names = call_names(node, pf.aliases)
+            if not names:
                 continue
-            if rule.predicate is not None and not rule.predicate(node, pf.aliases):
-                continue
-            line = getattr(node, "lineno", 0)
-            raw = source_lines[line - 1].strip() if 0 < line <= len(source_lines) else ""
-            resolved = resolve(dotted_name(node.func), pf.aliases)
-            hits.append(
-                Hit(
-                    rule=rule,
-                    path=pf.path,
-                    line=line,
-                    matched_name=resolved or dotted_name(node.func),
-                    excerpt=raw[:200],
+            for rule in call_rules:
+                if not (names & rule.targets):
+                    continue
+                if rule.predicate is not None and not rule.predicate(node, pf.aliases):
+                    continue
+                line = getattr(node, "lineno", 0)
+                resolved = resolve(dotted_name(node.func), pf.aliases)
+                hits.append(
+                    Hit(
+                        rule=rule,
+                        path=pf.path,
+                        line=line,
+                        matched_name=resolved or dotted_name(node.func),
+                        excerpt=_line_text(line),
+                    )
                 )
+
+        # ---- string literals (endpoints, credential paths)
+        elif isinstance(node, ast.Constant) and isinstance(node.value, str):
+            for rule in string_rules:
+                match = next((t for t in rule.targets if t in node.value), None)
+                if match is None:
+                    continue
+                line = getattr(node, "lineno", 0)
+                hits.append(
+                    Hit(
+                        rule=rule,
+                        path=pf.path,
+                        line=line,
+                        matched_name=match,
+                        excerpt=node.value[:200],
+                    )
+                )
+
+        # ---- subscripts, e.g. os.environ["AWS_SECRET_ACCESS_KEY"]
+        elif isinstance(node, ast.Subscript):
+            base = resolve(dotted_name(node.value), pf.aliases)
+            if not base:
+                continue
+            for rule in subscript_rules:
+                if base not in rule.targets:
+                    continue
+                line = getattr(node, "lineno", 0)
+                key = node.slice.value if isinstance(node.slice, ast.Constant) else None
+                key_text = key if isinstance(key, str) else "<computed>"
+                # The NAME of a credential-shaped variable is recorded; the value never is.
+                capability = (
+                    "env.credential_pattern_read"
+                    if isinstance(key, str) and _env_key_is_credential_shaped(key)
+                    else rule.capability
+                )
+                effective = (
+                    rule
+                    if capability == rule.capability
+                    else Rule(
+                        rule_id=f"{rule.rule_id}-credential-shaped",
+                        family=rule.family,
+                        capability=capability,
+                        targets=rule.targets,
+                        kind=rule.kind,
+                        escalated=True,
+                        what="A credential-shaped environment variable is read by name",
+                        blind_spot=(
+                            "Classification is by variable NAME only. A credential held in a "
+                            "variable with an ordinary name is not classified as one, and a "
+                            "non-secret variable whose name matches is over-classified."
+                        ),
+                    )
+                )
+                hits.append(
+                    Hit(
+                        rule=effective,
+                        path=pf.path,
+                        line=line,
+                        matched_name=f"{base}[{key_text!r}]",
+                        excerpt=_line_text(line),
+                    )
+                )
+    return hits
+
+
+def scan_strings(
+    items: list[tuple[str, str, int | None]],
+    rules: tuple[Rule, ...] = STRING_RULES,
+) -> list[Hit]:
+    """Apply the string rules to arbitrary (text, path, line) triples.
+
+    Exposed so a metadata endpoint in a YAML file produces the same finding as one in a
+    Python file. A rule that only looks at .py files would miss the config-borne case,
+    which is the more likely place to find a hardcoded endpoint.
+    """
+    hits: list[Hit] = []
+    for text, path, line in items:
+        for rule in rules:
+            match = next((t for t in rule.targets if t in text), None)
+            if match is None:
+                continue
+            hits.append(
+                Hit(rule=rule, path=path, line=line or 0, matched_name=match, excerpt=text[:200])
             )
     return hits
 
@@ -337,6 +807,7 @@ def run(
     excluded_dirs: set[str] | None = None,
     families: tuple[str, ...] | None = None,
     component: str = "scanner",
+    include_configs: bool = True,
 ) -> SurfaceResult:
     """Run the Python-surface checks over a repository root."""
     excluded_dirs = excluded_dirs or {"vendor", ".git", "node_modules", "__pycache__"}
@@ -359,9 +830,28 @@ def run(
     for pf in files:
         hits += scan_file(pf, rules)
 
+    # String rules apply to configuration too. A hardcoded metadata endpoint is more likely
+    # to sit in a YAML file than in Python, and a rule that only reads .py files would miss
+    # the commoner case entirely.
+    languages = ["python"]
+    if include_configs:
+        active_string_rules = tuple(r for r in rules if r.kind == "string")
+        if active_string_rules:
+            languages += ["yaml", "json", "toml"]
+            for cfg_path in iter_config_files(root, excluded=excluded_dirs):
+                rel = str(cfg_path.relative_to(root))
+                parsed = parse_config(cfg_path, rel)
+                if not parsed.ok:
+                    failed.append(parsed.failed_item)
+                    continue
+                analysed.append(rel)
+                hits += scan_strings(
+                    [(s.value, rel, s.line) for s in parsed.scalars], active_string_rules
+                )
+
     scope = make_scope(
-        analysed=analysed,
-        languages=["python"],
+        analysed=sorted(analysed),
+        languages=languages,
         excluded=excluded,
         failed=failed,
     )
@@ -370,7 +860,11 @@ def run(
     for h in hits:
         by_capability[h.rule.capability].append(h)
 
-    capabilities = sorted({r.capability for r in rules})
+    # Include capabilities that only appear at match time — the credential-shaped
+    # environment read is derived from the key, not declared by a static rule. Deriving the
+    # list from `rules` alone produced a Hit with no corresponding Finding, which is a
+    # silently dropped detection.
+    capabilities = sorted({r.capability for r in rules} | set(by_capability))
     findings = []
     for capability in capabilities:
         cap_hits = by_capability.get(capability, [])

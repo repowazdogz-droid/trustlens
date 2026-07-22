@@ -74,7 +74,12 @@ def build_alias_map(tree: ast.Module) -> dict[str, str]:
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
             for a in node.names:
-                aliases[a.asname or a.name.split(".")[0]] = a.name
+                if a.asname:
+                    aliases[a.asname] = a.name
+                # `import urllib.request` binds the name `urllib`, which refers to the top
+                # package — NOT to `urllib.request`. Mapping urllib -> urllib.request would
+                # rewrite `urllib.request.urlopen` into `urllib.request.request.urlopen`,
+                # corrupting the resolved name recorded as evidence.
         elif isinstance(node, ast.ImportFrom):
             if node.module is None or node.level:
                 continue  # relative import; the target is outside this file's knowledge
@@ -172,6 +177,11 @@ def call_names(node: ast.Call, aliases: dict[str, str]) -> set[str]:
     """Every name a call could reasonably be known by, for matching against rules."""
     raw = dotted_name(node.func)
     if not raw:
+        # A method call on the result of another call — `tarfile.open(p).extractall()` —
+        # has no dotted name. Expose the bare attribute so suffix rules still match,
+        # because chained calls are idiomatic and would otherwise be a blanket blind spot.
+        if isinstance(node.func, ast.Attribute):
+            return {node.func.attr}
         return set()
     resolved = resolve(raw, aliases)
     names = {raw, resolved}

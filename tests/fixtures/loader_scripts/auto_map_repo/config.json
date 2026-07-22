@@ -1,0 +1,8 @@
+{
+  "_trustlens_fixture": "SYNTHETIC - auto_map points at repository code",
+  "model_type": "custom",
+  "auto_map": {
+    "AutoConfig": "configuration_custom.CustomConfig",
+    "AutoModelForCausalLM": "modeling_custom.CustomForCausalLM"
+  }
+}
