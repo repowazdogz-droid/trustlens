@@ -191,12 +191,31 @@ def test_no_sandbox_module_imports_an_analysis_package():
 
 
 def test_the_constraint_is_recorded_where_it_will_be_read():
-    """The rule must live in the threat model, not only in a test file."""
+    """The rule must live in the threat model, not only in a test file.
+
+    Reads the declared status *line* rather than searching the whole document for
+    "NOT WRITTEN". The substring form skipped spuriously the moment the threat model was
+    drafted, because the drafted document names all three of its possible states in a
+    table — so the guard switched itself off at exactly the point it became live. Same
+    defect as the one corrected in `test_process_boundary.py`; found by checking whether
+    the skip was still honest after the document changed.
+    """
     doc = (ROOT / "SANDBOX_THREAT_MODEL.md").read_text(encoding="utf-8")
-    if "NOT WRITTEN" in doc:
+    status = next(
+        (ln for ln in doc.splitlines() if ln.startswith("## Status:")), ""
+    ).removeprefix("## Status:").strip()
+    if status.startswith("NOT WRITTEN"):
         pytest.skip("threat model not yet drafted; this becomes live when it is")
-    assert "sandbox configuration" in doc.lower()
-    assert "SandboxSpec" in doc or "does not initially control" in doc
+
+    assert "sandbox configuration" in doc.lower(), (
+        "the threat model must state the constraint in its own words, not delegate it"
+    )
+    assert "does not initially control" in doc, (
+        "the gVisor SECURITY.md precondition is the evidence for the constraint and must "
+        "be quoted, so a future reader can check it rather than trust it"
+    )
+    for advisory in ("GHSA-7fhf-v3p3-rp56", "CVE-2026-50540", "CVE-2026-44210"):
+        assert advisory in doc, f"{advisory} is load-bearing evidence and must be cited"
 
 
 def test_launch_config_fields_are_enumerated_not_gestured_at():

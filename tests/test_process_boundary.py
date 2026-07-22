@@ -136,10 +136,54 @@ def test_no_sandbox_module_exists_yet():
     )
 
 
-def test_sandbox_threat_model_still_declares_itself_unwritten():
-    """The placeholder must not quietly become a real-looking document."""
+#: The only states SANDBOX_THREAT_MODEL.md may declare. `SIGNED OFF` is a claim about a
+#: human action; nothing in this repository may set it, and no test may infer it.
+THREAT_MODEL_STATES = (
+    "NOT WRITTEN",
+    "DRAFT — AWAITING SIGN-OFF",
+    "SIGNED OFF",
+)
+
+
+def test_sandbox_threat_model_declares_exactly_one_known_state():
+    """The document must say which of three states it is in, on a parseable line.
+
+    Corrects a real defect in the first version of this test, which asserted
+    `"NOT WRITTEN" in doc or "REVIEWED" in doc` over the whole file. That passed for the
+    wrong reason: the placeholder happened to contain the word "REVIEWED" in an unrelated
+    sentence about schema enforcement, so the second branch was satisfied by prose rather
+    than by any recorded review. A substring search over a whole document is not a state
+    check.
+
+    It was also wrongly binary. A drafted-but-unapproved threat model is a legitimate third
+    state, not the "ambiguous middle" the old test forbade — the ambiguity it was really
+    guarding against is a document that does not say where it stands. So the fix is to
+    require an explicit status line, not to forbid the state.
+    """
     doc = (PACKAGE.parent / "SANDBOX_THREAT_MODEL.md").read_text(encoding="utf-8")
-    assert "NOT WRITTEN" in doc or "REVIEWED" in doc, (
-        "SANDBOX_THREAT_MODEL.md must either declare itself unwritten or record a completed "
-        "review; it may not sit in an ambiguous middle state"
+    status_lines = [ln for ln in doc.splitlines() if ln.startswith("## Status:")]
+    assert len(status_lines) == 1, (
+        f"expected exactly one '## Status:' line, found {len(status_lines)}: {status_lines}"
+    )
+    declared = status_lines[0].removeprefix("## Status:").strip()
+    assert any(declared.startswith(s) for s in THREAT_MODEL_STATES), (
+        f"threat model declares an unrecognised state {declared!r}; it must be one of "
+        f"{THREAT_MODEL_STATES}"
+    )
+
+
+def test_sign_off_is_not_claimed_while_the_phase_3_gate_still_holds():
+    """`SIGNED OFF` may only be set by Warren, never by an implementing session.
+
+    This cannot detect who edited the file. What it can do is refuse the combination that
+    would matter: a document claiming sign-off while the rest of the gate is untouched is
+    far more likely to be a session that wrote the words than a human who reviewed them.
+    """
+    doc = (PACKAGE.parent / "SANDBOX_THREAT_MODEL.md").read_text(encoding="utf-8")
+    status = next(ln for ln in doc.splitlines() if ln.startswith("## Status:"))
+    if not status.removeprefix("## Status:").strip().startswith("SIGNED OFF"):
+        return
+    assert (PACKAGE.parent / "docs" / "SIGN_OFF.md").exists(), (
+        "the threat model claims SIGNED OFF but no docs/SIGN_OFF.md records who signed it, "
+        "when, and on what. Sign-off is a human act with a record, not a status string."
     )
