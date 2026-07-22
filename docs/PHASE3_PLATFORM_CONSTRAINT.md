@@ -90,3 +90,73 @@ conclusion.
 weighed explicitly in the review, and its conformance probes could not be run on the machine
 where the rest of this project is verified — which matters because the human sign-off gate
 covers exactly those probes.
+
+---
+
+# Addendum, 2026-07-22: CI viability, and a correction on escape counts
+
+## CI as a path for Firecracker/Kata — real, but narrower than implied, and not currently existing
+
+**There is no CI configured in this repository.** No `.github/workflows`, no git remote.
+"CI-only iteration" is therefore infrastructure that would have to be created, not an option
+already available — a distinction worth making before it is weighed against buying a Linux
+box.
+
+**GitHub-hosted runners do expose `/dev/kvm`, but only on the larger tier.** From GitHub's
+own changelog, 23 February 2023, "Hardware accelerated Android virtualization on Actions
+Linux larger hosted runners":
+
+> "Starting on February 23, 2023, Actions users of GitHub-hosted **larger** Linux runners
+> will be able to make use of hardware acceleration for Android testing… To make use of this
+> on Linux, Actions users will need to add the runner user to the KVM user group"
+
+with the setup being a udev rule on `KERNEL=="kvm"`. The presence of a `/dev/kvm` node is
+what Firecracker requires.
+
+So the CI path is **real but paid and tier-specific**: larger runners, not the standard free
+ones. **[?] Whether the standard `ubuntu-latest` runners now also expose `/dev/kvm` was not
+verified** — the primary evidence found says "larger", and I am not extrapolating from it.
+
+Weighing it honestly: CI would let Firecracker or Kata be exercised, but the conformance
+probes are precisely the artefact requiring human sign-off, and running them only on remote
+ephemeral infrastructure makes that review harder to perform and harder to trust than running
+them where the reviewer can see them.
+
+## Correction: the "highest escape count" line was stated with more confidence than the evidence carries
+
+I wrote that rootless podman/runc has "the highest escape count". The underlying CVEs are
+real and I verified three of them directly against NVD rather than relying on a summary:
+
+| CVE | NVD CVSS | Verbatim |
+|---|---|---|
+| CVE-2019-5736 | 8.6 | "allows attackers to overwrite the host runc binary (and consequently obtain host root access)" |
+| CVE-2024-21626 | 8.6 | "due to an internal file descriptor leak, an attacker could cause…" |
+| CVE-2025-31133 | 7.8 | affects "1.2.7 and below, 1.3.0-rc.1 through 1.3.1, 1.4.0-rc.1 and 1.4.0-rc.2" |
+
+**But a cross-project count is not a like-for-like measurement, and ranking by it is
+unsound.** The denominators differ in ways that swamp the counts:
+
+* **gVisor publishes zero GitHub repository advisories** — disclosure runs through a mailing
+  list — and its CVE criteria explicitly exclude anything where "the attacker… control[s] the
+  sandbox configuration". Its low count reflects its disclosure route and restrictive
+  criteria as much as its defect rate.
+* **runc's own advisory list omits CVE-2019-5736**, its most famous escape. Every GHSA-derived
+  count in this review is therefore a **lower bound**, not a total.
+* **Kata's advisories cluster in the last ten months**, which could indicate more defects or
+  simply more scrutiny — one of them credits AI-assisted analysis for the finding.
+* Deployment scale, age and attacker attention differ by orders of magnitude across the four.
+
+**What survives as decision-relevant, stated at the strength the evidence supports:**
+
+* Firecracker: **no confirmed guest-to-host escape** in the public record; two memory-safety
+  defects with conditional escape potential.
+* gVisor: **one** confirmed sandbox-crossing issue, in 2018.
+* Kata: **four** host-compromise advisories in twelve months, **three of them
+  configuration-injection**.
+* runc/podman: **repeated** confirmed escapes across 2019–2025, three landing on one day
+  (2025-11-05), against a mechanism whose own projects publish no threat model.
+
+That last row is enough to treat plain rootless containers as a weak fallback for hostile ML
+artifacts — supported by the shared-kernel argument and podman's own claim being a *privilege
+ceiling* rather than a containment claim, not by a count comparison. **The count comparison
+itself should not appear in the review as a ranking.**
