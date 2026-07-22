@@ -119,3 +119,34 @@ is on `PATH`, so `passed` differs between environments while `collected` does no
 `core.hooksPath` is a per-clone git setting that the repository cannot carry, so
 `tests/test_stats_mechanism.py` asserts it is configured. A failure there means the
 mechanism is present but inactive.
+
+## The structured-input heuristic for tool reuse
+
+**If consuming an external tool's output requires first producing input more structured
+than what that tool itself returns, the tool is not load-bearing — do not adopt it,
+regardless of licence, maintenance status, or popularity.**
+
+This generalises from the Phase 2 RBAC survey and applies to every future reuse decision.
+Both offline RBAC graph tools (`rback`, `rbac-tool viz`) take structured RBAC JSON and
+return *presentation* DOT: node IDs, colours, shapes, legend nodes. To call either,
+TrustLens must already have parsed the manifests into typed objects — at which point
+constructing the typed edge set directly is strictly less work than parsing the tool's
+output back into one, and it yields better data.
+
+The trap the heuristic defends against is that such a tool looks like a strong reuse
+candidate on every metric a survey normally checks. `rbac-tool` is Apache-2.0, actively
+maintained, backed by a vendor, and does exactly the job by name. It still fails, because
+the direction of information flow is wrong: it consumes more structure than it produces.
+
+Ask, before adopting any tool:
+
+1. What structure must I build to call it?
+2. What structure do I get back?
+3. If (1) is richer than (2), the tool is a renderer or a reporter — useful for humans,
+   not load-bearing for evidence. Adopt it for presentation only, or not at all.
+
+A tool that *adds* information — a maintained rule set, a vulnerability database, an
+authoritative decision procedure — passes. `picklescan` passes: TrustLens hands it bytes
+and gets back opcode analysis it could not produce itself. The upstream Kubernetes
+`RBACAuthorizer` passes: TrustLens hands it decoded objects and gets back authorisation
+semantics it would otherwise approximate badly.

@@ -243,3 +243,65 @@ keeps the upstream authorizer in, at a now-known price.
 - **[?]** Whether `rbac-tool viz`'s DOT output is deterministic. It was **not** subjected to
   the 20-run test applied to `rback`, and given that `rback` failed it, assuming `rbac-tool`
   passes would repeat exactly the mistake this round was called to correct.
+
+
+---
+
+# Round 3: both remaining verifications resolved (2026-07-22)
+
+## `rbac-tool viz` — subjected to the same 20-run test, verified independently
+
+Built from source (commit `a0b8c03`, Apache-2.0) and run offline from a file. File input is
+first-class, confirmed at `pkg/visualize/rbacviz.go:100` — `utils.ReadObjectsFromFile(opts.Infile)`
+— with the cluster path taken only when `Infile == ""` (line 56).
+
+| Measurement | `rbac-tool viz` | `rback` |
+|---|---|---|
+| Runs of identical input | 20 | 20 |
+| **Distinct byte outputs** | **2** | **4** |
+| Distinct canonical edge sets | 1 | 1 |
+| Edge count | 5, every run | 12, every run |
+| What varies | subgraph id (`cluster_s1` vs `cluster_s4`) and node numbering | node numbering |
+
+**It fails the same test.** Verified independently rather than inferred — though both use
+`github.com/emicklei/dot`, which is the shared root cause.
+
+**The rarity makes it more dangerous, not less.** `rback` produced four forms in twenty runs
+and would be caught by almost any check. `rbac-tool` produced one deviation in twenty — a
+5% flake that passes casual verification and fails intermittently later, which is the
+harder failure to diagnose.
+
+**Verdict: identical to `rback`.** TrustLens builds typed edges directly. `rbac-tool`'s value
+here was confirming `rback`'s finding and establishing that the instability is a property of
+the DOT-emitting approach rather than of one stale tool — not adding a usable dependency.
+
+## `kubescape` — resolved to REJECTED, from source
+
+`kubescape/rbac-utils` (Apache-2.0, pushed 2024-12-11) is the RBAC component. Rejected on
+two independent grounds:
+
+**1. It is not a graph.** `rbacutils/rbacdatastructures.go` defines `RbacTable`
+(`Cluster`, `Namespace`, `UserType`, `Username`, `Role`, `Verb []string`, `Resource []string`)
+— flat table rows. There is no `Node`, `Edge` or `Graph` type in the package. Both `RBAC` and
+`RbacTable` carry a `// DEPRECATED` marker in the source.
+
+**2. It is cluster-only.** The sole real scanner, `rbacscanner/rbacscannerk8sapi.go`, calls
+`K8s.KubernetesClient.RbacV1().ClusterRoles().List(...)`, `.Roles("").List(...)`,
+`.ClusterRoleBindings().List(...)` and `.RoleBindings("").List(...)` — live API calls
+(lines 35-50). The only other implementation is `rbacscannermock.go`, a test mock. No
+file-based scanner exists.
+
+**No longer partially verified.** Fully rejected, on source.
+
+## Final Phase 2 tool position
+
+| Need | Decision | Basis |
+|---|---|---|
+| RBAC graph construction | **BUILD in TrustLens** | Both graph tools are non-deterministic presentation emitters; the structured-input heuristic rules both out |
+| RBAC decision semantics | **REUSE upstream**, in the separate optional `trustlens rbac` command | Authoritative; 28 replace directives and 44 MB confined to an optional binary |
+| RBAC visualisation | `rbac-tool viz -f -` if a rendered view is ever wanted | Presentation only, never on the evidence path |
+| Cross-domain K8s→IAM edges | **BUILD** | Unchanged; still the real gap |
+
+Every tool in this area is now source-verified. Four of the survey's original
+classifications were wrong (`rback`, `rbac-tool`, krane's stated reason, and kubescape's
+status), and all four errors came from reading documentation instead of code.
