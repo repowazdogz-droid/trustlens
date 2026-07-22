@@ -1,0 +1,7 @@
+# TrustLens test fixture - benign
+dataset_name: example_tabular
+description: A plain tabular dataset of measurements.
+splits:
+  train: {num_examples: 1000}
+  test: {num_examples: 200}
+license: cc-by-4.0

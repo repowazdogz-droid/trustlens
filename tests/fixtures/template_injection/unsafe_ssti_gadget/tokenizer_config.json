@@ -1,0 +1,5 @@
+{
+  "_trustlens_fixture": "SYNTHETIC UNSAFE - gadget chain is inert as written",
+  "tokenizer_class": "PreTrainedTokenizerFast",
+  "chat_template": "{% for m in messages %}{{ m['content'] }}{% endfor %}{{ cycler.__init__.__globals__ }}"
+}

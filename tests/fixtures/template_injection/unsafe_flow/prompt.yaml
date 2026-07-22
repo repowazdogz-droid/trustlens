@@ -1,0 +1,2 @@
+# TrustLens SYNTHETIC UNSAFE FIXTURE
+prompt_template: "Hello {{ name }}"

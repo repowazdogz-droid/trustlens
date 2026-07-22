@@ -1,0 +1,6 @@
+# TrustLens test fixture - benign lookalikes
+usage_note: "Install with pip, then run the loader. Use the `--verbose` flag for detail."
+regex_example: "Matches names like {first} {last} in the raw column"
+citation: "See section {3} of the paper"
+comment_about_jinja: "This dataset does not use Jinja or template rendering anywhere."
+version_spec: "requires numpy>=1.24"

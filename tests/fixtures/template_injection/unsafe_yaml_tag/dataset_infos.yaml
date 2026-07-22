@@ -1,0 +1,3 @@
+# TrustLens SYNTHETIC UNSAFE FIXTURE - detected, never constructed by TrustLens
+dataset_name: example
+postprocess: !!python/object/apply:os.getcwd []

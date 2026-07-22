@@ -1,0 +1,6 @@
+# TrustLens SYNTHETIC UNSAFE FIXTURE - no real payload, does nothing if resolved
+defaults:
+  - _self_
+batch_size: 32
+worker_id: "${eval:1+1}"
+cache_dir: "${oc.env:HOME}/cache"
