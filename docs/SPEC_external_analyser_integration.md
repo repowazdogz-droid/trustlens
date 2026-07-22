@@ -1,8 +1,53 @@
 # Mini-spec: integrating an external analyser (Bandit first)
 
-**Status: DRAFT — UNREVIEWED. No code exists against this spec, and none may be written
-until it has been reviewed.** Written 2026-07-22 as the design precondition recorded in
+**Status: REVIEWED 2026-07-22. The placement questions are DECIDED (see below). No
+integration code exists yet.** Written 2026-07-22 as the design precondition recorded in
 `trustlens/scanner/CLAIMS.md`.
+
+---
+
+## DECISIONS (Warren, 2026-07-22)
+
+**1. External analysers stay OUT of the scan path.** Each becomes its own command producing
+its own record, exactly as acquisition did. `scan()` keeps its no-subprocess property
+**untouched and absolute**, and the inertness harness requires **no change at all** — which
+retires §4 of this spec entirely.
+
+```
+trustlens scan    ./repo         # inert; no subprocess; the guarantee is unchanged
+trustlens analyse ./repo         # spawns the allowlisted analyser; emits its own record
+trustlens rbac    ./manifests    # spawns the Go RBAC helper; emits its own record
+```
+
+Records compose through the existing `input_records[]` provenance already built for the
+blast-radius phase. The cost accepted: two commands rather than one, and cross-record
+composition to merge results.
+
+This decision governs **Phase 2 as well as Bandit**. The upstream Kubernetes RBAC
+authorizer (`plugin/pkg/auth/authorizer/rbac/rbac.go:172`) is reusable over in-memory
+objects but is Go, so it too becomes a separate command rather than an in-process call.
+
+**2. An analyser is OPTIONAL, and its absence is recorded.** A missing analyser makes the
+capabilities it would have covered `UNSUPPORTED`, with the reason stated. This preserves the
+clean-clone property Phase 0 deliberately established: the evidence model can still be
+verified with no analysis toolchain installed. The cost accepted: coverage varies between
+runs, so two records of the same artifact may legitimately differ, and any comparison
+between them must account for that.
+
+**3. Disagreement between analysers is recorded as a contradiction** — my recommendation,
+not a question that was put to review. The evidence model already treats contradictions as
+first-class and pins `reconciled: false` in machine-produced records. Suppressing a
+disagreement between two analysers would be exactly the silent reconciliation that field
+exists to prevent. If it proves noisy in practice, the fix is presentation, not suppression.
+
+### What these decisions retire from this spec
+
+- **§4 (harness distinguishes the approved analyser) is no longer needed.** `scan()` spawns
+  nothing, so the harness keeps its current, stronger assertion unchanged. The `analyse`
+  command gets its own controls instead.
+- The third open question below is answered above.
+
+---
 
 ## Why this needs a spec rather than a wiring commit
 
@@ -92,16 +137,23 @@ Before any code is written against this spec, a reviewer should agree that:
 5. Disagreement between Bandit and TrustLens's own rules on the same construct is recorded
    as a contradiction, not resolved by preferring either source.
 
-## Open questions for the reviewer
+## Open questions — all three answered
 
-- Should Bandit be a hard dependency, or optional with its absence recorded as `UNSUPPORTED`
-  for the capabilities it would have covered? The latter preserves the clean-clone property
-  that Phase 0 deliberately established, at the cost of variable coverage between runs.
-- Is corroboration from a second tool worth a contradiction record when the two disagree, or
-  does that add noise without adding information? The evidence model supports it; whether it
-  helps a reader is not established.
-- Does spawning any process at all belong in the scanner, or should external analysis be a
-  separate command that produces its own record, the way acquisition is separate? That would
-  preserve the scanner's no-subprocess property entirely and is the more conservative option.
+All three questions originally posed here are answered in the DECISIONS section above.
 
-**Until this document is reviewed, Bandit remains deferred and no integration code exists.**
+## Remaining requirements for the `analyse` command
+
+Unchanged by the placement decision, and still binding:
+
+1. **Allowlisted binary, resolved not inherited** (§1).
+2. **Version recorded from the tool** (§2) — `version_source: "reported_by_tool"`, or
+   `unknown`, never a guess.
+3. **Exit code and stderr are evidence** (§3) — and Bandit's exit code 3, "no supported
+   files", must map to a **vacuous scope**, not a clean result.
+4. **Scope stays TrustLens's own** (§5) — Bandit's `errors[]` may merge into `scope.failed`;
+   Bandit's view of what it analysed must never become `scope.analysed`.
+5. **Its own inertness controls.** `analyse` spawns exactly one allowlisted binary and
+   nothing else, tested the same way `scan` is.
+6. A test asserting `scan` still spawns nothing, so the separation cannot erode.
+
+**Bandit remains deferred until the `analyse` command is built to this spec.**

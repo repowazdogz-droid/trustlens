@@ -331,3 +331,21 @@ discipline: `0` clean, `1` findings, **`2` analysis did not complete**, `3` usag
 incomplete scan deliberately does not exit `0`, because a caller that treats it as clean
 reproduces the false-clean failure at the process boundary, where none of the in-process
 guards can see it.
+
+## External analysers: decided 2026-07-22
+
+External analysers stay **out of the scan path**. Each becomes its own command emitting its
+own record, composed through `input_records[]` — the same separation already applied to
+acquisition. `scan()` therefore keeps its no-subprocess guarantee **absolute and unchanged**,
+and the inertness harness needs no modification.
+
+An analyser is **optional**. Its absence makes the capabilities it would have covered
+`UNSUPPORTED` with the reason recorded, preserving the clean-clone property: the evidence
+model verifies with no analysis toolchain installed. Coverage therefore varies between runs,
+and comparing two records of the same artifact must account for that.
+
+Disagreement between two analysers is recorded as a contradiction rather than reconciled,
+consistent with `reconciled: false` being pinned in machine-produced records.
+
+This decision governs Phase 2 as well: the upstream Kubernetes RBAC authorizer is reusable
+but is Go, so it becomes a separate command rather than an in-process dependency.
