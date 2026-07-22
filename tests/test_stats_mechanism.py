@@ -106,12 +106,43 @@ def _run_hook(message: str, tmp_path: Path) -> subprocess.CompletedProcess:
     )
 
 
+def _hook_can_verify() -> bool:
+    """Whether the hook's own `python3 scripts/stats.py` can produce a count here.
+
+    The hook shells out to `python3`, which in a bare environment may be an interpreter
+    without pytest installed. That is not a defect — the hook fails closed and refuses the
+    commit — but it means the accept-path cannot be exercised there.
+    """
+    proc = subprocess.run(
+        ["python3", str(STATS), "--tests"], cwd=ROOT, capture_output=True, text=True
+    )
+    return proc.returncode == 0 and proc.stdout.strip().isdigit()
+
+
 @nested
 def test_hook_rejects_a_wrong_count(tmp_path):
+    """Rejection is required. The REASON may differ by environment; both are refusals."""
     result = _run_hook("Some change\n\n999999 tests pass.\n", tmp_path)
     assert result.returncode == 1, "the hook must reject an impossible count"
-    assert "REJECTED" in result.stderr
-    assert "999999" in result.stderr
+    if _hook_can_verify():
+        assert "REJECTED" in result.stderr
+        assert "999999" in result.stderr
+    else:
+        assert "could not read a test count" in result.stderr
+
+
+@nested
+def test_hook_fails_closed_when_it_cannot_verify(tmp_path):
+    """An unverifiable claim must be refused, never waved through.
+
+    Surfaced by a clean-clone run where `python3` had no pytest: the hook could not run
+    the suite, and refusing was the correct outcome.
+    """
+    if _hook_can_verify():
+        pytest.skip("this environment can verify; the fail-closed path is not exercisable")
+    result = _run_hook("Some change\n\n123 tests pass.\n", tmp_path)
+    assert result.returncode == 1
+    assert "Refusing the commit" in result.stderr
 
 
 @nested
@@ -122,6 +153,11 @@ def test_hook_ignores_a_message_with_no_claim(tmp_path):
 
 @nested
 def test_hook_accepts_the_count_the_runner_reports(tmp_path):
+    if not _hook_can_verify():
+        pytest.skip(
+            "the hook's python3 has no pytest here, so it correctly refuses every claim; "
+            "the accept path cannot be exercised in this environment"
+        )
     actual = subprocess.run(
         [sys.executable, str(STATS), "--tests"], cwd=ROOT, capture_output=True, text=True
     ).stdout.strip()
