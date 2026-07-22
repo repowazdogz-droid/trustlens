@@ -26,9 +26,77 @@
         "Constructs cited at the recorded positions are present in the artifact."
       ]
     },
-    "content_hash": "0b26d279b702b138a90974c5bb53937d18771384690e453b850c591049d36bb1",
-    "contradictions": [],
-    "declared_capabilities": [],
+    "content_hash": "d356a0e8a7c1baa2d5a13f450e51498287e14c1e42a2ab57bf432826092ba87b",
+    "contradictions": [
+      {
+        "between": [
+          {
+            "assertion": "no custom code",
+            "evidence_kind": "declared",
+            "ref": "0"
+          },
+          {
+            "assertion": "execution.loader_script FOUND at unsafe_dataset_loader.py:None",
+            "evidence_kind": "static",
+            "ref": "scanner:execution.loader_script:99d667ac7aa127ec"
+          }
+        ],
+        "capability": "execution.loader_script",
+        "contradiction_id": "DVR-execution.loader_script",
+        "reconciled": false,
+        "summary": "The artifact declares execution.loader_script as explicitly_absent, but it was found in the analysed scope."
+      },
+      {
+        "between": [
+          {
+            "assertion": "passive tabular data",
+            "evidence_kind": "declared",
+            "ref": "1"
+          },
+          {
+            "assertion": "execution.loader_script FOUND at unsafe_dataset_loader.py:None",
+            "evidence_kind": "static",
+            "ref": "scanner:execution.loader_script:99d667ac7aa127ec"
+          }
+        ],
+        "capability": "execution.loader_script",
+        "contradiction_id": "DVR-execution.loader_script",
+        "reconciled": false,
+        "summary": "The artifact declares execution.loader_script as not_required, but it was found in the analysed scope."
+      }
+    ],
+    "declared_capabilities": [
+      {
+        "capability": "execution.loader_script",
+        "declaration": "explicitly_absent",
+        "declared_by": "dataset_card",
+        "extraction_rule_id": "declared-surface",
+        "extraction_rule_version": "0.1.0",
+        "source": {
+          "excerpt": "no custom code",
+          "kind": "declaration_text",
+          "line": 5,
+          "path": "README.md",
+          "redacted": false
+        },
+        "verbatim": "no custom code"
+      },
+      {
+        "capability": "execution.loader_script",
+        "declaration": "not_required",
+        "declared_by": "dataset_card",
+        "extraction_rule_id": "declared-surface",
+        "extraction_rule_version": "0.1.0",
+        "source": {
+          "excerpt": "passive tabular data",
+          "kind": "declaration_text",
+          "line": 5,
+          "path": "README.md",
+          "redacted": false
+        },
+        "verbatim": "passive tabular data"
+      }
+    ],
     "environment_description_ref": null,
     "findings": [
       {
@@ -1572,7 +1640,7 @@
     "generic_advice": [],
     "input_records": [],
     "mitigations": [],
-    "record_id": "2223c44fa72d33bc6051ec3854e89eba",
+    "record_id": "c956ff54a201708eeae2d6bf1ddf5a38",
     "residual_uncertainty": "Every declared capability was reported on and every analysed path completed. Runtime reachability of every finding remains unestablished, and capabilities outside the implemented rules were not examined.",
     "run": {
       "completed_at": "2026-07-22T00:00:01+00:00",
@@ -1580,7 +1648,7 @@
       "execution_mode": "static_analysis",
       "invocation": "trustlens scan examples/repos/unsafe_dataset_loader",
       "reasoning_notes": [
-        "All declared check families reported on every capability they cover."
+        "Declared-surface extraction examined 15 conventional card and manifest locations, read 1, and recorded 2 declaration(s)."
       ],
       "started_at": "2026-07-22T00:00:00+00:00"
     },
@@ -1588,6 +1656,7 @@
     "schema_version": "trustlens/1.0.0",
     "scope": {
       "analysed": [
+        "README.md",
         "loader_config.yaml",
         "unsafe_dataset_loader.py"
       ],
@@ -1595,7 +1664,9 @@
       "failed": [],
       "languages": [
         "json",
+        "markdown",
         "python",
+        "text",
         "toml",
         "yaml"
       ],
@@ -1607,13 +1678,7 @@
       "name": "trustlens",
       "version": "0.1.0"
     },
-    "unknowns": [
-      {
-        "reason": "Declared-surface extraction is not implemented in this build.",
-        "subject": "Declared capabilities of the artifact",
-        "would_be_resolved_by": "The declared-surface extractor (README, dataset card, manifests)."
-      }
-    ],
+    "unknowns": [],
     "unsupported": []
   },
   "summary": {

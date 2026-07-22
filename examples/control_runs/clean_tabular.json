@@ -26,9 +26,55 @@
         "Constructs cited at the recorded positions are present in the artifact."
       ]
     },
-    "content_hash": "70e771c10ed4561ab691433ec2325a07d49ef3c01aa630831ba50aa45df2d66d",
+    "content_hash": "8b2111f2c066ae57fcf1371b0a732f6d4fa45d610da3ddc9e4afcc75abc1ff29",
     "contradictions": [],
-    "declared_capabilities": [],
+    "declared_capabilities": [
+      {
+        "capability": "execution.loader_script",
+        "declaration": "explicitly_absent",
+        "declared_by": "dataset_card",
+        "extraction_rule_id": "declared-surface",
+        "extraction_rule_version": "0.1.0",
+        "source": {
+          "excerpt": "No custom code",
+          "kind": "declaration_text",
+          "line": 6,
+          "path": "README.md",
+          "redacted": false
+        },
+        "verbatim": "No custom code"
+      },
+      {
+        "capability": "network.outbound",
+        "declaration": "explicitly_absent",
+        "declared_by": "dataset_card",
+        "extraction_rule_id": "declared-surface",
+        "extraction_rule_version": "0.1.0",
+        "source": {
+          "excerpt": "No custom code, no network",
+          "kind": "declaration_text",
+          "line": 6,
+          "path": "README.md",
+          "redacted": false
+        },
+        "verbatim": "No custom code, no network"
+      },
+      {
+        "capability": "execution.loader_script",
+        "declaration": "not_required",
+        "declared_by": "dataset_card",
+        "extraction_rule_id": "declared-surface",
+        "extraction_rule_version": "0.1.0",
+        "source": {
+          "excerpt": "Passive CSV data",
+          "kind": "declaration_text",
+          "line": 6,
+          "path": "README.md",
+          "redacted": false
+        },
+        "verbatim": "Passive CSV data"
+      }
+    ],
     "environment_description_ref": null,
     "findings": [
       {
@@ -1429,7 +1475,7 @@
     "generic_advice": [],
     "input_records": [],
     "mitigations": [],
-    "record_id": "bb81c03d98474a10fad706226bab8ea3",
+    "record_id": "cdf64b221f86c838823aa33ea05be604",
     "residual_uncertainty": "Every declared capability was reported on and every analysed path completed. Runtime reachability of every finding remains unestablished, and capabilities outside the implemented rules were not examined.",
     "run": {
       "completed_at": "2026-07-22T00:00:01+00:00",
@@ -1437,7 +1483,7 @@
       "execution_mode": "static_analysis",
       "invocation": "trustlens scan examples/repos/clean_tabular",
       "reasoning_notes": [
-        "All declared check families reported on every capability they cover."
+        "Declared-surface extraction examined 15 conventional card and manifest locations, read 1, and recorded 3 declaration(s)."
       ],
       "started_at": "2026-07-22T00:00:00+00:00"
     },
@@ -1445,13 +1491,16 @@
     "schema_version": "trustlens/1.0.0",
     "scope": {
       "analysed": [
+        "README.md",
         "dataset_infos.yaml"
       ],
       "excluded": [],
       "failed": [],
       "languages": [
         "json",
+        "markdown",
         "python",
+        "text",
         "toml",
         "yaml"
       ],
@@ -1463,13 +1512,7 @@
       "name": "trustlens",
       "version": "0.1.0"
     },
-    "unknowns": [
-      {
-        "reason": "Declared-surface extraction is not implemented in this build.",
-        "subject": "Declared capabilities of the artifact",
-        "would_be_resolved_by": "The declared-surface extractor (README, dataset card, manifests)."
-      }
-    ],
+    "unknowns": [],
     "unsupported": []
   },
   "summary": {

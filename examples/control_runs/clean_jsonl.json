@@ -26,7 +26,7 @@
         "Constructs cited at the recorded positions are present in the artifact."
       ]
     },
-    "content_hash": "0773251f55dd52be692202b2053c07261b906a88cf99487efa338f53cf120565",
+    "content_hash": "e6a610b691712ba18298c756c019df993ee7afc01cc45298f3cfcfea27e27c71",
     "contradictions": [],
     "declared_capabilities": [],
     "environment_description_ref": null,
@@ -1435,7 +1435,7 @@
     "generic_advice": [],
     "input_records": [],
     "mitigations": [],
-    "record_id": "a2cc096ec591ae4ba3d51c72904da4c7",
+    "record_id": "ce9105f2b1ad416d20dc0b7b97dcfaa9",
     "residual_uncertainty": "Every declared capability was reported on and every analysed path completed. Runtime reachability of every finding remains unestablished, and capabilities outside the implemented rules were not examined.",
     "run": {
       "completed_at": "2026-07-22T00:00:01+00:00",
@@ -1443,7 +1443,7 @@
       "execution_mode": "static_analysis",
       "invocation": "trustlens scan examples/repos/clean_jsonl",
       "reasoning_notes": [
-        "All declared check families reported on every capability they cover."
+        "Declared-surface extraction examined 15 conventional card and manifest locations, read 1, and recorded 0 declaration(s)."
       ],
       "started_at": "2026-07-22T00:00:00+00:00"
     },
@@ -1451,13 +1451,16 @@
     "schema_version": "trustlens/1.0.0",
     "scope": {
       "analysed": [
+        "README.md",
         "helpers.py"
       ],
       "excluded": [],
       "failed": [],
       "languages": [
         "json",
+        "markdown",
         "python",
+        "text",
         "toml",
         "yaml"
       ],
@@ -1471,9 +1474,9 @@
     },
     "unknowns": [
       {
-        "reason": "Declared-surface extraction is not implemented in this build.",
+        "reason": "No card, metadata or manifest declaration was found among the 15 conventional locations examined. The artifact has not declared what it requires; this is not a declaration that it requires nothing.",
         "subject": "Declared capabilities of the artifact",
-        "would_be_resolved_by": "The declared-surface extractor (README, dataset card, manifests)."
+        "would_be_resolved_by": "A dataset or model card stating the artifact's execution, network and credential requirements."
       }
     ],
     "unsupported": []

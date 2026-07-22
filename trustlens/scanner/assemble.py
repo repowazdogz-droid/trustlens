@@ -37,7 +37,7 @@ from ..evidence import (
     parse as parse_status,
 )
 from ..evidence.schema import SchemaValidationError, validate_structure
-from .checks import loader_scripts, python_surface, template_injection
+from .checks import declared_surface, loader_scripts, python_surface, template_injection
 
 TOOL_VERSION = "0.1.0"
 
@@ -127,6 +127,10 @@ class ScanResult:
     rows: list[dict]
 
     @property
+    def contradictions(self) -> list[dict]:
+        return self.record["contradictions"]
+
+    @property
     def complete(self) -> bool:
         return not self.coverage_gaps and all(o.error is None for o in self.outcomes)
 
@@ -157,6 +161,16 @@ def scan(
     failed: list[dict] = []
     languages: set[str] = set()
     notes: list[str] = []
+
+    declared = declared_surface.run(root, excluded_dirs=excluded_dirs)
+    analysed.update(declared.scope["analysed"])
+    languages.update(declared.scope["languages"])
+    failed += [f for f in declared.scope["failed"] if f not in failed]
+    notes.append(
+        f"Declared-surface extraction examined {len(declared.sources_examined)} conventional "
+        f"card and manifest locations, read {len(declared.scope['analysed'])}, and recorded "
+        f"{len(declared.declarations)} declaration(s)."
+    )
 
     for spec in checks:
         outcome = FamilyOutcome(name=spec.name)
@@ -263,7 +277,49 @@ def scan(
     )
 
     index = FindingIndex([{"findings": findings}])
-    rows = index.declared_versus_observed({"declared_capabilities": []})
+    rows = index.declared_versus_observed({"declared_capabilities": declared.declarations})
+
+    # The product's core output: the artifact says it does not do X, and X was found.
+    contradictions = list(declared.contradictions)
+    for i, decl in enumerate(declared.declarations):
+        if decl["declaration"] not in ("explicitly_absent", "not_required"):
+            continue
+        view = index.view(decl["capability"])
+        if view.status is not Status.FOUND:
+            continue
+        contributing = [
+            f for f in findings
+            if f["capability"] == decl["capability"] and f["status"] == "FOUND"
+        ]
+        contradictions.append(
+            {
+                "contradiction_id": f"DVR-{decl['capability']}",
+                "summary": (
+                    f"The artifact declares {decl['capability']} as "
+                    f"{decl['declaration']}, but it was found in the analysed scope."
+                ),
+                "between": [
+                    {
+                        "evidence_kind": "declared",
+                        "ref": str(i),
+                        "assertion": decl["verbatim"][:200],
+                    },
+                    {
+                        "evidence_kind": "static",
+                        "ref": contributing[0]["finding_id"],
+                        "assertion": (
+                            f"{decl['capability']} FOUND at "
+                            f"{contributing[0]['evidence'][0]['path']}"
+                            f":{contributing[0]['evidence'][0]['line']}"
+                            if contributing[0]["evidence"]
+                            else f"{decl['capability']} FOUND"
+                        ),
+                    },
+                ],
+                "reconciled": False,
+                "capability": decl["capability"],
+            }
+        )
 
     record = make_record(
         component="scanner",
@@ -298,14 +354,9 @@ def scan(
         },
         scope=scope,
         findings=findings,
-        declared_capabilities=[],
-        unknowns=[
-            {
-                "subject": "Declared capabilities of the artifact",
-                "reason": "Declared-surface extraction is not implemented in this build.",
-                "would_be_resolved_by": "The declared-surface extractor (README, dataset card, manifests).",
-            }
-        ],
+        declared_capabilities=declared.declarations,
+        contradictions=contradictions,
+        unknowns=declared.unknowns,
         residual_uncertainty=_residual(findings, coverage_gaps, failed),
         claims={
             "establishes": [
