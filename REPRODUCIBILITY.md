@@ -11,6 +11,12 @@ git clone <repo> trustlens && cd trustlens
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 
+# Required. git cannot carry this setting, so a fresh clone has the commit-msg
+# hook present but INACTIVE. tests/test_stats_mechanism.py fails until it is set,
+# deliberately: a reporting mechanism that is silently switched off is the exact
+# failure it exists to prevent.
+git config core.hooksPath .githooks
+
 # Regenerate every example record from source.
 PYTHONPATH=. python3 examples/generate_examples.py
 
