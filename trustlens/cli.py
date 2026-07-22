@@ -120,6 +120,63 @@ def _cmd_map_credentials(args: argparse.Namespace) -> int:
     return EXIT_FINDINGS if found else EXIT_CLEAN
 
 
+def _cmd_rbac(args: argparse.Namespace) -> int:
+    """Optional Go helper. Kept fully out of the core scan path by design."""
+    from .mapper import rbac_helper
+
+    manifest_dir = Path(args.manifests)
+    if not manifest_dir.is_dir():
+        print(f"error: {manifest_dir} is not a directory", file=sys.stderr)
+        return EXIT_USAGE
+
+    result = rbac_helper.run_helper(manifest_dir, binary=args.binary)
+    if not result.available:
+        print(f"UNSUPPORTED: {result.unavailable_reason}", file=sys.stderr)
+        print(json.dumps({"available": False, "reason": result.unavailable_reason}, indent=2))
+        # Absence is not a clean result and not a crash: the capabilities are unassessed.
+        return EXIT_INCOMPLETE
+
+    payload = {
+        "available": True,
+        "binary": result.binary_path,
+        "tool_version": result.version,
+        "kubernetes_semantics": result.kubernetes_module,
+        "analysed": result.analysed,
+        "failed": result.failed,
+        "service_accounts": result.service_accounts,
+        "decisions": result.decisions,
+    }
+    if args.format == "json":
+        print(json.dumps(payload, indent=2, sort_keys=True))
+    else:
+        print("TrustLens RBAC (upstream Kubernetes authorizer)")
+        print("=" * 70)
+        print(f"Semantics from : Kubernetes {result.kubernetes_module}")
+        print(f"Analysed       : {len(result.analysed)} manifest file(s)")
+        print("")
+        allowed = [d for d in result.decisions if d["allowed"]]
+        if not allowed:
+            print("  No probed verb was allowed for any service account in these manifests.")
+            print(f"  {len(result.decisions)} probe(s) were evaluated; this is a result over")
+            print("  the probed set, not a statement that nothing is permitted.")
+        for d in allowed:
+            print(f"  [ALLOWED] {d['subject']}: {d['verb']} {d['resource']}")
+            print(f"            {d['reason'][:110]}")
+        if result.failed:
+            print("")
+            print("Manifests that could not be read:")
+            for f in result.failed:
+                print(f"  {f['path']} — {f['kind']}: {f['reason'][:80]}")
+        print("")
+        print("These decisions establish what the SUPPLIED MANIFESTS would permit. They do")
+        print("not establish what any live cluster permits. No cluster was contacted.")
+
+    if result.failed:
+        print("\nSome manifests could not be read. Exit 2 — not a clean result.", file=sys.stderr)
+        return EXIT_INCOMPLETE
+    return EXIT_FINDINGS if any(d["allowed"] for d in result.decisions) else EXIT_CLEAN
+
+
 def _cmd_plan(args: argparse.Namespace) -> int:
     try:
         plan = acquire_mod.plan(args.source, ref=args.ref)
@@ -187,6 +244,15 @@ def build_parser() -> argparse.ArgumentParser:
     p_map.add_argument("--format", choices=("text", "json"), default="text")
     p_map.add_argument("--output", help="write the evidence record to this path")
     p_map.set_defaults(func=_cmd_map_credentials)
+
+    p_rbac = sub.add_parser(
+        "rbac",
+        help="OPTIONAL: evaluate Kubernetes RBAC with the upstream authorizer (separate binary)",
+    )
+    p_rbac.add_argument("manifests", help="directory of Kubernetes manifests")
+    p_rbac.add_argument("--binary", help="path to the trustlens-rbac helper")
+    p_rbac.add_argument("--format", choices=("text", "json"), default="text")
+    p_rbac.set_defaults(func=_cmd_rbac)
 
     p_plan = sub.add_parser(
         "plan", help="dry run: show what a fetch would retrieve, writing nothing"

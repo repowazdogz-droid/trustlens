@@ -349,3 +349,15 @@ consistent with `reconciled: false` being pinned in machine-produced records.
 
 This decision governs Phase 2 as well: the upstream Kubernetes RBAC authorizer is reusable
 but is Go, so it becomes a separate command rather than an in-process dependency.
+
+## Phase 2 status (2026-07-22)
+
+Built and tested: `trustlens map-credentials` (pure Python, inert, core path), the
+Terraform and Kubernetes RBAC ingesters, the cross-domain K8s→IAM join via the IRSA `:sub`
+condition, and the optional `trustlens rbac` Go helper wrapping the upstream Kubernetes
+authorizer.
+
+Not built, and recorded rather than dropped: IAM condition evaluation (a deliberate
+documented gap — see `docs/SPEC_phase2_credential_mapper.md` for why a partial
+implementation would be worse than none), `policy_sentry` integration, and network-policy
+reachability. **Phase 2 is partially complete.**

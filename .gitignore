@@ -14,3 +14,6 @@ reports/*.json
 # Acquired artifacts are never committed: they are untrusted third-party content.
 workdir/
 acquired/
+
+# The optional Go RBAC helper is 45MB and is built, not committed.
+go/rbac/trustlens-rbac

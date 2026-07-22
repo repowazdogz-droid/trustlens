@@ -110,3 +110,52 @@ differentiator and there is no prior art to reuse.
 - **[?]** Whether the Phase 0 environment-description schema sketch survives contact with a
   real Terraform plan. Blocks step 1 and should be tested against a real plan, not a
   hand-written one.
+
+---
+
+# Decisions on the remaining Phase 2 scope (2026-07-22)
+
+## IAM condition evaluation — DOCUMENTED GAP, deliberately not built
+
+Every IAM-derived edge already carries the limitation "Statement Conditions are not
+evaluated; the grant may be narrower in practice", and that stays.
+
+**Reasoning for not building it now.** IAM conditions are not a small feature. Sound
+evaluation needs the operator families (`StringEquals`/`StringLike`/`StringNotEquals`,
+`ArnLike`, `IpAddress`, `DateGreaterThan`, `Bool`, `Null`, `NumericLessThan`), the
+`ForAllValues:`/`ForAnyValue:` set qualifiers, the `IfExists` suffix, policy variables
+(`${aws:username}`), and the multi-key/multi-value AND/OR semantics between them. A partial
+implementation is **worse than none**: it would evaluate the operators it knows and silently
+ignore the rest, producing edges that *look* condition-aware and are therefore trusted more,
+while being wrong in exactly the cases conditions exist to cover. That is the false-precision
+counterpart of the false-clean failure this project is built to avoid.
+
+The honest state is the current one: the edge is reported, and the finding says the
+condition was not evaluated. A reader can see the gap.
+
+**What would change the decision.** `policy_sentry` and Parliament (both permissive, both
+verified in Phase 0) carry condition-key metadata, and Cedar's `symcc` offers real SMT
+evaluation for a Cedar-shaped policy set. Either is a route to sound evaluation. Neither is
+a small integration, and both belong to their own scoped piece of work rather than being
+appended to the end of Phase 2.
+
+**One exception already implemented.** The IRSA `:sub` condition IS parsed, because it is
+not a narrowing predicate over an otherwise-known grant — it is the only thing that
+identifies *which* Kubernetes service account the trust applies to. Dropping it would make
+the trust look far broader than it is, so parsing it makes the edge narrower and more
+accurate, not falsely precise.
+
+## policy_sentry integration and network-policy reachability — NOT BUILT
+
+Both remain unbuilt and are recorded here rather than quietly dropped:
+
+* **policy_sentry** would supply offline AWS action → access-level → ARN-format metadata, so
+  a `s3:GetObject` edge could be classified as a read rather than left as an opaque action
+  string. Verified permissive (MIT) and pure-Python in Phase 0.
+* **Network-policy reachability** would add `network.*` edges from Kubernetes NetworkPolicy
+  documents, including the metadata-endpoint egress case that Phase 1's scanner detects
+  statically and that the Phase 0 example record models by hand.
+
+Neither is started. Phase 2 is therefore **partially complete**: the mapper, the
+cross-domain join and the optional RBAC helper are built and tested; these two are named,
+scoped, and outstanding.
