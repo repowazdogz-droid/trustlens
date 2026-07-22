@@ -28,6 +28,11 @@ class NodeKind(str, Enum):
 
     PROCESS = "process"
     SERVICE_ACCOUNT = "service_account"
+    #: A human or external identity named as an RBAC subject. NOT a process: typing a
+    #: `kind: User` subject as one produces edges reading "a process can do X" about a
+    #: person, which is a different security claim.
+    USER = "user"
+    GROUP = "group"
     #: An external identity provider named in a trust policy. NOT a service
     #: account: typing an OIDC provider ARN as one would let a cross-domain join
     #: match on a name that means something else.
@@ -39,8 +44,18 @@ class NodeKind(str, Enum):
     IAM_ROLE = "iam_role"
     IAM_POLICY = "iam_policy"
     STORAGE_RESOURCE = "storage_resource"
+    #: A wildcard in a policy Resource field. NOT a resource: "*" means EVERY resource, and
+    #: typing it as one makes a path to everything render identically to a path to one
+    #: specific bucket — the most consequential of the three conflations found.
+    WILDCARD_RESOURCE = "wildcard_resource"
     API_ENDPOINT = "api_endpoint"
+    #: A NAMESPACED Kubernetes Role. Distinct from a ClusterRole below: they are different
+    #: object types, and distinguishing them only by whether a namespace field happens to
+    #: be None is the same conflation that briefly typed an OIDC provider as a service
+    #: account. A namespaced Role and a cluster-scoped role of the same name are not the
+    #: same grant.
     K8S_ROLE = "k8s_role"
+    K8S_CLUSTER_ROLE = "k8s_cluster_role"
     K8S_NAMESPACE = "k8s_namespace"
     NETWORK_SEGMENT = "network_segment"
 

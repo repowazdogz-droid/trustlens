@@ -228,10 +228,19 @@ def ingest_plan(
                     continue
                 actions = _as_list(stmt.get("Action"))
                 for resource in _as_list(stmt.get("Resource")):
+                    # "*" is not a resource, it is every resource. Typing it as one makes a
+                    # path to everything render identically to a path to one bucket. A
+                    # secrets store is likewise not storage.
+                    if resource == "*" or resource.endswith(":*") and resource.count(":") < 3:
+                        target_kind = NodeKind.WILDCARD_RESOURCE
+                    elif ":secretsmanager:" in resource or ":ssm:" in resource:
+                        target_kind = NodeKind.SECRET
+                    else:
+                        target_kind = NodeKind.STORAGE_RESOURCE
                     graph.add(
                         Edge(
                             source=node,
-                            target=Node(NodeKind.STORAGE_RESOURCE, resource),
+                            target=Node(target_kind, resource),
                             kind=EdgeKind.POLICY_ALLOWS,
                             reachability=Reachability.CONFIGURED,
                             evidence_path=rel,

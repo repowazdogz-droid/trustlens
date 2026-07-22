@@ -122,3 +122,97 @@ def test_helper_absence_does_not_break_the_mapper():
     result = map_credentials(ENV, **TS)
     assert result.graph.edges, "the mapper stands alone without the helper"
     assert any(e.kind is EdgeKind.CAN_ASSUME for e in result.graph.edges)
+
+
+# ------------------------------------- the conflation audit, applied beyond the first case
+
+def test_rbac_user_and_group_subjects_are_not_typed_as_processes(tmp_path):
+    """A `kind: User` subject is a person, not a process.
+
+    Typing one as PROCESS produces edges reading "a process can read secrets" about a
+    human, which is a different security claim. Found by auditing every node kind after
+    the FEDERATED_PRINCIPAL fix rather than assuming that was the only instance.
+    """
+    from trustlens.mapper import rbac as rbac_mod
+
+    d = tmp_path / "k8s"
+    d.mkdir()
+    (d / "b.yaml").write_text(
+        "apiVersion: rbac.authorization.k8s.io/v1\nkind: RoleBinding\n"
+        "metadata: {name: b, namespace: ml}\n"
+        "roleRef: {kind: Role, name: r, apiGroup: rbac.authorization.k8s.io}\n"
+        "subjects:\n"
+        "  - {kind: User, name: alice}\n"
+        "  - {kind: Group, name: platform}\n"
+        "  - {kind: ServiceAccount, name: sa, namespace: ml}\n",
+        encoding="utf-8",
+    )
+    res = rbac_mod.ingest(d, captured_at="2026-01-01T00:00:00+00:00",
+                          captured_at_basis="operator_asserted")
+    kinds = {n.identifier: n.kind for n in res.graph.nodes()}
+    assert kinds["alice"] is NodeKind.USER
+    assert kinds["platform"] is NodeKind.GROUP
+    assert kinds["sa"] is NodeKind.SERVICE_ACCOUNT
+    assert NodeKind.PROCESS not in kinds.values()
+
+
+def test_cluster_role_and_namespaced_role_are_distinct_kinds(tmp_path):
+    """Same name, different object type — they must not collapse into one node."""
+    from trustlens.mapper import rbac as rbac_mod
+
+    d = tmp_path / "k8s"
+    d.mkdir()
+    (d / "r.yaml").write_text(
+        "apiVersion: rbac.authorization.k8s.io/v1\nkind: Role\n"
+        "metadata: {name: reader, namespace: ml}\n"
+        "rules: [{apiGroups: [''], resources: ['configmaps'], verbs: ['get']}]\n"
+        "---\n"
+        "apiVersion: rbac.authorization.k8s.io/v1\nkind: ClusterRole\n"
+        "metadata: {name: reader}\n"
+        "rules: [{apiGroups: [''], resources: ['configmaps'], verbs: ['get']}]\n",
+        encoding="utf-8",
+    )
+    res = rbac_mod.ingest(d, captured_at="2026-01-01T00:00:00+00:00",
+                          captured_at_basis="operator_asserted")
+    kinds = {n.kind for n in res.graph.nodes() if n.identifier == "reader"}
+    assert kinds == {NodeKind.K8S_ROLE, NodeKind.K8S_CLUSTER_ROLE}, (
+        "a Role and a ClusterRole of the same name must not share a node kind"
+    )
+
+
+def test_a_policy_wildcard_is_not_typed_as_a_resource():
+    """`Resource: "*"` means EVERY resource; typing it as one hides the difference."""
+    result = map_credentials(ENV, **TS)
+    for node in result.graph.nodes():
+        if node.identifier == "*":
+            assert node.kind is NodeKind.WILDCARD_RESOURCE, (
+                'a "*" resource must not render identically to a specific bucket'
+            )
+    assert any(n.kind is NodeKind.WILDCARD_RESOURCE for n in result.graph.nodes())
+
+
+def test_a_secrets_store_arn_is_not_typed_as_storage():
+    from trustlens.mapper import terraform as tf
+    import json as _json
+
+    plan = {
+        "format_version": "1.2",
+        "resource_changes": [
+            {
+                "type": "aws_iam_policy", "name": "p",
+                "change": {"after": {"name": "p", "policy": _json.dumps({
+                    "Statement": [{"Effect": "Allow", "Action": "secretsmanager:GetSecretValue",
+                                   "Resource": "arn:aws:secretsmanager:eu-west-2:1:secret:db"}]
+                })}},
+            }
+        ],
+    }
+    p = Path(__file__).parent / "_tmp_plan.json"
+    p.write_text(_json.dumps(plan), encoding="utf-8")
+    try:
+        res = tf.ingest_plan(p, "plan.json", captured_at="2026-01-01T00:00:00+00:00",
+                             captured_at_basis="operator_asserted")
+        kinds = {n.kind for n in res.graph.nodes() if "secretsmanager" in n.identifier}
+        assert kinds == {NodeKind.SECRET}, "a secrets-store ARN is not storage"
+    finally:
+        p.unlink(missing_ok=True)

@@ -115,10 +115,11 @@ def build_graph(
         src = obj["__source__"]
         ns = _namespace(obj)
         ref = obj.get("roleRef") or {}
+        is_cluster_role = ref.get("kind") == "ClusterRole"
         role_node = Node(
-            NodeKind.K8S_ROLE,
+            NodeKind.K8S_CLUSTER_ROLE if is_cluster_role else NodeKind.K8S_ROLE,
             ref.get("name", "<unknown>"),
-            namespace=ns if ref.get("kind") == "Role" else None,
+            namespace=None if is_cluster_role else ns,
         )
         subjects = obj.get("subjects") or []
         if not subjects:
@@ -133,9 +134,14 @@ def build_graph(
             if not isinstance(subject, dict):
                 continue
             sub_kind = subject.get("kind", "")
-            node_kind = (
-                NodeKind.SERVICE_ACCOUNT if sub_kind == "ServiceAccount" else NodeKind.PROCESS
-            )
+            # An RBAC subject is a ServiceAccount, a User or a Group. They are different
+            # kinds of principal and must not share a label: an edge saying "a process can
+            # read secrets" about a human User is a different security claim.
+            node_kind = {
+                "ServiceAccount": NodeKind.SERVICE_ACCOUNT,
+                "User": NodeKind.USER,
+                "Group": NodeKind.GROUP,
+            }.get(sub_kind, NodeKind.PROCESS)
             graph.add(
                 Edge(
                     source=Node(node_kind, subject.get("name", "<unnamed>"),
@@ -157,7 +163,11 @@ def build_graph(
     # --- roles: role -> the resources its rules name
     for (kind, name, ns), obj in sorted(roles.items(), key=lambda kv: str(kv[0])):
         src = obj["__source__"]
-        role_node = Node(NodeKind.K8S_ROLE, name, namespace=ns)
+        role_node = Node(
+            NodeKind.K8S_CLUSTER_ROLE if kind == "ClusterRole" else NodeKind.K8S_ROLE,
+            name,
+            namespace=ns,
+        )
         for i, rule in enumerate(obj.get("rules") or []):
             if not isinstance(rule, dict):
                 continue
