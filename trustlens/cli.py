@@ -25,6 +25,7 @@ from pathlib import Path
 from .scanner import acquire as acquire_mod
 from .scanner.assemble import scan as run_scan, summarise
 from .scanner.report import discrepancy_level, render
+from .mapper.assemble import DescriptionError, map_credentials
 
 EXIT_CLEAN = 0
 EXIT_FINDINGS = 1
@@ -62,6 +63,60 @@ def _cmd_scan(args: argparse.Namespace) -> int:
             file=sys.stderr,
         )
         return EXIT_INCOMPLETE
+    return EXIT_FINDINGS if found else EXIT_CLEAN
+
+
+def _cmd_map_credentials(args: argparse.Namespace) -> int:
+    """Offline credential reachability. Spawns nothing, contacts nothing."""
+    try:
+        result = map_credentials(Path(args.description))
+    except DescriptionError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return EXIT_USAGE
+
+    record = result.record
+    if args.format == "json":
+        print(json.dumps(record, indent=2, sort_keys=True))
+    else:
+        ref = record["environment_description_ref"]
+        print("TrustLens credential reachability")
+        print("=" * 70)
+        # Surfaced prominently, not buried: every path below is only as current as this.
+        print(f"Description captured : {ref['description_captured_at']}  ({ref['captured_at_basis']})")
+        print(f"Description          : {ref['description_id']}")
+        print("")
+        for finding in sorted(record["findings"], key=lambda f: (f["status"], f["capability"])):
+            print(f"  [{finding['status']}] {finding['capability']}")
+            for ev in finding["evidence"][:6]:
+                print(f"      {ev['detail']}")
+            if finding["status"] == "UNSUPPORTED":
+                print(f"      Not assessed: {finding['unsupported_construct'][:110]}")
+        if record["contradictions"]:
+            print("")
+            print("Contradictions (recorded, not reconciled):")
+            for c in record["contradictions"]:
+                print(f"  [{c['contradiction_id']}] {c['summary']}")
+        if record["scope"]["failed"]:
+            print("")
+            print("Inputs that could not be read:")
+            for f in record["scope"]["failed"]:
+                print(f"  {f['path']} — {f['kind']}: {f['reason'][:90]}")
+        print("")
+        print(f"Residual uncertainty: {record['residual_uncertainty']}")
+
+    if args.output:
+        Path(args.output).write_text(
+            json.dumps(record, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        )
+
+    if record["scope"]["failed"] or result.coverage_gaps:
+        print(
+            "\nThe model is incomplete: some inputs could not be read. Exit 2 — not a "
+            "clean result.",
+            file=sys.stderr,
+        )
+        return EXIT_INCOMPLETE
+    found = any(f["status"] == "FOUND" for f in record["findings"])
     return EXIT_FINDINGS if found else EXIT_CLEAN
 
 
@@ -123,6 +178,15 @@ def build_parser() -> argparse.ArgumentParser:
     p_scan.add_argument("--format", choices=("text", "json"), default="text")
     p_scan.add_argument("--output", help="write the evidence record to this path")
     p_scan.set_defaults(func=_cmd_scan)
+
+    p_map = sub.add_parser(
+        "map-credentials",
+        help="offline credential reachability from an environment description",
+    )
+    p_map.add_argument("description", help="path to a trustlens_env_v1 description")
+    p_map.add_argument("--format", choices=("text", "json"), default="text")
+    p_map.add_argument("--output", help="write the evidence record to this path")
+    p_map.set_defaults(func=_cmd_map_credentials)
 
     p_plan = sub.add_parser(
         "plan", help="dry run: show what a fetch would retrieve, writing nothing"

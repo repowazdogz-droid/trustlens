@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata: {name: dataset-worker, namespace: ml}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata: {name: secret-reader, namespace: ml}
+rules:
+  - apiGroups: [""]
+    resources: ["secrets", "configmaps"]
+    verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata: {name: bind-secret-reader, namespace: ml}
+roleRef: {kind: Role, name: secret-reader, apiGroup: rbac.authorization.k8s.io}
+subjects:
+  - {kind: ServiceAccount, name: dataset-worker, namespace: ml}
