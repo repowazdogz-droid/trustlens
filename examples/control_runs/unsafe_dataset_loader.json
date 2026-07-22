@@ -1,0 +1,1693 @@
+{
+  "example_repo": "unsafe_dataset_loader",
+  "record": {
+    "artifact": {
+      "acquired_at": "2026-07-22T00:00:00+00:00",
+      "acquisition_authorised_by": null,
+      "acquisition_method": "user_supplied_path",
+      "artifact_id": "unsafe_dataset_loader",
+      "artifact_type": "local_directory",
+      "content_hash": "9f76f98bb0632a5fa8ef7762952ba1a5653d86f27e68824a558132249ed93189",
+      "content_hash_method": "directory_manifest_v1",
+      "declared_kind": null,
+      "file_count": 3,
+      "immutable_reference": null,
+      "source": "examples/repos/unsafe_dataset_loader",
+      "total_bytes": 1083
+    },
+    "claims": {
+      "does_not_establish": [
+        "That any construct executes at runtime.",
+        "That the artifact is malicious, or that any finding is exploitable.",
+        "That capabilities outside the analysed rules are absent."
+      ],
+      "establishes": [
+        "The listed static checks ran over the recorded scope at the recorded rule versions.",
+        "Constructs cited at the recorded positions are present in the artifact."
+      ]
+    },
+    "content_hash": "74bdf5b9e02d8e651a8209e8d099b262e7f378c91f0812d6d96eb59b155641fb",
+    "contradictions": [],
+    "declared_capabilities": [],
+    "environment_description_ref": null,
+    "findings": [
+      {
+        "capability": "template.injection_surface",
+        "confidence_basis": "No conventional template or interpolation syntax matched in 1 parsed configuration file(s).",
+        "derived_from": [],
+        "detection_method": "static_ast",
+        "environment_description_ref": null,
+        "evidence": [],
+        "evidence_strength": "STATIC_MATCH",
+        "evidence_unavailable_reason": null,
+        "finding_id": "scanner:template.injection_surface:8a48027545b9eb98",
+        "independently_reproduced": {
+          "by": [],
+          "records": [],
+          "reproduced": false
+        },
+        "limitations": [
+          "A surface match establishes that an expression-bearing value exists; it does not establish that anything renders or evaluates it.",
+          "Detection is syntactic. An expression assembled at runtime from fragments would not be matched.",
+          "Only YAML, JSON and TOML configuration is analysed. Other configuration formats are out of scope for this check.",
+          "Conventional template syntax is common and usually benign; this finding is a surface inventory, not an indication of compromise."
+        ],
+        "notes": null,
+        "rule_id": "template-injection-config",
+        "rule_version": "0.1.0",
+        "scope": {
+          "analysed": [
+            "loader_config.yaml",
+            "unsafe_dataset_loader.py"
+          ],
+          "excluded": [],
+          "failed": [],
+          "languages": [
+            "yaml",
+            "json",
+            "toml",
+            "python"
+          ],
+          "vacuous": false
+        },
+        "source_component": "scanner",
+        "status": "NOT_FOUND_WITHIN_ANALYSED_SCOPE",
+        "unknown_reason": null,
+        "unsupported_construct": null
+      },
+      {
+        "capability": "template.expression_evaluation",
+        "confidence_basis": "2 configuration value(s) contained a construct with no benign use in configuration (sandbox-escape gadget or expression-evaluating resolver), and 0 intra-function flow(s) from a configuration load to a render or eval sink were found.",
+        "derived_from": [],
+        "detection_method": "static_ast",
+        "environment_description_ref": null,
+        "evidence": [
+          {
+            "detail": "detector=ssti-gadget",
+            "excerpt": "${eval:__import__('os').name}",
+            "kind": "config_key",
+            "line": 2,
+            "path": "loader_config.yaml",
+            "pointer": "/builder_module",
+            "redacted": false
+          },
+          {
+            "detail": "detector=resolver-eval",
+            "excerpt": "${eval:__import__('os').name}",
+            "kind": "config_key",
+            "line": 2,
+            "path": "loader_config.yaml",
+            "pointer": "/builder_module",
+            "redacted": false
+          }
+        ],
+        "evidence_strength": "STATIC_MATCH",
+        "evidence_unavailable_reason": null,
+        "finding_id": "scanner:template.expression_evaluation:0be97130e625951b",
+        "independently_reproduced": {
+          "by": [],
+          "records": [],
+          "reproduced": false
+        },
+        "limitations": [
+          "A surface match establishes that an expression-bearing value exists; it does not establish that anything renders or evaluates it.",
+          "Detection is syntactic. An expression assembled at runtime from fragments would not be matched.",
+          "Only YAML, JSON and TOML configuration is analysed. Other configuration formats are out of scope for this check.",
+          "Flow analysis is intra-function only. A configuration value passed between functions or modules before reaching a sink is not detected.",
+          "A detected flow does not establish that the sink is reached at runtime."
+        ],
+        "notes": null,
+        "rule_id": "template-injection-config",
+        "rule_version": "0.1.0",
+        "scope": {
+          "analysed": [
+            "loader_config.yaml",
+            "unsafe_dataset_loader.py"
+          ],
+          "excluded": [],
+          "failed": [],
+          "languages": [
+            "yaml",
+            "json",
+            "toml",
+            "python"
+          ],
+          "vacuous": false
+        },
+        "source_component": "scanner",
+        "status": "FOUND",
+        "unknown_reason": null,
+        "unsupported_construct": null
+      },
+      {
+        "capability": "execution.deserialization",
+        "confidence_basis": "No arbitrary-object YAML tags were found in 1 parsed configuration file(s).",
+        "derived_from": [],
+        "detection_method": "static_ast",
+        "environment_description_ref": null,
+        "evidence": [],
+        "evidence_strength": "STATIC_MATCH",
+        "evidence_unavailable_reason": null,
+        "finding_id": "scanner:execution.deserialization:c092e6819a83a323",
+        "independently_reproduced": {
+          "by": [],
+          "records": [],
+          "reproduced": false
+        },
+        "limitations": [
+          "A surface match establishes that an expression-bearing value exists; it does not establish that anything renders or evaluates it.",
+          "Detection is syntactic. An expression assembled at runtime from fragments would not be matched.",
+          "Only YAML, JSON and TOML configuration is analysed. Other configuration formats are out of scope for this check.",
+          "Establishes that the tag is present, not that the document is ever loaded with an unsafe loader. Under yaml.safe_load the tag raises instead."
+        ],
+        "notes": null,
+        "rule_id": "template-injection-config",
+        "rule_version": "0.1.0",
+        "scope": {
+          "analysed": [
+            "loader_config.yaml",
+            "unsafe_dataset_loader.py"
+          ],
+          "excluded": [],
+          "failed": [],
+          "languages": [
+            "yaml",
+            "json",
+            "toml",
+            "python"
+          ],
+          "vacuous": false
+        },
+        "source_component": "scanner",
+        "status": "NOT_FOUND_WITHIN_ANALYSED_SCOPE",
+        "unknown_reason": null,
+        "unsupported_construct": null
+      },
+      {
+        "capability": "cloud.credential_file_access",
+        "confidence_basis": "No call site matched any of the 1 rule(s) for this capability across 2 parsed Python file(s).",
+        "derived_from": [],
+        "detection_method": "static_ast",
+        "environment_description_ref": null,
+        "evidence": [],
+        "evidence_strength": "STATIC_MATCH",
+        "evidence_unavailable_reason": null,
+        "finding_id": "scanner:cloud.credential_file_access:acf81c1d9e7919b9",
+        "independently_reproduced": {
+          "by": [],
+          "records": [],
+          "reproduced": false
+        },
+        "limitations": [
+          "Establishes that the construct appears in parsed source; does not establish that it executes at runtime.",
+          "Analysis is per-file and syntactic. A call assembled dynamically or reached through an indirection is not matched.",
+          "Presence of the path does not establish that the file is read."
+        ],
+        "notes": null,
+        "rule_id": "python-surface:cloud.credential_file_access",
+        "rule_version": "0.1.0",
+        "scope": {
+          "analysed": [
+            "loader_config.yaml",
+            "unsafe_dataset_loader.py"
+          ],
+          "excluded": [],
+          "failed": [],
+          "languages": [
+            "python",
+            "yaml",
+            "json",
+            "toml"
+          ],
+          "vacuous": false
+        },
+        "source_component": "scanner",
+        "status": "NOT_FOUND_WITHIN_ANALYSED_SCOPE",
+        "unknown_reason": null,
+        "unsupported_construct": null
+      },
+      {
+        "capability": "cloud.metadata_endpoint",
+        "confidence_basis": "1 call site(s) matched 1 rule(s) (cloud-metadata-endpoint) across 2 parsed Python file(s). Import aliases were resolved before matching.",
+        "derived_from": [],
+        "detection_method": "static_ast",
+        "environment_description_ref": null,
+        "evidence": [
+          {
+            "detail": "rule=cloud-metadata-endpoint resolved=169.254.169.254",
+            "excerpt": "http://169.254.169.254/latest/meta-data/",
+            "kind": "file_line",
+            "line": 3,
+            "path": "loader_config.yaml",
+            "redacted": false
+          }
+        ],
+        "evidence_strength": "STATIC_MATCH",
+        "evidence_unavailable_reason": null,
+        "finding_id": "scanner:cloud.metadata_endpoint:8e402ef8b43d743b",
+        "independently_reproduced": {
+          "by": [],
+          "records": [],
+          "reproduced": false
+        },
+        "limitations": [
+          "Establishes that the construct appears in parsed source; does not establish that it executes at runtime.",
+          "Analysis is per-file and syntactic. A call assembled dynamically or reached through an indirection is not matched.",
+          "An address assembled at runtime, or reached via a redirect or a hostname not in this list, is not matched. Documentation quoting the address also matches."
+        ],
+        "notes": null,
+        "rule_id": "python-surface:cloud.metadata_endpoint",
+        "rule_version": "0.1.0",
+        "scope": {
+          "analysed": [
+            "loader_config.yaml",
+            "unsafe_dataset_loader.py"
+          ],
+          "excluded": [],
+          "failed": [],
+          "languages": [
+            "python",
+            "yaml",
+            "json",
+            "toml"
+          ],
+          "vacuous": false
+        },
+        "source_component": "scanner",
+        "status": "FOUND",
+        "unknown_reason": null,
+        "unsupported_construct": null
+      },
+      {
+        "capability": "cloud.sdk_credential_discovery",
+        "confidence_basis": "No call site matched any of the 1 rule(s) for this capability across 2 parsed Python file(s).",
+        "derived_from": [],
+        "detection_method": "static_ast",
+        "environment_description_ref": null,
+        "evidence": [],
+        "evidence_strength": "STATIC_MATCH",
+        "evidence_unavailable_reason": null,
+        "finding_id": "scanner:cloud.sdk_credential_discovery:191de90caf17db3e",
+        "independently_reproduced": {
+          "by": [],
+          "records": [],
+          "reproduced": false
+        },
+        "limitations": [
+          "Establishes that the construct appears in parsed source; does not establish that it executes at runtime.",
+          "Analysis is per-file and syntactic. A call assembled dynamically or reached through an indirection is not matched.",
+          "Credential discovery is implicit in these SDKs; this reports the entry point, not a specific credential source."
+        ],
+        "notes": null,
+        "rule_id": "python-surface:cloud.sdk_credential_discovery",
+        "rule_version": "0.1.0",
+        "scope": {
+          "analysed": [
+            "loader_config.yaml",
+            "unsafe_dataset_loader.py"
+          ],
+          "excluded": [],
+          "failed": [],
+          "languages": [
+            "python",
+            "yaml",
+            "json",
+            "toml"
+          ],
+          "vacuous": false
+        },
+        "source_component": "scanner",
+        "status": "NOT_FOUND_WITHIN_ANALYSED_SCOPE",
+        "unknown_reason": null,
+        "unsupported_construct": null
+      },
+      {
+        "capability": "container.docker_socket",
+        "confidence_basis": "No call site matched any of the 2 rule(s) for this capability across 2 parsed Python file(s).",
+        "derived_from": [],
+        "detection_method": "static_ast",
+        "environment_description_ref": null,
+        "evidence": [],
+        "evidence_strength": "STATIC_MATCH",
+        "evidence_unavailable_reason": null,
+        "finding_id": "scanner:container.docker_socket:8ae223518c0904dd",
+        "independently_reproduced": {
+          "by": [],
+          "records": [],
+          "reproduced": false
+        },
+        "limitations": [
+          "Establishes that the construct appears in parsed source; does not establish that it executes at runtime.",
+          "Analysis is per-file and syntactic. A call assembled dynamically or reached through an indirection is not matched.",
+          "Access to this socket is generally equivalent to host root; presence is surface.",
+          "Does not establish that the daemon is reachable in the target environment."
+        ],
+        "notes": null,
+        "rule_id": "python-surface:container.docker_socket",
+        "rule_version": "0.1.0",
+        "scope": {
+          "analysed": [
+            "loader_config.yaml",
+            "unsafe_dataset_loader.py"
+          ],
+          "excluded": [],
+          "failed": [],
+          "languages": [
+            "python",
+            "yaml",
+            "json",
+            "toml"
+          ],
+          "vacuous": false
+        },
+        "source_component": "scanner",
+        "status": "NOT_FOUND_WITHIN_ANALYSED_SCOPE",
+        "unknown_reason": null,
+        "unsupported_construct": null
+      },
+      {
+        "capability": "env.credential_pattern_read",
+        "confidence_basis": "No call site matched any of the 0 rule(s) for this capability across 2 parsed Python file(s).",
+        "derived_from": [],
+        "detection_method": "static_ast",
+        "environment_description_ref": null,
+        "evidence": [],
+        "evidence_strength": "STATIC_MATCH",
+        "evidence_unavailable_reason": null,
+        "finding_id": "scanner:env.credential_pattern_read:2dbb1cb7137da247",
+        "independently_reproduced": {
+          "by": [],
+          "records": [],
+          "reproduced": false
+        },
+        "limitations": [
+          "Establishes that the construct appears in parsed source; does not establish that it executes at runtime.",
+          "Analysis is per-file and syntactic. A call assembled dynamically or reached through an indirection is not matched."
+        ],
+        "notes": null,
+        "rule_id": "python-surface:env.credential_pattern_read",
+        "rule_version": "0.1.0",
+        "scope": {
+          "analysed": [
+            "loader_config.yaml",
+            "unsafe_dataset_loader.py"
+          ],
+          "excluded": [],
+          "failed": [],
+          "languages": [
+            "python",
+            "yaml",
+            "json",
+            "toml"
+          ],
+          "vacuous": false
+        },
+        "source_component": "scanner",
+        "status": "NOT_FOUND_WITHIN_ANALYSED_SCOPE",
+        "unknown_reason": null,
+        "unsupported_construct": null
+      },
+      {
+        "capability": "env.enumeration",
+        "confidence_basis": "No call site matched any of the 2 rule(s) for this capability across 2 parsed Python file(s).",
+        "derived_from": [],
+        "detection_method": "static_ast",
+        "environment_description_ref": null,
+        "evidence": [],
+        "evidence_strength": "STATIC_MATCH",
+        "evidence_unavailable_reason": null,
+        "finding_id": "scanner:env.enumeration:2bdbe4eb4ecabc66",
+        "independently_reproduced": {
+          "by": [],
+          "records": [],
+          "reproduced": false
+        },
+        "limitations": [
+          "Establishes that the construct appears in parsed source; does not establish that it executes at runtime.",
+          "Analysis is per-file and syntactic. A call assembled dynamically or reached through an indirection is not matched.",
+          "dict(os.environ) and {**os.environ} are separate constructs; the first is matched by the subscript rule set, the second is a known miss.",
+          "subprocess calls inherit the environment implicitly and are not matched here."
+        ],
+        "notes": null,
+        "rule_id": "python-surface:env.enumeration",
+        "rule_version": "0.1.0",
+        "scope": {
+          "analysed": [
+            "loader_config.yaml",
+            "unsafe_dataset_loader.py"
+          ],
+          "excluded": [],
+          "failed": [],
+          "languages": [
+            "python",
+            "yaml",
+            "json",
+            "toml"
+          ],
+          "vacuous": false
+        },
+        "source_component": "scanner",
+        "status": "NOT_FOUND_WITHIN_ANALYSED_SCOPE",
+        "unknown_reason": null,
+        "unsupported_construct": null
+      },
+      {
+        "capability": "env.named_read",
+        "confidence_basis": "No call site matched any of the 2 rule(s) for this capability across 2 parsed Python file(s).",
+        "derived_from": [],
+        "detection_method": "static_ast",
+        "environment_description_ref": null,
+        "evidence": [],
+        "evidence_strength": "STATIC_MATCH",
+        "evidence_unavailable_reason": null,
+        "finding_id": "scanner:env.named_read:fabf9398737e2e45",
+        "independently_reproduced": {
+          "by": [],
+          "records": [],
+          "reproduced": false
+        },
+        "limitations": [
+          "Establishes that the construct appears in parsed source; does not establish that it executes at runtime.",
+          "Analysis is per-file and syntactic. A call assembled dynamically or reached through an indirection is not matched.",
+          "A computed key is recorded as a read without the name.",
+          "The variable name is not resolved when it is computed at runtime."
+        ],
+        "notes": null,
+        "rule_id": "python-surface:env.named_read",
+        "rule_version": "0.1.0",
+        "scope": {
+          "analysed": [
+            "loader_config.yaml",
+            "unsafe_dataset_loader.py"
+          ],
+          "excluded": [],
+          "failed": [],
+          "languages": [
+            "python",
+            "yaml",
+            "json",
+            "toml"
+          ],
+          "vacuous": false
+        },
+        "source_component": "scanner",
+        "status": "NOT_FOUND_WITHIN_ANALYSED_SCOPE",
+        "unknown_reason": null,
+        "unsupported_construct": null
+      },
+      {
+        "capability": "execution.build_hook",
+        "confidence_basis": "No call site matched any of the 1 rule(s) for this capability across 2 parsed Python file(s).",
+        "derived_from": [],
+        "detection_method": "static_ast",
+        "environment_description_ref": null,
+        "evidence": [],
+        "evidence_strength": "STATIC_MATCH",
+        "evidence_unavailable_reason": null,
+        "finding_id": "scanner:execution.build_hook:8d96dc328d95c28e",
+        "independently_reproduced": {
+          "by": [],
+          "records": [],
+          "reproduced": false
+        },
+        "limitations": [
+          "Establishes that the construct appears in parsed source; does not establish that it executes at runtime.",
+          "Analysis is per-file and syntactic. A call assembled dynamically or reached through an indirection is not matched.",
+          "Matching `setup` by bare name over-reports on any function called setup(). The repository-shape check distinguishes an actual setup.py."
+        ],
+        "notes": null,
+        "rule_id": "python-surface:execution.build_hook",
+        "rule_version": "0.1.0",
+        "scope": {
+          "analysed": [
+            "loader_config.yaml",
+            "unsafe_dataset_loader.py"
+          ],
+          "excluded": [],
+          "failed": [],
+          "languages": [
+            "python",
+            "yaml",
+            "json",
+            "toml"
+          ],
+          "vacuous": false
+        },
+        "source_component": "scanner",
+        "status": "NOT_FOUND_WITHIN_ANALYSED_SCOPE",
+        "unknown_reason": null,
+        "unsupported_construct": null
+      },
+      {
+        "capability": "execution.deserialization",
+        "confidence_basis": "2 call site(s) matched 2 rule(s) (pickle-load, yaml-unsafe-load) across 2 parsed Python file(s). Import aliases were resolved before matching. Conditional rules fired only under their stated condition: yaml-unsafe-load (only when no Loader, or a non-safe Loader, is supplied); torch-load-weights-only-false (only when weights_only=False is written literally); numpy-allow-pickle (only when allow_pickle=True is written literally); keras-safe-mode-false (only when safe_mode=False is written literally).",
+        "derived_from": [],
+        "detection_method": "static_ast",
+        "environment_description_ref": null,
+        "evidence": [
+          {
+            "detail": "rule=yaml-unsafe-load resolved=yaml.load",
+            "excerpt": "cfg = yaml.load(open(\"loader_config.yaml\").read())      # no Loader",
+            "kind": "file_line",
+            "line": 16,
+            "path": "unsafe_dataset_loader.py",
+            "redacted": false
+          },
+          {
+            "detail": "rule=pickle-load resolved=pickle.loads",
+            "excerpt": "return pickle.loads(blob), mod",
+            "kind": "file_line",
+            "line": 20,
+            "path": "unsafe_dataset_loader.py",
+            "redacted": false
+          }
+        ],
+        "evidence_strength": "STATIC_MATCH",
+        "evidence_unavailable_reason": null,
+        "finding_id": "scanner:execution.deserialization:0af63bf5e030d11e",
+        "independently_reproduced": {
+          "by": [],
+          "records": [],
+          "reproduced": false
+        },
+        "limitations": [
+          "Establishes that the construct appears in parsed source; does not establish that it executes at runtime.",
+          "Analysis is per-file and syntactic. A call assembled dynamically or reached through an indirection is not matched.",
+          "A Loader passed through a variable is treated as unsafe, which may over-report. yaml.safe_load is never flagged.",
+          "An omitted weights_only is NOT flagged, because current PyTorch defaults it to True. An artifact pinned to an older torch would be unsafe and is not detected.",
+          "Establishes the call site, not the trustworthiness of the data it reads. A pickle load of a file the repository itself ships is still arbitrary code.",
+          "Rare outside interpreter internals; presence is itself unusual.",
+          "Widening may be entirely legitimate; it is reported as surface, not fault.",
+          "allow_pickle defaults to False and an omitted argument is not flagged.",
+          "full_load is narrower than unsafe_load but still constructs Python objects.",
+          "safe_mode defaults to True in Keras v3 and an omitted argument is not flagged. Lambda layers inside a .keras archive are a separate, unimplemented check."
+        ],
+        "notes": null,
+        "rule_id": "python-surface:execution.deserialization",
+        "rule_version": "0.1.0",
+        "scope": {
+          "analysed": [
+            "loader_config.yaml",
+            "unsafe_dataset_loader.py"
+          ],
+          "excluded": [],
+          "failed": [],
+          "languages": [
+            "python",
+            "yaml",
+            "json",
+            "toml"
+          ],
+          "vacuous": false
+        },
+        "source_component": "scanner",
+        "status": "FOUND",
+        "unknown_reason": null,
+        "unsupported_construct": null
+      },
+      {
+        "capability": "execution.dynamic_eval",
+        "confidence_basis": "No call site matched any of the 2 rule(s) for this capability across 2 parsed Python file(s).",
+        "derived_from": [],
+        "detection_method": "static_ast",
+        "environment_description_ref": null,
+        "evidence": [],
+        "evidence_strength": "STATIC_MATCH",
+        "evidence_unavailable_reason": null,
+        "finding_id": "scanner:execution.dynamic_eval:2e92aa33b6fcffd4",
+        "independently_reproduced": {
+          "by": [],
+          "records": [],
+          "reproduced": false
+        },
+        "limitations": [
+          "Establishes that the construct appears in parsed source; does not establish that it executes at runtime.",
+          "Analysis is per-file and syntactic. A call assembled dynamically or reached through an indirection is not matched.",
+          "A call reached indirectly, e.g. through getattr(builtins, 'ev'+'al'), is not matched. Only a syntactically visible callee is.",
+          "Legitimate in metaprogramming libraries; rare in dataset or model code."
+        ],
+        "notes": null,
+        "rule_id": "python-surface:execution.dynamic_eval",
+        "rule_version": "0.1.0",
+        "scope": {
+          "analysed": [
+            "loader_config.yaml",
+            "unsafe_dataset_loader.py"
+          ],
+          "excluded": [],
+          "failed": [],
+          "languages": [
+            "python",
+            "yaml",
+            "json",
+            "toml"
+          ],
+          "vacuous": false
+        },
+        "source_component": "scanner",
+        "status": "NOT_FOUND_WITHIN_ANALYSED_SCOPE",
+        "unknown_reason": null,
+        "unsupported_construct": null
+      },
+      {
+        "capability": "execution.dynamic_import",
+        "confidence_basis": "1 call site(s) matched 1 rule(s) (dynamic-import) across 2 parsed Python file(s). Import aliases were resolved before matching.",
+        "derived_from": [],
+        "detection_method": "static_ast",
+        "environment_description_ref": null,
+        "evidence": [
+          {
+            "detail": "rule=dynamic-import resolved=importlib.import_module",
+            "excerpt": "mod = importlib.import_module(cfg[\"builder_module\"])",
+            "kind": "file_line",
+            "line": 17,
+            "path": "unsafe_dataset_loader.py",
+            "redacted": false
+          }
+        ],
+        "evidence_strength": "STATIC_MATCH",
+        "evidence_unavailable_reason": null,
+        "finding_id": "scanner:execution.dynamic_import:8a2d94db1b122637",
+        "independently_reproduced": {
+          "by": [],
+          "records": [],
+          "reproduced": false
+        },
+        "limitations": [
+          "Establishes that the construct appears in parsed source; does not establish that it executes at runtime.",
+          "Analysis is per-file and syntactic. A call assembled dynamically or reached through an indirection is not matched.",
+          "The imported module name is not resolved. A constant import here is indistinguishable from an attacker-controlled one without dataflow."
+        ],
+        "notes": null,
+        "rule_id": "python-surface:execution.dynamic_import",
+        "rule_version": "0.1.0",
+        "scope": {
+          "analysed": [
+            "loader_config.yaml",
+            "unsafe_dataset_loader.py"
+          ],
+          "excluded": [],
+          "failed": [],
+          "languages": [
+            "python",
+            "yaml",
+            "json",
+            "toml"
+          ],
+          "vacuous": false
+        },
+        "source_component": "scanner",
+        "status": "FOUND",
+        "unknown_reason": null,
+        "unsupported_construct": null
+      },
+      {
+        "capability": "filesystem.archive_extraction",
+        "confidence_basis": "No call site matched any of the 3 rule(s) for this capability across 2 parsed Python file(s). Conditional rules fired only under their stated condition: archive-extraction-unfiltered (only when no filter= is supplied; an explicit filter='data' or 'tar' is not flagged); archive-extraction-fully-trusted (only when filter='fully_trusted' is written literally).",
+        "derived_from": [],
+        "detection_method": "static_ast",
+        "environment_description_ref": null,
+        "evidence": [],
+        "evidence_strength": "STATIC_MATCH",
+        "evidence_unavailable_reason": null,
+        "finding_id": "scanner:filesystem.archive_extraction:8540a88e356db940",
+        "independently_reproduced": {
+          "by": [],
+          "records": [],
+          "reproduced": false
+        },
+        "limitations": [
+          "Establishes that the construct appears in parsed source; does not establish that it executes at runtime.",
+          "Analysis is per-file and syntactic. A call assembled dynamically or reached through an indirection is not matched.",
+          "Legitimate where the archive is genuinely trusted; the point is that the choice was made explicitly and is visible.",
+          "Opening an archive is not extracting it. Reported as surface only, and deliberately not escalated, because inspecting an archive is routine.",
+          "Python 3.14 changed the default extraction filter to 'data'; 3.13 and earlier defaulted to the equivalent of 'fully_trusted'. The consuming Python version is NOT visible in the artifact, so this finding does not assert which applies. A filter supplied through a variable is not evaluated and is not flagged; that is a recorded miss."
+        ],
+        "notes": null,
+        "rule_id": "python-surface:filesystem.archive_extraction",
+        "rule_version": "0.1.0",
+        "scope": {
+          "analysed": [
+            "loader_config.yaml",
+            "unsafe_dataset_loader.py"
+          ],
+          "excluded": [],
+          "failed": [],
+          "languages": [
+            "python",
+            "yaml",
+            "json",
+            "toml"
+          ],
+          "vacuous": false
+        },
+        "source_component": "scanner",
+        "status": "NOT_FOUND_WITHIN_ANALYSED_SCOPE",
+        "unknown_reason": null,
+        "unsupported_construct": null
+      },
+      {
+        "capability": "filesystem.delete",
+        "confidence_basis": "No call site matched any of the 1 rule(s) for this capability across 2 parsed Python file(s).",
+        "derived_from": [],
+        "detection_method": "static_ast",
+        "environment_description_ref": null,
+        "evidence": [],
+        "evidence_strength": "STATIC_MATCH",
+        "evidence_unavailable_reason": null,
+        "finding_id": "scanner:filesystem.delete:b4d82ed0f9a13aa2",
+        "independently_reproduced": {
+          "by": [],
+          "records": [],
+          "reproduced": false
+        },
+        "limitations": [
+          "Establishes that the construct appears in parsed source; does not establish that it executes at runtime.",
+          "Analysis is per-file and syntactic. A call assembled dynamically or reached through an indirection is not matched.",
+          "Deletion of a temporary file the code itself created is equally matched."
+        ],
+        "notes": null,
+        "rule_id": "python-surface:filesystem.delete",
+        "rule_version": "0.1.0",
+        "scope": {
+          "analysed": [
+            "loader_config.yaml",
+            "unsafe_dataset_loader.py"
+          ],
+          "excluded": [],
+          "failed": [],
+          "languages": [
+            "python",
+            "yaml",
+            "json",
+            "toml"
+          ],
+          "vacuous": false
+        },
+        "source_component": "scanner",
+        "status": "NOT_FOUND_WITHIN_ANALYSED_SCOPE",
+        "unknown_reason": null,
+        "unsupported_construct": null
+      },
+      {
+        "capability": "filesystem.path_traversal",
+        "confidence_basis": "1 call site(s) matched 1 rule(s) (path-traversal-literal) across 2 parsed Python file(s). Import aliases were resolved before matching.",
+        "derived_from": [],
+        "detection_method": "static_ast",
+        "environment_description_ref": null,
+        "evidence": [
+          {
+            "detail": "rule=path-traversal-literal resolved=../../",
+            "excerpt": "../../tmp/payload.tar",
+            "kind": "file_line",
+            "line": 4,
+            "path": "loader_config.yaml",
+            "redacted": false
+          }
+        ],
+        "evidence_strength": "STATIC_MATCH",
+        "evidence_unavailable_reason": null,
+        "finding_id": "scanner:filesystem.path_traversal:f7bcde030bc11c51",
+        "independently_reproduced": {
+          "by": [],
+          "records": [],
+          "reproduced": false
+        },
+        "limitations": [
+          "Establishes that the construct appears in parsed source; does not establish that it executes at runtime.",
+          "Analysis is per-file and syntactic. A call assembled dynamically or reached through an indirection is not matched.",
+          "A single '..' is too common to match. Traversal assembled at runtime from segments is not detected; the config-side case is covered by the template check."
+        ],
+        "notes": null,
+        "rule_id": "python-surface:filesystem.path_traversal",
+        "rule_version": "0.1.0",
+        "scope": {
+          "analysed": [
+            "loader_config.yaml",
+            "unsafe_dataset_loader.py"
+          ],
+          "excluded": [],
+          "failed": [],
+          "languages": [
+            "python",
+            "yaml",
+            "json",
+            "toml"
+          ],
+          "vacuous": false
+        },
+        "source_component": "scanner",
+        "status": "FOUND",
+        "unknown_reason": null,
+        "unsupported_construct": null
+      },
+      {
+        "capability": "filesystem.permission_change",
+        "confidence_basis": "No call site matched any of the 1 rule(s) for this capability across 2 parsed Python file(s).",
+        "derived_from": [],
+        "detection_method": "static_ast",
+        "environment_description_ref": null,
+        "evidence": [],
+        "evidence_strength": "STATIC_MATCH",
+        "evidence_unavailable_reason": null,
+        "finding_id": "scanner:filesystem.permission_change:654c9265e75fc9e6",
+        "independently_reproduced": {
+          "by": [],
+          "records": [],
+          "reproduced": false
+        },
+        "limitations": [
+          "Establishes that the construct appears in parsed source; does not establish that it executes at runtime.",
+          "Analysis is per-file and syntactic. A call assembled dynamically or reached through an indirection is not matched.",
+          "Does not resolve the target path or the resulting mode."
+        ],
+        "notes": null,
+        "rule_id": "python-surface:filesystem.permission_change",
+        "rule_version": "0.1.0",
+        "scope": {
+          "analysed": [
+            "loader_config.yaml",
+            "unsafe_dataset_loader.py"
+          ],
+          "excluded": [],
+          "failed": [],
+          "languages": [
+            "python",
+            "yaml",
+            "json",
+            "toml"
+          ],
+          "vacuous": false
+        },
+        "source_component": "scanner",
+        "status": "NOT_FOUND_WITHIN_ANALYSED_SCOPE",
+        "unknown_reason": null,
+        "unsupported_construct": null
+      },
+      {
+        "capability": "filesystem.read_sensitive_path",
+        "confidence_basis": "No call site matched any of the 1 rule(s) for this capability across 2 parsed Python file(s).",
+        "derived_from": [],
+        "detection_method": "static_ast",
+        "environment_description_ref": null,
+        "evidence": [],
+        "evidence_strength": "STATIC_MATCH",
+        "evidence_unavailable_reason": null,
+        "finding_id": "scanner:filesystem.read_sensitive_path:65608143779868d4",
+        "independently_reproduced": {
+          "by": [],
+          "records": [],
+          "reproduced": false
+        },
+        "limitations": [
+          "Establishes that the construct appears in parsed source; does not establish that it executes at runtime.",
+          "Analysis is per-file and syntactic. A call assembled dynamically or reached through an indirection is not matched.",
+          "Presence of the path does not establish that it is opened."
+        ],
+        "notes": null,
+        "rule_id": "python-surface:filesystem.read_sensitive_path",
+        "rule_version": "0.1.0",
+        "scope": {
+          "analysed": [
+            "loader_config.yaml",
+            "unsafe_dataset_loader.py"
+          ],
+          "excluded": [],
+          "failed": [],
+          "languages": [
+            "python",
+            "yaml",
+            "json",
+            "toml"
+          ],
+          "vacuous": false
+        },
+        "source_component": "scanner",
+        "status": "NOT_FOUND_WITHIN_ANALYSED_SCOPE",
+        "unknown_reason": null,
+        "unsupported_construct": null
+      },
+      {
+        "capability": "filesystem.write",
+        "confidence_basis": "No call site matched any of the 2 rule(s) for this capability across 2 parsed Python file(s). Conditional rules fired only under their stated condition: open-for-write (only when a literal mode containing w, a, x or + is supplied).",
+        "derived_from": [],
+        "detection_method": "static_ast",
+        "environment_description_ref": null,
+        "evidence": [],
+        "evidence_strength": "STATIC_MATCH",
+        "evidence_unavailable_reason": null,
+        "finding_id": "scanner:filesystem.write:a07d6a047f25a41a",
+        "independently_reproduced": {
+          "by": [],
+          "records": [],
+          "reproduced": false
+        },
+        "limitations": [
+          "Establishes that the construct appears in parsed source; does not establish that it executes at runtime.",
+          "Analysis is per-file and syntactic. A call assembled dynamically or reached through an indirection is not matched.",
+          "A computed mode string is not claimed in either direction, so open(p, m) with a variable mode is not reported as a write.",
+          "write_text and write_bytes are matched on the bare method name, so any object exposing them matches. Over-reports by design."
+        ],
+        "notes": null,
+        "rule_id": "python-surface:filesystem.write",
+        "rule_version": "0.1.0",
+        "scope": {
+          "analysed": [
+            "loader_config.yaml",
+            "unsafe_dataset_loader.py"
+          ],
+          "excluded": [],
+          "failed": [],
+          "languages": [
+            "python",
+            "yaml",
+            "json",
+            "toml"
+          ],
+          "vacuous": false
+        },
+        "source_component": "scanner",
+        "status": "NOT_FOUND_WITHIN_ANALYSED_SCOPE",
+        "unknown_reason": null,
+        "unsupported_construct": null
+      },
+      {
+        "capability": "k8s.api_access",
+        "confidence_basis": "No call site matched any of the 1 rule(s) for this capability across 2 parsed Python file(s).",
+        "derived_from": [],
+        "detection_method": "static_ast",
+        "environment_description_ref": null,
+        "evidence": [],
+        "evidence_strength": "STATIC_MATCH",
+        "evidence_unavailable_reason": null,
+        "finding_id": "scanner:k8s.api_access:59d5aa3e50edf488",
+        "independently_reproduced": {
+          "by": [],
+          "records": [],
+          "reproduced": false
+        },
+        "limitations": [
+          "Establishes that the construct appears in parsed source; does not establish that it executes at runtime.",
+          "Analysis is per-file and syntactic. A call assembled dynamically or reached through an indirection is not matched.",
+          "Does not establish which API operations are attempted or permitted."
+        ],
+        "notes": null,
+        "rule_id": "python-surface:k8s.api_access",
+        "rule_version": "0.1.0",
+        "scope": {
+          "analysed": [
+            "loader_config.yaml",
+            "unsafe_dataset_loader.py"
+          ],
+          "excluded": [],
+          "failed": [],
+          "languages": [
+            "python",
+            "yaml",
+            "json",
+            "toml"
+          ],
+          "vacuous": false
+        },
+        "source_component": "scanner",
+        "status": "NOT_FOUND_WITHIN_ANALYSED_SCOPE",
+        "unknown_reason": null,
+        "unsupported_construct": null
+      },
+      {
+        "capability": "k8s.serviceaccount_token_access",
+        "confidence_basis": "No call site matched any of the 1 rule(s) for this capability across 2 parsed Python file(s).",
+        "derived_from": [],
+        "detection_method": "static_ast",
+        "environment_description_ref": null,
+        "evidence": [],
+        "evidence_strength": "STATIC_MATCH",
+        "evidence_unavailable_reason": null,
+        "finding_id": "scanner:k8s.serviceaccount_token_access:ea9a96795544f103",
+        "independently_reproduced": {
+          "by": [],
+          "records": [],
+          "reproduced": false
+        },
+        "limitations": [
+          "Establishes that the construct appears in parsed source; does not establish that it executes at runtime.",
+          "Analysis is per-file and syntactic. A call assembled dynamically or reached through an indirection is not matched.",
+          "Reading the path does not establish that the token is used against the API."
+        ],
+        "notes": null,
+        "rule_id": "python-surface:k8s.serviceaccount_token_access",
+        "rule_version": "0.1.0",
+        "scope": {
+          "analysed": [
+            "loader_config.yaml",
+            "unsafe_dataset_loader.py"
+          ],
+          "excluded": [],
+          "failed": [],
+          "languages": [
+            "python",
+            "yaml",
+            "json",
+            "toml"
+          ],
+          "vacuous": false
+        },
+        "source_component": "scanner",
+        "status": "NOT_FOUND_WITHIN_ANALYSED_SCOPE",
+        "unknown_reason": null,
+        "unsupported_construct": null
+      },
+      {
+        "capability": "network.dns",
+        "confidence_basis": "No call site matched any of the 1 rule(s) for this capability across 2 parsed Python file(s).",
+        "derived_from": [],
+        "detection_method": "static_ast",
+        "environment_description_ref": null,
+        "evidence": [],
+        "evidence_strength": "STATIC_MATCH",
+        "evidence_unavailable_reason": null,
+        "finding_id": "scanner:network.dns:92fa0fea0ce57beb",
+        "independently_reproduced": {
+          "by": [],
+          "records": [],
+          "reproduced": false
+        },
+        "limitations": [
+          "Establishes that the construct appears in parsed source; does not establish that it executes at runtime.",
+          "Analysis is per-file and syntactic. A call assembled dynamically or reached through an indirection is not matched.",
+          "Name resolution alone does not establish that a connection follows."
+        ],
+        "notes": null,
+        "rule_id": "python-surface:network.dns",
+        "rule_version": "0.1.0",
+        "scope": {
+          "analysed": [
+            "loader_config.yaml",
+            "unsafe_dataset_loader.py"
+          ],
+          "excluded": [],
+          "failed": [],
+          "languages": [
+            "python",
+            "yaml",
+            "json",
+            "toml"
+          ],
+          "vacuous": false
+        },
+        "source_component": "scanner",
+        "status": "NOT_FOUND_WITHIN_ANALYSED_SCOPE",
+        "unknown_reason": null,
+        "unsupported_construct": null
+      },
+      {
+        "capability": "network.listen",
+        "confidence_basis": "No call site matched any of the 1 rule(s) for this capability across 2 parsed Python file(s).",
+        "derived_from": [],
+        "detection_method": "static_ast",
+        "environment_description_ref": null,
+        "evidence": [],
+        "evidence_strength": "STATIC_MATCH",
+        "evidence_unavailable_reason": null,
+        "finding_id": "scanner:network.listen:97e9e46016a4a270",
+        "independently_reproduced": {
+          "by": [],
+          "records": [],
+          "reproduced": false
+        },
+        "limitations": [
+          "Establishes that the construct appears in parsed source; does not establish that it executes at runtime.",
+          "Analysis is per-file and syntactic. A call assembled dynamically or reached through an indirection is not matched.",
+          "Matched on the bare method name, so any object with a bind() or listen() method matches. This rule over-reports by design and is not escalated."
+        ],
+        "notes": null,
+        "rule_id": "python-surface:network.listen",
+        "rule_version": "0.1.0",
+        "scope": {
+          "analysed": [
+            "loader_config.yaml",
+            "unsafe_dataset_loader.py"
+          ],
+          "excluded": [],
+          "failed": [],
+          "languages": [
+            "python",
+            "yaml",
+            "json",
+            "toml"
+          ],
+          "vacuous": false
+        },
+        "source_component": "scanner",
+        "status": "NOT_FOUND_WITHIN_ANALYSED_SCOPE",
+        "unknown_reason": null,
+        "unsupported_construct": null
+      },
+      {
+        "capability": "network.outbound",
+        "confidence_basis": "1 call site(s) matched 1 rule(s) (http-client) across 2 parsed Python file(s). Import aliases were resolved before matching.",
+        "derived_from": [],
+        "detection_method": "static_ast",
+        "environment_description_ref": null,
+        "evidence": [
+          {
+            "detail": "rule=http-client resolved=urllib.request.urlopen",
+            "excerpt": "blob = urllib.request.urlopen(cfg[\"remote\"]).read()",
+            "kind": "file_line",
+            "line": 18,
+            "path": "unsafe_dataset_loader.py",
+            "redacted": false
+          }
+        ],
+        "evidence_strength": "STATIC_MATCH",
+        "evidence_unavailable_reason": null,
+        "finding_id": "scanner:network.outbound:db92581309e2a372",
+        "independently_reproduced": {
+          "by": [],
+          "records": [],
+          "reproduced": false
+        },
+        "limitations": [
+          "Establishes that the construct appears in parsed source; does not establish that it executes at runtime.",
+          "Analysis is per-file and syntactic. A call assembled dynamically or reached through an indirection is not matched.",
+          "A socket used only to listen is reported here as well; see network.listen.",
+          "Presence in ML dataset code is unusual and is reported as surface.",
+          "The destination is not resolved. A constant URL to a well-known host and an attacker-controlled one are indistinguishable without dataflow."
+        ],
+        "notes": null,
+        "rule_id": "python-surface:network.outbound",
+        "rule_version": "0.1.0",
+        "scope": {
+          "analysed": [
+            "loader_config.yaml",
+            "unsafe_dataset_loader.py"
+          ],
+          "excluded": [],
+          "failed": [],
+          "languages": [
+            "python",
+            "yaml",
+            "json",
+            "toml"
+          ],
+          "vacuous": false
+        },
+        "source_component": "scanner",
+        "status": "FOUND",
+        "unknown_reason": null,
+        "unsupported_construct": null
+      },
+      {
+        "capability": "network.package_fetch",
+        "confidence_basis": "No call site matched any of the 1 rule(s) for this capability across 2 parsed Python file(s).",
+        "derived_from": [],
+        "detection_method": "static_ast",
+        "environment_description_ref": null,
+        "evidence": [],
+        "evidence_strength": "STATIC_MATCH",
+        "evidence_unavailable_reason": null,
+        "finding_id": "scanner:network.package_fetch:5fb517b6f01f6acd",
+        "independently_reproduced": {
+          "by": [],
+          "records": [],
+          "reproduced": false
+        },
+        "limitations": [
+          "Establishes that the construct appears in parsed source; does not establish that it executes at runtime.",
+          "Analysis is per-file and syntactic. A call assembled dynamically or reached through an indirection is not matched.",
+          "Does not check whether the download is pinned to an immutable revision; Bandit's B615 covers the unpinned Hugging Face case and is integrated separately."
+        ],
+        "notes": null,
+        "rule_id": "python-surface:network.package_fetch",
+        "rule_version": "0.1.0",
+        "scope": {
+          "analysed": [
+            "loader_config.yaml",
+            "unsafe_dataset_loader.py"
+          ],
+          "excluded": [],
+          "failed": [],
+          "languages": [
+            "python",
+            "yaml",
+            "json",
+            "toml"
+          ],
+          "vacuous": false
+        },
+        "source_component": "scanner",
+        "status": "NOT_FOUND_WITHIN_ANALYSED_SCOPE",
+        "unknown_reason": null,
+        "unsupported_construct": null
+      },
+      {
+        "capability": "package.install_at_runtime",
+        "confidence_basis": "No call site matched any of the 1 rule(s) for this capability across 2 parsed Python file(s).",
+        "derived_from": [],
+        "detection_method": "static_ast",
+        "environment_description_ref": null,
+        "evidence": [],
+        "evidence_strength": "STATIC_MATCH",
+        "evidence_unavailable_reason": null,
+        "finding_id": "scanner:package.install_at_runtime:59b348ad69cb9ec7",
+        "independently_reproduced": {
+          "by": [],
+          "records": [],
+          "reproduced": false
+        },
+        "limitations": [
+          "Establishes that the construct appears in parsed source; does not establish that it executes at runtime.",
+          "Analysis is per-file and syntactic. A call assembled dynamically or reached through an indirection is not matched.",
+          "Matched as text, so the same string in documentation or a README-style config field matches. Pair with process.subprocess evidence before treating as live."
+        ],
+        "notes": null,
+        "rule_id": "python-surface:package.install_at_runtime",
+        "rule_version": "0.1.0",
+        "scope": {
+          "analysed": [
+            "loader_config.yaml",
+            "unsafe_dataset_loader.py"
+          ],
+          "excluded": [],
+          "failed": [],
+          "languages": [
+            "python",
+            "yaml",
+            "json",
+            "toml"
+          ],
+          "vacuous": false
+        },
+        "source_component": "scanner",
+        "status": "NOT_FOUND_WITHIN_ANALYSED_SCOPE",
+        "unknown_reason": null,
+        "unsupported_construct": null
+      },
+      {
+        "capability": "package.manager_invocation",
+        "confidence_basis": "No call site matched any of the 1 rule(s) for this capability across 2 parsed Python file(s).",
+        "derived_from": [],
+        "detection_method": "static_ast",
+        "environment_description_ref": null,
+        "evidence": [],
+        "evidence_strength": "STATIC_MATCH",
+        "evidence_unavailable_reason": null,
+        "finding_id": "scanner:package.manager_invocation:19dda5e5d4897582",
+        "independently_reproduced": {
+          "by": [],
+          "records": [],
+          "reproduced": false
+        },
+        "limitations": [
+          "Establishes that the construct appears in parsed source; does not establish that it executes at runtime.",
+          "Analysis is per-file and syntactic. A call assembled dynamically or reached through an indirection is not matched.",
+          "pip's internal API is unsupported by pip itself; presence is unusual."
+        ],
+        "notes": null,
+        "rule_id": "python-surface:package.manager_invocation",
+        "rule_version": "0.1.0",
+        "scope": {
+          "analysed": [
+            "loader_config.yaml",
+            "unsafe_dataset_loader.py"
+          ],
+          "excluded": [],
+          "failed": [],
+          "languages": [
+            "python",
+            "yaml",
+            "json",
+            "toml"
+          ],
+          "vacuous": false
+        },
+        "source_component": "scanner",
+        "status": "NOT_FOUND_WITHIN_ANALYSED_SCOPE",
+        "unknown_reason": null,
+        "unsupported_construct": null
+      },
+      {
+        "capability": "process.shell",
+        "confidence_basis": "1 call site(s) matched 1 rule(s) (subprocess-shell-true) across 2 parsed Python file(s). Import aliases were resolved before matching. Conditional rules fired only under their stated condition: subprocess-shell-true (only when shell=True is written literally).",
+        "derived_from": [],
+        "detection_method": "static_ast",
+        "environment_description_ref": null,
+        "evidence": [
+          {
+            "detail": "rule=subprocess-shell-true resolved=subprocess.run",
+            "excerpt": "subprocess.run(f\"tar xf {cfg['archive']}\", shell=True)",
+            "kind": "file_line",
+            "line": 19,
+            "path": "unsafe_dataset_loader.py",
+            "redacted": false
+          }
+        ],
+        "evidence_strength": "STATIC_MATCH",
+        "evidence_unavailable_reason": null,
+        "finding_id": "scanner:process.shell:9efe31187c2f9864",
+        "independently_reproduced": {
+          "by": [],
+          "records": [],
+          "reproduced": false
+        },
+        "limitations": [
+          "Establishes that the construct appears in parsed source; does not establish that it executes at runtime.",
+          "Analysis is per-file and syntactic. A call assembled dynamically or reached through an indirection is not matched.",
+          "Does not resolve the command string.",
+          "shell=True passed via a variable or **kwargs is not matched; only a literal True is. A shell-less call that invokes /bin/sh explicitly is caught by the shell-binary rule instead."
+        ],
+        "notes": null,
+        "rule_id": "python-surface:process.shell",
+        "rule_version": "0.1.0",
+        "scope": {
+          "analysed": [
+            "loader_config.yaml",
+            "unsafe_dataset_loader.py"
+          ],
+          "excluded": [],
+          "failed": [],
+          "languages": [
+            "python",
+            "yaml",
+            "json",
+            "toml"
+          ],
+          "vacuous": false
+        },
+        "source_component": "scanner",
+        "status": "FOUND",
+        "unknown_reason": null,
+        "unsupported_construct": null
+      },
+      {
+        "capability": "process.subprocess",
+        "confidence_basis": "1 call site(s) matched 1 rule(s) (subprocess-invocation) across 2 parsed Python file(s). Import aliases were resolved before matching.",
+        "derived_from": [],
+        "detection_method": "static_ast",
+        "environment_description_ref": null,
+        "evidence": [
+          {
+            "detail": "rule=subprocess-invocation resolved=subprocess.run",
+            "excerpt": "subprocess.run(f\"tar xf {cfg['archive']}\", shell=True)",
+            "kind": "file_line",
+            "line": 19,
+            "path": "unsafe_dataset_loader.py",
+            "redacted": false
+          }
+        ],
+        "evidence_strength": "STATIC_MATCH",
+        "evidence_unavailable_reason": null,
+        "finding_id": "scanner:process.subprocess:a32fdb474476d935",
+        "independently_reproduced": {
+          "by": [],
+          "records": [],
+          "reproduced": false
+        },
+        "limitations": [
+          "Establishes that the construct appears in parsed source; does not establish that it executes at runtime.",
+          "Analysis is per-file and syntactic. A call assembled dynamically or reached through an indirection is not matched.",
+          "Does not establish that the command is attacker-controlled, nor that the call is reached at runtime."
+        ],
+        "notes": null,
+        "rule_id": "python-surface:process.subprocess",
+        "rule_version": "0.1.0",
+        "scope": {
+          "analysed": [
+            "loader_config.yaml",
+            "unsafe_dataset_loader.py"
+          ],
+          "excluded": [],
+          "failed": [],
+          "languages": [
+            "python",
+            "yaml",
+            "json",
+            "toml"
+          ],
+          "vacuous": false
+        },
+        "source_component": "scanner",
+        "status": "FOUND",
+        "unknown_reason": null,
+        "unsupported_construct": null
+      },
+      {
+        "capability": "execution.loader_script",
+        "confidence_basis": "2 repository-shape indicator(s) matched: dataset-builder-class; dataset-loader-script-by-name. A loading script is honoured by `datasets` before 4.0.0 and rejected from that version onward; the consuming version is unknown to this check.",
+        "derived_from": [],
+        "detection_method": "static_ast",
+        "environment_description_ref": null,
+        "evidence": [
+          {
+            "detail": "rule=dataset-loader-script-by-name a top-level Python file named after the repository directory (unsafe_dataset_loader.py) is the dataset loading-script convention",
+            "excerpt": "unsafe_dataset_loader.py",
+            "kind": "declaration_text",
+            "line": null,
+            "path": "unsafe_dataset_loader.py",
+            "redacted": false
+          },
+          {
+            "detail": "rule=dataset-builder-class class SensorReadings subclasses GeneratorBasedBuilder",
+            "excerpt": "class SensorReadings(GeneratorBasedBuilder)",
+            "kind": "file_line",
+            "line": 11,
+            "path": "unsafe_dataset_loader.py",
+            "redacted": false
+          }
+        ],
+        "evidence_strength": "STATIC_MATCH",
+        "evidence_unavailable_reason": null,
+        "finding_id": "scanner:execution.loader_script:99d667ac7aa127ec",
+        "independently_reproduced": {
+          "by": [],
+          "records": [],
+          "reproduced": false
+        },
+        "limitations": [
+          "Establishes the presence and shape of a file, not that it is executed.",
+          "Repository conventions change; a loading script under an unconventional name and with no builder subclass is not matched.",
+          "Whether a loading script is live depends on the consuming `datasets` version, which is NOT visible in the artifact. Scripts are honoured before 4.0.0 and raise RuntimeError from 4.0.0 onward. This finding does not assert which applies."
+        ],
+        "notes": null,
+        "rule_id": "loader-scripts:execution.loader_script",
+        "rule_version": "0.1.0",
+        "scope": {
+          "analysed": [
+            "unsafe_dataset_loader.py"
+          ],
+          "excluded": [],
+          "failed": [],
+          "languages": [
+            "python",
+            "json"
+          ],
+          "vacuous": false
+        },
+        "source_component": "scanner",
+        "status": "FOUND",
+        "unknown_reason": null,
+        "unsupported_construct": null
+      },
+      {
+        "capability": "execution.dynamic_import",
+        "confidence_basis": "No repository-shape indicator for this capability across 1 Python and 0 JSON file(s).",
+        "derived_from": [],
+        "detection_method": "static_ast",
+        "environment_description_ref": null,
+        "evidence": [],
+        "evidence_strength": "STATIC_MATCH",
+        "evidence_unavailable_reason": null,
+        "finding_id": "scanner:execution.dynamic_import:01a96b5778c2acc3",
+        "independently_reproduced": {
+          "by": [],
+          "records": [],
+          "reproduced": false
+        },
+        "limitations": [
+          "Establishes the presence and shape of a file, not that it is executed.",
+          "Repository conventions change; a loading script under an unconventional name and with no builder subclass is not matched.",
+          "auto_map is executed by transformers only when the consumer passes trust_remote_code=True; the finding records reachability, not activation."
+        ],
+        "notes": null,
+        "rule_id": "loader-scripts:execution.dynamic_import",
+        "rule_version": "0.1.0",
+        "scope": {
+          "analysed": [
+            "unsafe_dataset_loader.py"
+          ],
+          "excluded": [],
+          "failed": [],
+          "languages": [
+            "python",
+            "json"
+          ],
+          "vacuous": false
+        },
+        "source_component": "scanner",
+        "status": "NOT_FOUND_WITHIN_ANALYSED_SCOPE",
+        "unknown_reason": null,
+        "unsupported_construct": null
+      },
+      {
+        "capability": "execution.build_hook",
+        "confidence_basis": "No repository-shape indicator for this capability across 1 Python and 0 JSON file(s).",
+        "derived_from": [],
+        "detection_method": "static_ast",
+        "environment_description_ref": null,
+        "evidence": [],
+        "evidence_strength": "STATIC_MATCH",
+        "evidence_unavailable_reason": null,
+        "finding_id": "scanner:execution.build_hook:fd752b60a69eef30",
+        "independently_reproduced": {
+          "by": [],
+          "records": [],
+          "reproduced": false
+        },
+        "limitations": [
+          "Establishes the presence and shape of a file, not that it is executed.",
+          "Repository conventions change; a loading script under an unconventional name and with no builder subclass is not matched."
+        ],
+        "notes": null,
+        "rule_id": "loader-scripts:execution.build_hook",
+        "rule_version": "0.1.0",
+        "scope": {
+          "analysed": [
+            "unsafe_dataset_loader.py"
+          ],
+          "excluded": [],
+          "failed": [],
+          "languages": [
+            "python",
+            "json"
+          ],
+          "vacuous": false
+        },
+        "source_component": "scanner",
+        "status": "NOT_FOUND_WITHIN_ANALYSED_SCOPE",
+        "unknown_reason": null,
+        "unsupported_construct": null
+      }
+    ],
+    "generic_advice": [],
+    "input_records": [],
+    "mitigations": [],
+    "record_id": "3bcd067b3f43dc3133343d1f88c955be",
+    "residual_uncertainty": "Every declared capability was reported on and every analysed path completed. Runtime reachability of every finding remains unestablished, and capabilities outside the implemented rules were not examined.",
+    "run": {
+      "completed_at": "2026-07-22T00:00:01+00:00",
+      "config_hash": null,
+      "execution_mode": "static_analysis",
+      "invocation": "trustlens scan examples/repos/unsafe_dataset_loader",
+      "reasoning_notes": [
+        "All declared check families reported on every capability they cover."
+      ],
+      "started_at": "2026-07-22T00:00:00+00:00"
+    },
+    "sandbox": null,
+    "schema_version": "trustlens/1.0.0",
+    "scope": {
+      "analysed": [
+        "loader_config.yaml",
+        "unsafe_dataset_loader.py"
+      ],
+      "excluded": [],
+      "failed": [],
+      "languages": [
+        "json",
+        "python",
+        "toml",
+        "yaml"
+      ],
+      "vacuous": false
+    },
+    "tool": {
+      "commit": null,
+      "component": "scanner",
+      "name": "trustlens",
+      "version": "0.1.0"
+    },
+    "unknowns": [
+      {
+        "reason": "Declared-surface extraction is not implemented in this build.",
+        "subject": "Declared capabilities of the artifact",
+        "would_be_resolved_by": "The declared-surface extractor (README, dataset card, manifests)."
+      }
+    ],
+    "unsupported": []
+  },
+  "summary": {
+    "analysis_complete": true,
+    "clean_within_scope": [
+      "cloud.credential_file_access",
+      "cloud.sdk_credential_discovery",
+      "container.docker_socket",
+      "env.credential_pattern_read",
+      "env.enumeration",
+      "env.named_read",
+      "execution.build_hook",
+      "execution.build_hook",
+      "execution.deserialization",
+      "execution.dynamic_eval",
+      "execution.dynamic_import",
+      "filesystem.archive_extraction",
+      "filesystem.delete",
+      "filesystem.permission_change",
+      "filesystem.read_sensitive_path",
+      "filesystem.write",
+      "k8s.api_access",
+      "k8s.serviceaccount_token_access",
+      "network.dns",
+      "network.listen",
+      "network.package_fetch",
+      "package.install_at_runtime",
+      "package.manager_invocation",
+      "template.injection_surface"
+    ],
+    "contributing_findings": {
+      "cloud.metadata_endpoint": [
+        "scanner:cloud.metadata_endpoint:8e402ef8b43d743b"
+      ],
+      "execution.deserialization": [
+        "scanner:execution.deserialization:c092e6819a83a323",
+        "scanner:execution.deserialization:0af63bf5e030d11e"
+      ],
+      "execution.dynamic_import": [
+        "scanner:execution.dynamic_import:8a2d94db1b122637",
+        "scanner:execution.dynamic_import:01a96b5778c2acc3"
+      ],
+      "execution.loader_script": [
+        "scanner:execution.loader_script:99d667ac7aa127ec"
+      ],
+      "filesystem.path_traversal": [
+        "scanner:filesystem.path_traversal:f7bcde030bc11c51"
+      ],
+      "network.outbound": [
+        "scanner:network.outbound:db92581309e2a372"
+      ],
+      "process.shell": [
+        "scanner:process.shell:9efe31187c2f9864"
+      ],
+      "process.subprocess": [
+        "scanner:process.subprocess:a32fdb474476d935"
+      ],
+      "template.expression_evaluation": [
+        "scanner:template.expression_evaluation:0be97130e625951b"
+      ]
+    },
+    "coverage_gaps": [],
+    "found": [
+      "cloud.metadata_endpoint",
+      "execution.deserialization",
+      "execution.dynamic_import",
+      "execution.loader_script",
+      "filesystem.path_traversal",
+      "network.outbound",
+      "process.shell",
+      "process.subprocess",
+      "template.expression_evaluation"
+    ],
+    "incomplete": [],
+    "scope_complete": true,
+    "scope_failures": []
+  }
+}

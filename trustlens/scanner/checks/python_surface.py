@@ -509,6 +509,37 @@ CLOUD_RULES: tuple[Rule, ...] = (
 )
 
 
+#: Named extraction filters that constrain member paths. `data` is the strict filter that
+#: became the default in Python 3.14; `tar` is looser but still rejects absolute paths.
+#: Verified from the tarfile documentation, retrieved 2026-07-22.
+SAFE_EXTRACTION_FILTERS = frozenset({"data", "tar"})
+
+
+def _extraction_filter_literal(call: ast.Call) -> str | None:
+    node = keyword_of(call, "filter")
+    if isinstance(node, ast.Constant) and isinstance(node.value, str):
+        return node.value
+    return None
+
+
+def _no_extraction_filter(call: ast.Call, aliases: dict) -> bool:
+    """Fire only when no filter argument is supplied at all.
+
+    An explicit filter='data' or filter='tar' is the documented way to get constrained
+    extraction on every Python version, so flagging it would fire on code that has already
+    done the right thing — the fastest way to lose a user's trust in a scanner. An explicit
+    filter='fully_trusted' is handled by its own escalated rule, so it is excluded here to
+    avoid reporting one call twice. A filter supplied through a variable is not evaluated
+    and is NOT flagged, because the finding's own wording ("without an explicit extraction
+    filter") would otherwise be false; that is a recorded miss rather than a silent one.
+    """
+    return keyword_of(call, "filter") is None
+
+
+def _fully_trusted_filter(call: ast.Call, aliases: dict) -> bool:
+    return _extraction_filter_literal(call) == "fully_trusted"
+
+
 def _write_mode(call: ast.Call, aliases: dict) -> bool:
     """open() is a write only when its mode says so. Reading is not a finding."""
     mode = keyword_of(call, "mode")
@@ -568,17 +599,52 @@ FILESYSTEM_RULES: tuple[Rule, ...] = (
         blind_spot="Does not resolve the target path or the resulting mode.",
     ),
     Rule(
-        rule_id="archive-extraction",
+        rule_id="archive-extraction-unfiltered",
         family="filesystem",
         capability="filesystem.archive_extraction",
-        targets=frozenset({"tarfile.open", "extractall", "extract", "shutil.unpack_archive",
-                           "zipfile.ZipFile"}),
-        escalated=True,
-        what="An archive is extracted, which can write outside the destination directory",
+        targets=frozenset({"extractall", "extract", "shutil.unpack_archive"}),
+        predicate=_no_extraction_filter,
+        predicate_note=(
+            "only when no filter= is supplied; an explicit filter='data' or 'tar' is not flagged"
+        ),
+        what=(
+            "An archive is extracted without an explicit extraction filter, so whether "
+            "member paths are constrained depends on the consuming Python version"
+        ),
         blind_spot=(
-            "Python 3.12+ supports a `filter=` argument that constrains extraction; this "
-            "rule does not yet distinguish a filtered extractall from an unfiltered one, "
-            "so it over-reports on modern, safe code. Recorded in CLAIMS.md."
+            "Python 3.14 changed the default extraction filter to 'data'; 3.13 and earlier "
+            "defaulted to the equivalent of 'fully_trusted'. The consuming Python version "
+            "is NOT visible in the artifact, so this finding does not assert which applies. "
+            "A filter supplied through a variable is not evaluated and is not flagged; "
+            "that is a recorded miss."
+        ),
+    ),
+    Rule(
+        rule_id="archive-extraction-fully-trusted",
+        family="filesystem",
+        capability="filesystem.archive_extraction",
+        targets=frozenset({"extractall", "extract", "shutil.unpack_archive"}),
+        escalated=True,
+        predicate=_fully_trusted_filter,
+        predicate_note="only when filter='fully_trusted' is written literally",
+        what=(
+            "An archive is extracted with the filter explicitly set to fully_trusted, "
+            "which permits absolute paths and paths outside the destination"
+        ),
+        blind_spot=(
+            "Legitimate where the archive is genuinely trusted; the point is that the "
+            "choice was made explicitly and is visible."
+        ),
+    ),
+    Rule(
+        rule_id="archive-open",
+        family="filesystem",
+        capability="filesystem.archive_extraction",
+        targets=frozenset({"tarfile.open", "zipfile.ZipFile"}),
+        what="An archive is opened (listing or reading members is not extraction)",
+        blind_spot=(
+            "Opening an archive is not extracting it. Reported as surface only, and "
+            "deliberately not escalated, because inspecting an archive is routine."
         ),
     ),
     Rule(
@@ -653,6 +719,11 @@ PACKAGE_RULES: tuple[Rule, ...] = (
 RULES = RULES + NETWORK_RULES + ENVIRONMENT_RULES + CLOUD_RULES + FILESYSTEM_RULES + PACKAGE_RULES
 
 FAMILIES = tuple(dict.fromkeys(r.family for r in RULES))
+
+#: Capabilities produced at match time rather than declared by a static rule. They are
+#: always emitted with an explicit status so a clean repository still makes a statement
+#: about them.
+DERIVED_CAPABILITIES = ("env.credential_pattern_read",)
 
 #: String rules are reusable outside Python source — a metadata endpoint in a YAML file is
 #: the same finding as one in a .py file.
@@ -864,7 +935,14 @@ def run(
     # environment read is derived from the key, not declared by a static rule. Deriving the
     # list from `rules` alone produced a Hit with no corresponding Finding, which is a
     # silently dropped detection.
-    capabilities = sorted({r.capability for r in rules} | set(by_capability))
+    #
+    # DERIVED_CAPABILITIES are included unconditionally so that they always receive an
+    # explicit status. Emitting them only when they matched meant a clean repository
+    # produced no statement about them at all, which the assembler's coverage
+    # reconciliation correctly flagged as a promised-but-undelivered capability.
+    capabilities = sorted(
+        {r.capability for r in rules} | set(by_capability) | set(DERIVED_CAPABILITIES)
+    )
     findings = []
     for capability in capabilities:
         cap_hits = by_capability.get(capability, [])

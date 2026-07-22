@@ -1,0 +1,4 @@
+dataset_name: clean_tabular
+description: Two numeric features and a label.
+splits:
+  train: {num_examples: 2}

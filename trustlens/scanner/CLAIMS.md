@@ -30,14 +30,53 @@ what parsed. `ast.parse` runs behind a recursion fence because the documented
 interpreter-crash vector takes attacker-chosen input, and hitting it produces a recorded
 failure rather than a crash.
 
+## The assembler cannot report clean for work it did not do
+
+`assemble.scan()` runs every family and reconciles **declared coverage against delivered
+findings**. Each family states up front which capabilities it is responsible for; anything
+promised and not delivered becomes an `UNKNOWN` finding plus a recorded coverage gap.
+
+| Failure injected | Result |
+|---|---|
+| A family silently drops a finding | coverage gap + `UNKNOWN` for that capability; `analysis_complete` false |
+| A family raises | scope failure naming the exception; every promised capability becomes `UNKNOWN` |
+| A family emits a schema-invalid finding | finding rejected, recorded as an `internal_error` scope failure, capability becomes `UNKNOWN` |
+| A family hand-assembles `NOT_FOUND` over a failed scope | rejected by schema validation, leaving a coverage gap |
+| A family raises while others succeed | the working families' findings are preserved |
+
+Tested in `tests/scanner/test_assemble.py`. The property in one sentence: **the overall
+verdict cannot be clean unless every declared capability was actually reported on.**
+
+This reconciliation immediately caught a real gap: `env.credential_pattern_read` is derived
+at match time and was only ever emitted when it matched, so a clean repository made no
+statement about it at all. It is now emitted unconditionally.
+
+**Per-finding scope may be narrower than record scope, deliberately.** The loader-scripts
+family reads only `.py` and `.json`, so an undecodable `.yaml` is genuinely outside its
+scope and its clean result is honest. To stop that being misread, `summarise()` surfaces
+`scope_failures` and `scope_complete` at the top level, so a reader sees that something in
+the artifact could not be analysed without cross-referencing every finding.
+
 ## External tools
 
-**No external tool is currently wired into any `FOUND` or `NOT_FOUND_WITHIN_ANALYSED_SCOPE`
-claim.** Every finding above comes from TrustLens's own analysis. Of the five surveyed
-tools, only Bandit has been verified to distinguish "nothing found" from "could not read"
-in machine-readable output (`docs/PHASE1_ENTRY_CONDITIONS.md`), so only Bandit is eligible;
-its integration is not yet built. Semgrep, gitleaks, syft and osv-scanner remain excluded
-from status claims until each is independently verified the same way.
+**No external tool is wired into any `FOUND` or `NOT_FOUND_WITHIN_ANALYSED_SCOPE` claim.**
+Every finding comes from TrustLens's own analysis, and the scanner spawns no processes at
+all — a property the inertness harness verifies by making `subprocess.run` raise.
+
+Of the five surveyed tools, only Bandit has verified failure reporting
+(`docs/PHASE1_ENTRY_CONDITIONS.md`). Semgrep, gitleaks, syft and osv-scanner remain
+excluded from status claims until each is independently verified against malformed input.
+Re-checked 2026-07-22: no shipped code references or invokes any of them, and the
+entry-condition probe still reproduces all five characterisations unchanged.
+
+**Bandit integration deferred, 2026-07-22.** Not a passive TODO — a decision with a reason.
+Introducing Bandit means the scanner spawns a subprocess for the first time, which requires
+its own design: an allowlisted binary, the executed version recorded in
+`tool.external_tools`, exit code and stderr captured as evidence (Bandit's `errors[]` is
+trustworthy but its exit code still carries information), and the inertness harness taught
+to distinguish "spawns the one approved analyser" from "spawns anything". Until that design
+exists, adding Bandit would weaken the strongest property the scanner currently has.
+Revisit when the harness can express the distinction.
 
 ## What the template-injection check establishes
 
@@ -117,8 +156,31 @@ that method matches. None is escalated:
 - `write_text`, `write_bytes`, `unlink` (`filesystem.*`)
 - `extractall`, `extract` (`filesystem.archive_extraction`)
 - `setup` (`execution.build_hook`) — the repository-shape check distinguishes a real `setup.py`
-- `archive-extraction` does **not** yet distinguish a Python 3.12+ `filter=`-constrained
-  `extractall` from an unconstrained one, so it over-reports on modern, safe code.
+
+**Archive extraction — resolved 2026-07-22, previously an over-reporting gap.** The rule
+now distinguishes three cases and no longer fires on code that has already done the right
+thing:
+
+| Written | Reported |
+|---|---|
+| `extractall(...)` with no `filter=` | `archive-extraction-unfiltered`, **not** escalated, with the version condition stated |
+| `extractall(..., filter='data')` or `filter='tar'` | not reported |
+| `extractall(..., filter='fully_trusted')` | `archive-extraction-fully-trusted`, escalated |
+| `extractall(..., filter=some_variable)` | not reported — a recorded miss |
+| `tarfile.open(...)` / `zipfile.ZipFile(...)` | `archive-open` only; opening is not extracting |
+
+**Correction to an earlier claim in this file:** it previously said the constrained default
+arrived in Python 3.12. That was wrong. Verified from the `tarfile` documentation
+(retrieved 2026-07-22): "Changed in version **3.14**: Set the default extraction filter to
+`data`... Previously, the filter strategy was equivalent to `fully_trusted`." So an
+unfiltered `extractall` is unsafe by default on 3.13 and earlier and safe by default from
+3.14 — and the consuming Python version is not visible in the artifact, so the finding
+states the condition rather than asserting which applies. This is the same version-gate
+shape as the `datasets` loader-script finding.
+
+A computed `filter=` is deliberately not flagged: the finding's own wording is "without an
+explicit extraction filter", and firing when one *was* supplied would make the finding text
+false. Missing that case is preferable to reporting something untrue.
 
 **String rules match text, including documentation.** `cloud-metadata-endpoint`,
 `sensitive-path-literal`, `package-install-command` and the credential-path rules match a
@@ -210,3 +272,29 @@ Recorded because a control set that has never caught anything is not evidence th
    a metadata endpoint in YAML while the string rules ran only over Python, so the fixture
    passed on the strength of an unrelated match in a `.py` file. String rules now run over
    configuration values as well, which is the likelier location for a hardcoded endpoint.
+
+## Bundled example repositories and stored control-run evidence
+
+`examples/repos/` ships six examples; `examples/control_runs/` stores the evidence record
+the full scanner actually produced for each, regenerable and byte-identical.
+
+| Example | Role | Result |
+|---|---|---|
+| `clean_tabular` | negative control | 0 findings, scope complete |
+| `clean_jsonl` | negative control (includes a benign helper module) | 0 findings |
+| `clean_imagefolder` | negative control (no code at all) | 0 findings |
+| `unsafe_dataset_loader` | positive control — presented as passive data | 9 capabilities `FOUND` |
+| `unsafe_model_repo` | positive control — `auto_map` remote code | 8 capabilities `FOUND` |
+| `partial_encoding` | PARTIAL control | `legacy.yaml` undecodable; scope incomplete |
+
+**Negative controls are non-vacuous at the full-scanner level.** The unsafe examples are
+committed inert — every dangerous call sits inside a function — so the controls
+*materialise* a live variant in a temp directory, arming it with an import-time payload, a
+malicious pickle and an unsafe YAML tag pointed at canary paths. The suite then
+**detonates** that variant to prove the payloads fire, and only then scans a fresh copy
+with `subprocess`, `os.system` and `socket` replaced by raising objects. No canary appears,
+nothing enters `sys.modules`, and the armed YAML tag is still detected — so inertness was
+not achieved by declining to look.
+
+Stored control-run evidence is compared against a fresh scan on every test run, so it
+cannot silently go stale.

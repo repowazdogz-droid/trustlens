@@ -250,3 +250,51 @@ def test_every_rule_declares_a_blind_spot():
         assert rule.what, f"{rule.rule_id} has no description"
         if rule.predicate is not None:
             assert rule.predicate_note, f"{rule.rule_id} is conditional but says no condition"
+
+
+# --------------------------------------------------- archive extraction filter discipline
+
+@pytest.mark.parametrize(
+    "call,expected_rules",
+    [
+        ("tarfile.open(s).extractall(path=d)", {"archive-extraction-unfiltered", "archive-open"}),
+        ("tarfile.open(s).extractall(path=d, filter='data')", {"archive-open"}),
+        ("tarfile.open(s).extractall(path=d, filter='tar')", {"archive-open"}),
+        (
+            "tarfile.open(s).extractall(path=d, filter='fully_trusted')",
+            {"archive-extraction-fully-trusted", "archive-open"},
+        ),
+        ("tarfile.open(s).extractall(path=d, filter=fl)", {"archive-open"}),
+        ("tarfile.open(s).getnames()", {"archive-open"}),
+    ],
+)
+def test_extraction_filter_is_respected(call, expected_rules):
+    """Code that already supplies a safe extraction filter must not be flagged.
+
+    Firing on filter='data' would fire on code that has done the right thing, which is the
+    fastest way for a scanner to lose a user's trust. See CLAIMS.md for the version detail:
+    the constrained default arrived in Python 3.14, not 3.12.
+    """
+    pf = parse_source(f"import tarfile\ndef f(s, d, fl): {call}\n", "a.py")
+    fired = {h.rule.rule_id for h in ps.scan_file(pf)}
+    assert fired == expected_rules, f"{call} -> {sorted(fired)}"
+
+
+def test_unfiltered_extraction_is_not_escalated_but_fully_trusted_is():
+    unfiltered = parse_source(
+        "import tarfile\ndef f(s, d): tarfile.open(s).extractall(path=d)\n", "a.py"
+    )
+    trusted = parse_source(
+        "import tarfile\ndef f(s, d): tarfile.open(s).extractall(path=d, filter='fully_trusted')\n",
+        "a.py",
+    )
+    assert not any(
+        h.rule.escalated for h in ps.scan_file(unfiltered)
+    ), "an unfiltered extractall is version-conditional, not a definite fault"
+    assert any(h.rule.escalated for h in ps.scan_file(trusted))
+
+
+def test_unfiltered_extraction_states_the_version_condition():
+    rule = next(r for r in ps.RULES if r.rule_id == "archive-extraction-unfiltered")
+    assert "3.14" in rule.blind_spot, "the finding must name the version where the default changed"
+    assert "not visible" in rule.blind_spot.lower() or "NOT visible" in rule.blind_spot

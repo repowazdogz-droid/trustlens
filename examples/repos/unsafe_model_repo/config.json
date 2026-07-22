@@ -1,0 +1,6 @@
+{
+  "model_type": "custom",
+  "auto_map": {
+    "AutoModelForCausalLM": "modeling_tiny.TinyForCausalLM"
+  }
+}
