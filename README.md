@@ -92,11 +92,11 @@ Tests: [`tests/schema/test_partial_is_not_absence.py`](tests/schema/test_partial
 ```bash
 git clone <repo> trustlens && cd trustlens
 python3 -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
+pip install -e ".[dev]"                    # installs the package + the test runner (pytest)
 
 git config core.hooksPath .githooks        # activate the count-discipline commit hook
                                            # (per-clone; the suite asserts it is wired)
-PYTHONPATH=. python3 examples/generate_examples.py
+python3 examples/generate_examples.py
 git diff --exit-code examples/records/     # regeneration is byte-identical by design
 python3 -m pytest tests -q
 ```
