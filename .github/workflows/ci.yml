@@ -33,6 +33,13 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Wire the commit-msg hook
+        # Required BEFORE the suite: test_hook_is_wired_up_in_this_clone asserts
+        # core.hooksPath == .githooks, which is a per-clone git setting not carried by the
+        # repo. Activating it here is the count discipline, not a workaround — if CI skipped
+        # it, that test would (correctly) fail.
+        run: git config core.hooksPath .githooks
+
       - name: Install
         run: |
           python -m pip install --upgrade pip
@@ -54,13 +61,10 @@ jobs:
           python -m pytest tests/test_sandbox_config_isolation.py -q
 
       - name: Count discipline
-        # The commit-msg hook rejects a commit whose stated counts disagree with the ones
-        # read from the tools. Install the hook path so the discipline is live CI-side, and
-        # run stats.py as the authoritative check — it reads counts from pytest and exits
-        # non-zero on any failure (scripts/stats.py:159).
-        run: |
-          git config core.hooksPath .githooks
-          python scripts/stats.py
+        # The commit-msg hook (wired above) rejects a commit whose stated counts disagree
+        # with the ones read from the tools. stats.py is the authoritative check — it reads
+        # counts from pytest and exits non-zero on any failure (scripts/stats.py:159).
+        run: python scripts/stats.py
 
       - name: Example records regenerate byte-identically
         # The evidence model's determinism claim: regenerating the shipped example records
@@ -87,6 +91,9 @@ jobs:
       - name: Install and verify in the clean clone
         working-directory: ../trustlens-cc
         run: |
+          # Wire the hook in the fresh clone too — core.hooksPath is per-clone and the suite
+          # asserts it is active.
+          git config core.hooksPath .githooks
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install -e .
