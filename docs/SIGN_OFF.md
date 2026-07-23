@@ -57,23 +57,40 @@ and non-weaponized *as written*, not merely as intended.
 
 ---
 
-## SO-2 — Conformance probe suite  *(awaiting review)*
+## SO-2 — Conformance probe suite
 
 | Field | Value |
 |---|---|
+| **Signed by** | Warren |
 | **Presented** | 2026-07-23 |
-| **Document** | `docs/PROBE_SUITE_REVIEW.md` |
-| **Code** | `trustlens/sandbox/probes.py`, `trustlens/sandbox/conformance.py` |
-| **Verdict** | **NOT YET GIVEN** — presented for review, not approved |
+| **Date** | 2026-07-23 |
+| **Document reviewed** | `docs/PROBE_SUITE_REVIEW.md` |
+| **Code reviewed** | `trustlens/sandbox/probes.py`, `trustlens/sandbox/conformance.py` |
+| **Verdict** | **GIVEN** — distinct from SO-1 |
 
-This gate is separate from SO-1 and non-delegable. The suite runs and passes ground-truth
-validation against real gVisor (12/12 conform inside; 8/12 deviate uncontained), but "it
-passes" is exactly what a human must not accept on trust for a suite that executes operations
-which must be safe *as written*. To sign off, review `docs/PROBE_SUITE_REVIEW.md` and its
-checklist, then record the verdict here as SO-2.
+Separate from SO-1 and non-delegable; discharged by Warren's own review, not by the tests
+passing.
 
-Approving SO-2 would record that the probes are safe to run and sound in what they check. It
-would **not** lift `EXPERIMENTAL`, approve hostile artifacts, or grant gVisor-only promotion.
+### Approved
+
+- **All twelve probes as non-weaponized as written.** Each attempts a prohibited operation in
+  its most benign observable form. The structural audit
+  (`tests/sandbox/test_probes_non_weaponized.py`) is accepted as a *supporting control* that
+  forbids known-bad shapes rather than certifying intent.
+- **PR-1, PR-2 and PR-3 as correctly fixed.** All three moved from proxy tests (namespace
+  artifacts, uid mapping, locale vars) to direct tests of the property actually in question
+  (host-planted sentinel; `mknod` capability; real credential-pattern env leakage). Right
+  direction; reasoning holds.
+- **The ground-truth validation as sufficient.** 8/12 `DEVIATES` uncontained establishes the
+  probes detect the absence of containment, so the 12/12 `CONFORMS` inside the sandbox carries
+  evidential weight rather than being an untested green.
+
+### What this sign-off does NOT grant
+
+SO-2 approves that the probes are **safe and sound**. It grants **no promotion**. `EXPERIMENTAL`
+stands. `status.promote()` must continue to refuse gVisor unconditionally. Any future promotion
+is a separate sign-off **not given here**, and stated by the signer as one that **will not be
+given for a gVisor-only configuration**.
 
 ---
 
@@ -81,5 +98,4 @@ would **not** lift `EXPERIMENTAL`, approve hostile artifacts, or grant gVisor-on
 
 | Gate | State |
 |---|---|
-| SO-2 — conformance-probe suite (non-destructive, non-weaponized *as written*) | **PRESENTED, NOT GIVEN** — see `docs/PROBE_SUITE_REVIEW.md` |
 | Promotion out of `EXPERIMENTAL` | **NOT GIVEN** — and not available on a gVisor-only configuration |

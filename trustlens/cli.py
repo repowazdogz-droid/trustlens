@@ -26,6 +26,10 @@ from .scanner import acquire as acquire_mod
 from .scanner.assemble import scan as run_scan, summarise
 from .scanner.report import discrepancy_level, render
 from .mapper.assemble import DescriptionError, map_credentials
+from .blast import combine as blast_combine
+from .blast.assemble import build_record as build_blast_record
+from .blast.inputs import EnvError, parse_env
+from .blast.render import render_report as render_blast
 
 EXIT_CLEAN = 0
 EXIT_FINDINGS = 1
@@ -274,7 +278,111 @@ def build_parser() -> argparse.ArgumentParser:
         "--acknowledgement", help="who authorised this fetch, and on what basis"
     )
     p_acq.set_defaults(func=_cmd_acquire)
+
+    p_blast = sub.add_parser(
+        "blast-radius",
+        help="offline: compose scanner + configured + sandbox evidence into reachability paths",
+    )
+    p_blast.add_argument("--scan", required=True, help="scanner evidence record (JSON)")
+    p_blast.add_argument("--env", required=True, help="environment file: entry, assets, capability targets, configured edges")
+    p_blast.add_argument("--sandbox", help="optional sandbox evidence record (JSON)")
+    p_blast.add_argument("--output", help="write the sealed blast_radius record here")
+    p_blast.set_defaults(func=_cmd_blast_radius)
     return parser
+
+
+def _load_json(path: str, label: str):
+    p = Path(path)
+    if not p.is_file():
+        print(f"error: {label} file {path} not found", file=sys.stderr)
+        return None
+    try:
+        return json.loads(p.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        print(f"error: could not read {label} file {path}: {exc}", file=sys.stderr)
+        return None
+
+
+def _cmd_blast_radius(args: argparse.Namespace) -> int:
+    """Offline composition of scanner + configured + sandbox evidence into reachability paths.
+
+    execution_mode: offline_modelling. Reads records, composes them, writes a record. Acquires
+    nothing, executes nothing.
+    """
+    scan = _load_json(args.scan, "--scan scanner record")
+    env_raw = _load_json(args.env, "--env environment")
+    if scan is None or env_raw is None:
+        return EXIT_USAGE
+    sandbox = _load_json(args.sandbox, "--sandbox record") if args.sandbox else None
+    if args.sandbox and sandbox is None:
+        return EXIT_USAGE
+
+    try:
+        env = parse_env(env_raw)
+    except EnvError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return EXIT_USAGE
+
+    scanner_edges = blast_combine.edges_from_scanner(
+        scan, env["entry"], capability_targets=env["capability_targets"],
+        description_captured_at=env["description_captured_at"],
+    )
+    sandbox_edges = (
+        blast_combine.edges_from_sandbox(
+            sandbox, capability_targets=env["capability_targets"], entry=env["entry"]
+        )
+        if sandbox else []
+    )
+    graph = blast_combine.build_graph(scanner_edges, env["configured_edges"], sandbox_edges)
+
+    all_paths = []
+    depth_hit = False
+    for asset in env["assets"]:
+        all_paths.extend(graph.enumerate_paths(env["entry"], asset))
+        depth_hit = depth_hit or graph.depth_bound_was_hit(env["entry"], asset)
+
+    print(render_blast(all_paths, depth_bound_hit=depth_hit))
+
+    if args.output:
+        # Declare the composed inputs from the records actually loaded — their own record_id and
+        # content_hash — so the composition's evidence base is traceable, never asserted.
+        input_records = []
+        for rec, comp in ((scan, "scanner"), (sandbox, "sandbox")):
+            if rec is None:
+                continue
+            input_records.append({
+                "component": rec.get("tool", {}).get("component", comp),
+                "record_id": rec.get("record_id", "0" * 32),
+                "content_hash": rec.get("content_hash", "0" * 64),
+            })
+        record = build_blast_record(
+            all_paths,
+            artifact=env_raw.get("artifact", {
+                "artifact_id": "unspecified", "artifact_type": "unspecified",
+                "declared_kind": "unspecified", "source": "unspecified",
+                "content_hash": "0" * 62, "content_hash_method": "unspecified",
+                "acquired_at": "1970-01-01T00:00:00+00:00", "acquisition_method": "already_local",
+                "acquisition_authorised_by": None, "immutable_reference": "unspecified",
+                "file_count": 0, "total_bytes": 0,
+            }),
+            input_records=input_records,
+            tool_version="0.1.0", commit=None,
+            started_at=env.get("description_captured_at"),
+            completed_at=env.get("description_captured_at"),
+            invocation="trustlens blast-radius",
+            environment_description_ref=env["environment_description_ref"],
+            depth_bound_hit=depth_hit,
+        )
+        Path(args.output).write_text(
+            json.dumps(record, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        )
+        print(f"\nEvidence record written to {args.output}", file=sys.stderr)
+
+    # Exit code: a live (non-blocked) path is a finding.
+    live = [p for p in all_paths if not p.is_blocked]
+    if depth_hit:
+        return EXIT_INCOMPLETE
+    return EXIT_FINDINGS if live else EXIT_CLEAN
 
 
 def main(argv: list[str] | None = None) -> int:
