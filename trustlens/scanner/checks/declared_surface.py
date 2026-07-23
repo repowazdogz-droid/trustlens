@@ -283,7 +283,7 @@ def extract_from_card(text: str, rel: str) -> tuple[list[Declaration], list[dict
 def extract_from_manifest(path: Path, rel: str) -> list[Declaration]:
     """A dependency manifest is a declaration that installation is expected."""
     try:
-        text = path.read_text(encoding="utf-8")
+        text = path.read_text(encoding="utf-8-sig")
     except (UnicodeDecodeError, OSError):
         return []
     if not text.strip():
@@ -357,7 +357,7 @@ def run(
             continue
         seen_real_paths.add(identity)
         try:
-            text = path.read_text(encoding="utf-8")
+            text = path.read_text(encoding="utf-8-sig")
         except UnicodeDecodeError as exc:
             failures.append(
                 {"path": name, "reason": f"UnicodeDecodeError: {exc}", "kind": "decode_error"}

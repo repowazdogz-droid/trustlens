@@ -4,8 +4,8 @@ Artifact        : unsafe_dataset_loader  (local_directory)
 Source          : examples/repos/unsafe_dataset_loader
 Immutable ref   : none recorded — acquisition is not reproducible
 Artifact hash   : 9f76f98bb0632a5fa8ef7762952ba1a5653d86f27e68824a558132249ed93189
-Record          : c956ff54a201708eeae2d6bf1ddf5a38  (schema trustlens/1.0.0)
-Record hash     : d356a0e8a7c1baa2d5a13f450e51498287e14c1e42a2ab57bf432826092ba87b
+Record          : f05db2ca3a68a5bedecd2deb7020540b  (schema trustlens/1.0.0)
+Record hash     : 02f3c1e9e552755153c4e291a6d3653cef8c3096475bcae183f764d2381e6cb0
 Tool            : trustlens 0.1.0
 
 Declared:

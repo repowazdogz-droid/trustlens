@@ -116,7 +116,7 @@ def load_python_file(path: Path, rel: str) -> PythonFile:
                 "resource_limit",
                 f"file exceeds the {MAX_SOURCE_BYTES}-byte parse limit and was not parsed",
             )
-        source = path.read_text(encoding="utf-8")
+        source = path.read_text(encoding="utf-8-sig")
     except UnicodeDecodeError as exc:
         return _fail(rel, "decode_error", f"UnicodeDecodeError: {exc}")
     except (OSError, PermissionError) as exc:
@@ -174,21 +174,35 @@ def resolve(name: str, aliases: dict[str, str]) -> str:
 
 
 def call_names(node: ast.Call, aliases: dict[str, str]) -> set[str]:
-    """Every name a call could reasonably be known by, for matching against rules."""
+    """The EXACT names a call is known by: its raw dotted form and its alias-resolved form.
+
+    This deliberately does NOT include the bare last segment. The last segment is a *suffix*
+    match, returned separately by `call_suffix()` and applied only to rules that opt into it
+    (`Rule.match_suffix`). Merging the two is what let `re.compile` match the builtin-`compile`
+    target — a false positive on a FOUND, and the same for `df.eval`, `model.compile`,
+    `get_model().eval()` and every other qualified call whose last segment happens to be a
+    builtin name. See `study/results/DIVERGENCE_CATALOGUE.md` D1.
+
+    A chained call (`tarfile.open(p).extractall()`) has no dotted name and therefore no exact
+    name; it carries only a suffix, which `call_suffix()` returns.
+    """
     raw = dotted_name(node.func)
     if not raw:
-        # A method call on the result of another call — `tarfile.open(p).extractall()` —
-        # has no dotted name. Expose the bare attribute so suffix rules still match,
-        # because chained calls are idiomatic and would otherwise be a blanket blind spot.
-        if isinstance(node.func, ast.Attribute):
-            return {node.func.attr}
         return set()
     resolved = resolve(raw, aliases)
-    names = {raw, resolved}
-    # Also expose the bare attribute so `x.extractall()` matches a suffix rule.
-    if "." in resolved:
-        names.add(resolved.rsplit(".", 1)[-1])
-    return {n for n in names if n}
+    return {n for n in {raw, resolved} if n}
+
+
+def call_suffix(node: ast.Call, aliases: dict[str, str]) -> str | None:
+    """The bare last attribute of an attribute call, for rules that opt into suffix matching.
+
+    `x.extractall()` -> `"extractall"`; `tarfile.open(p).extractall()` -> `"extractall"`.
+    A plain-name call (`compile(...)`) has no suffix and must be matched exactly, so this
+    returns `None` — that is how an unqualified builtin call is distinguished from `re.compile`.
+    """
+    if isinstance(node.func, ast.Attribute):
+        return node.func.attr
+    return None
 
 
 def keyword_of(node: ast.Call, name: str) -> ast.expr | None:

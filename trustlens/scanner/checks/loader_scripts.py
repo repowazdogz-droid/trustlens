@@ -90,7 +90,7 @@ def find_builder_classes(root: Path, py_files: list[str]) -> list[ShapeHit]:
     for rel in py_files:
         path = root / rel
         try:
-            tree = ast.parse(path.read_text(encoding="utf-8"))
+            tree = ast.parse(path.read_text(encoding="utf-8-sig"))
         except (SyntaxError, ValueError, UnicodeDecodeError, OSError):
             continue  # scope failures are recorded by the caller, not double-counted here
         for node in ast.walk(tree):
@@ -215,7 +215,7 @@ def run(
         rel = str(p.relative_to(root))
         if p.suffix == ".py":
             try:
-                p.read_text(encoding="utf-8")
+                p.read_text(encoding="utf-8-sig")
                 py_files.append(rel)
             except (UnicodeDecodeError, OSError) as exc:
                 failed.append(

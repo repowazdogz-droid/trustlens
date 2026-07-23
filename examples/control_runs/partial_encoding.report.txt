@@ -4,8 +4,8 @@ Artifact        : partial_encoding  (local_directory)
 Source          : examples/repos/partial_encoding
 Immutable ref   : none recorded — acquisition is not reproducible
 Artifact hash   : f328ae9f8bcbfc9ca3bf8f10439fd301210bfcf20841a79527ec9c2dc6a96f14
-Record          : af360d1a44d22e74176b40a53eebc644  (schema trustlens/1.0.0)
-Record hash     : a6c6342b757b3746368f80b0ccfe30fa7f833e6038cd3ebfd70eb5a4cba4cd4e
+Record          : f2c5e896c95d636acc99876b1e951593  (schema trustlens/1.0.0)
+Record hash     : 863918c0fedca2d07ee8132dbb5007600f4dce81bad0b9f1b620d1d70bb56575
 Tool            : trustlens 0.1.0
 
 Declared:

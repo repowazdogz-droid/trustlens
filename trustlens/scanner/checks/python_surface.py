@@ -30,6 +30,7 @@ from ..config_parse import iter_config_files, parse_config
 from ..pysource import (
     PythonFile,
     call_names,
+    call_suffix,
     dotted_name,
     is_literal_false,
     is_literal_true,
@@ -60,6 +61,13 @@ class Rule:
     #: "string"    — a string literal containing one of `targets` as a substring
     #: "subscript" — an index into a resolved name in `targets`, e.g. os.environ[...]
     kind: str = "call"
+    #: When True (default), a bare target also matches the *last segment* of a qualified call,
+    #: so `{"extractall"}` catches `x.extractall()`. This is the intended over-report for
+    #: method-name rules (bind/listen, extractall/extract, write_text/unlink, setup).
+    #: Set False for rules whose bare targets are BUILTINS (eval/exec/compile): a builtin must
+    #: match an unqualified call only, never the suffix of an unrelated qualified call like
+    #: `re.compile` / `df.eval` / `model.compile`. See study D1.
+    match_suffix: bool = True
 
 
 # --------------------------------------------------------------------------- predicates
@@ -108,10 +116,17 @@ RULES: tuple[Rule, ...] = (
         capability="execution.dynamic_eval",
         targets=frozenset({"eval", "exec", "compile", "builtins.eval", "builtins.exec", "builtins.compile"}),
         escalated=True,
+        # Builtins only: match an unqualified eval()/exec()/compile() or the explicit
+        # builtins.* form, NEVER the last segment of a qualified call. Without this,
+        # re.compile / df.eval / model.compile all falsely matched execution.dynamic_eval
+        # (a false positive on a FOUND). Regression: tests/scanner/test_exec_eval_builtin_fp.py.
+        match_suffix=False,
         what="A builtin that executes or compiles code supplied at runtime",
         blind_spot=(
             "A call reached indirectly, e.g. through getattr(builtins, 'ev'+'al'), is not "
-            "matched. Only a syntactically visible callee is."
+            "matched. Only a syntactically visible callee is. A builtin shadowed by a "
+            "same-named method on another object is intentionally not matched (that is the "
+            "fix for the re.compile false positive)."
         ),
     ),
     Rule(
@@ -766,10 +781,15 @@ def scan_file(pf: PythonFile, rules: tuple[Rule, ...] = RULES) -> list[Hit]:
     for node in ast.walk(pf.tree):
         # ---- calls
         if isinstance(node, ast.Call):
-            names = call_names(node, pf.aliases)
-            if not names:
+            exact = call_names(node, pf.aliases)
+            suffix = call_suffix(node, pf.aliases)
+            if not exact and suffix is None:
                 continue
             for rule in call_rules:
+                # A bare target matches the call's last segment only for suffix rules; a
+                # builtin rule (match_suffix=False) matches the exact name only, so
+                # `re.compile` no longer collides with the builtin `compile`.
+                names = (exact | {suffix}) if (rule.match_suffix and suffix) else exact
                 if not (names & rule.targets):
                     continue
                 if rule.predicate is not None and not rule.predicate(node, pf.aliases):

@@ -4,8 +4,8 @@ Artifact        : unsafe_model_repo  (local_directory)
 Source          : examples/repos/unsafe_model_repo
 Immutable ref   : none recorded — acquisition is not reproducible
 Artifact hash   : b016e350ae9596d6a89757c3fe95e9de2ae1ee55c6a09ad453bba91d8a00f848
-Record          : dbfa6431529881346b96d8462c34cf93  (schema trustlens/1.0.0)
-Record hash     : 2f01f76c0ecf4d03de021364c80576472be6caca8d6eee92d26b7d5f1e52ff57
+Record          : 7b0ab8219251911693d0b0b4f43a0701  (schema trustlens/1.0.0)
+Record hash     : 752d7a45487de036f604397e192d62b0cecf8f6385b03ed5c9c17e408c2f17c1
 Tool            : trustlens 0.1.0
 
 Declared:

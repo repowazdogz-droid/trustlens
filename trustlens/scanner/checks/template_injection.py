@@ -437,7 +437,7 @@ def run(
             continue
         rel = str(py.relative_to(root))
         try:
-            src = py.read_text(encoding="utf-8")
+            src = py.read_text(encoding="utf-8-sig")
         except (UnicodeDecodeError, OSError) as exc:
             failed.append(
                 {"path": rel, "reason": f"{type(exc).__name__}: {exc}", "kind": "decode_error"}

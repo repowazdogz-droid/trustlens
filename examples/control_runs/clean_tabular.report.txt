@@ -4,8 +4,8 @@ Artifact        : clean_tabular  (local_directory)
 Source          : examples/repos/clean_tabular
 Immutable ref   : none recorded — acquisition is not reproducible
 Artifact hash   : 4697629409cbf1bd43c313d58528e7f436a52829b1690a004bf4bd04deea700c
-Record          : cdf64b221f86c838823aa33ea05be604  (schema trustlens/1.0.0)
-Record hash     : 8b2111f2c066ae57fcf1371b0a732f6d4fa45d610da3ddc9e4afcc75abc1ff29
+Record          : db4291b81a6390a1dc87a408ab1c972a  (schema trustlens/1.0.0)
+Record hash     : f5946657e3bd41dc6ee4cce40da825bf92073e970ad5727e181f2ddd3349ecdb
 Tool            : trustlens 0.1.0
 
 Declared:

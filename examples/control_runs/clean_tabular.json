@@ -26,7 +26,7 @@
         "Constructs cited at the recorded positions are present in the artifact."
       ]
     },
-    "content_hash": "8b2111f2c066ae57fcf1371b0a732f6d4fa45d610da3ddc9e4afcc75abc1ff29",
+    "content_hash": "f5946657e3bd41dc6ee4cce40da825bf92073e970ad5727e181f2ddd3349ecdb",
     "contradictions": [],
     "declared_capabilities": [
       {
@@ -613,7 +613,7 @@
         "limitations": [
           "Establishes that the construct appears in parsed source; does not establish that it executes at runtime.",
           "Analysis is per-file and syntactic. A call assembled dynamically or reached through an indirection is not matched.",
-          "A call reached indirectly, e.g. through getattr(builtins, 'ev'+'al'), is not matched. Only a syntactically visible callee is.",
+          "A call reached indirectly, e.g. through getattr(builtins, 'ev'+'al'), is not matched. Only a syntactically visible callee is. A builtin shadowed by a same-named method on another object is intentionally not matched (that is the fix for the re.compile false positive).",
           "Legitimate in metaprogramming libraries; rare in dataset or model code."
         ],
         "notes": null,
@@ -1475,7 +1475,7 @@
     "generic_advice": [],
     "input_records": [],
     "mitigations": [],
-    "record_id": "cdf64b221f86c838823aa33ea05be604",
+    "record_id": "db4291b81a6390a1dc87a408ab1c972a",
     "residual_uncertainty": "Every declared capability was reported on and every analysed path completed. Runtime reachability of every finding remains unestablished, and capabilities outside the implemented rules were not examined.",
     "run": {
       "completed_at": "2026-07-22T00:00:01+00:00",

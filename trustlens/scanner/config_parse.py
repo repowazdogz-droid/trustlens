@@ -158,7 +158,7 @@ def _walk_yaml_node(node, pointer: str, out: ParsedConfig) -> None:
 def parse_yaml(path: Path, rel: str) -> ParsedConfig:
     out = ParsedConfig(path=rel, format="yaml")
     try:
-        text = path.read_text(encoding="utf-8")
+        text = path.read_text(encoding="utf-8-sig")
     except UnicodeDecodeError as exc:
         return _fail(rel, "yaml", "decode_error", f"UnicodeDecodeError: {exc}")
     except OSError as exc:
@@ -208,7 +208,7 @@ def _walk_plain(obj: Any, pointer: str, text: str, out: ParsedConfig) -> None:
 def parse_json(path: Path, rel: str) -> ParsedConfig:
     out = ParsedConfig(path=rel, format="json")
     try:
-        text = path.read_text(encoding="utf-8")
+        text = path.read_text(encoding="utf-8-sig")
     except UnicodeDecodeError as exc:
         return _fail(rel, "json", "decode_error", f"UnicodeDecodeError: {exc}")
     except OSError as exc:

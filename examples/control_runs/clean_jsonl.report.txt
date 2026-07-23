@@ -4,8 +4,8 @@ Artifact        : clean_jsonl  (local_directory)
 Source          : examples/repos/clean_jsonl
 Immutable ref   : none recorded — acquisition is not reproducible
 Artifact hash   : d7b196561058eb8ba63a61b473d0d59150d11fc7fcaffb7cca54bc277dac8ae6
-Record          : ce9105f2b1ad416d20dc0b7b97dcfaa9  (schema trustlens/1.0.0)
-Record hash     : e6a610b691712ba18298c756c019df993ee7afc01cc45298f3cfcfea27e27c71
+Record          : d5d1ea10cc04c0d940c267386dddd9cf  (schema trustlens/1.0.0)
+Record hash     : 3ea555b1516dc66c59e5e1acf12cd62d52d6d328eb76bee98e13f0b889c5ebb1
 Tool            : trustlens 0.1.0
 
 Declared:

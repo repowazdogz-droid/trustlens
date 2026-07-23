@@ -4,8 +4,8 @@ Artifact        : clean_imagefolder  (local_directory)
 Source          : examples/repos/clean_imagefolder
 Immutable ref   : none recorded — acquisition is not reproducible
 Artifact hash   : 2c5beb35bc04386e312a2e44de92c98cac3f8421892fb21a3c32d1d3a5c28be3
-Record          : 5bed3718eda26dddd1e5a2858910f771  (schema trustlens/1.0.0)
-Record hash     : f85e03dc70dd1361aa1b2301da832e7375046cb6e3b7624818d74b9b94d09605
+Record          : dc4782cf8d6232b6736d07e6ce3fcb94  (schema trustlens/1.0.0)
+Record hash     : cb924afe242d7d36ce0ef1cc1fdb8441e0d5f9f8c1a383ff67356c77cd66e2a7
 Tool            : trustlens 0.1.0
 
 Declared:
