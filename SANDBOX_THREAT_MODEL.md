@@ -1,11 +1,17 @@
 # Sandbox threat model
 
-## Status: DRAFT — AWAITING SIGN-OFF
+## Status: SIGNED OFF — SCOPED
 
-**Drafted 2026-07-22. Not approved. No isolation mechanism has been *selected* — one is
-*recommended*, and selecting it is Warren's call, not this document's.**
+**Signed off by Warren, 2026-07-22. The sign-off is SCOPED and is not unconditional; the
+scope is recorded in `docs/SIGN_OFF.md` and restated in §2.1.**
 
-**No sandbox execution code exists, and none will be written before sign-off.**
+**Approved for:** development, testing, and artifacts whose threat model is hostile userspace
+code, on gVisor/systrap with `--network=none`, rootless, with §4 binding.
+
+**NOT approved for:** genuinely hostile artifacts of the kind the July 2026 motivating
+incident involved (agentic attacker, chained zero-days, potential kernel-level exploitation);
+and not for treating gVisor as sufficient containment for the threat class TrustLens exists
+to defend against. See §2.1.
 
 This is the third of three explicit states this file may hold, declared on the line above so
 it can be checked mechanically rather than inferred from prose:
@@ -13,11 +19,15 @@ it can be checked mechanically rather than inferred from prose:
 | State | Meaning |
 |---|---|
 | `NOT WRITTEN` | Placeholder. No review performed. (Held until 2026-07-22.) |
-| `DRAFT — AWAITING SIGN-OFF` | Written, evidenced, not approved. **Current.** |
-| `SIGNED OFF` | Warren has reviewed and approved this document. |
+| `DRAFT — AWAITING SIGN-OFF` | Written, evidenced, not approved. (Held 2026-07-22.) |
+| `SIGNED OFF` | Warren has reviewed and approved this document. **Current, scoped.** |
 
 `SIGNED OFF` is a claim about a human action and may only be set by that human. Nothing in
-this repository sets it, and no test infers it.
+this repository sets it, and no test infers it — the gate test asserts only that the claim is
+accompanied by a `docs/SIGN_OFF.md` recording who signed, when, and on what.
+
+**Promotion out of `EXPERIMENTAL` is a separate future sign-off that has not been given**,
+and per the 2026-07-22 sign-off will not be given for a gVisor-only configuration.
 
 Two further things remain true regardless of this document's state, and are unchanged:
 
@@ -64,9 +74,42 @@ sandbox launch parameters, the isolation binary, or the kernel. §4 exists to ke
 way, because the boundary between these two lists is the entire security argument.
 
 Assumed capabilities: hostile userspace code, resource exhaustion attempts, attempts to read
-host state, attempts to exfiltrate over network, attempts to persist. Assumed **not**
-available: a working kernel 0-day. That assumption is load-bearing and is stated as an
-assumption, not a fact — it is the largest single item in this model's trusted base.
+host state, attempts to exfiltrate over network, attempts to persist.
+
+### 2.1 The no-kernel-0-day assumption is in tension with the tool's own purpose
+
+This must not be left as a quiet assumption, because it is in **direct tension with why
+TrustLens exists**. The motivating incident of July 2026 involved an agentic attacker
+chaining zero-days. TrustLens is built to scan artifacts from exactly that population. An
+assumption that no kernel exploitation is in play is therefore *false for the tool's own
+motivating threat class*, and a reader who skims §2 could take it for a routine caveat.
+
+Stated plainly, and binding:
+
+1. **gVisor is the correct choice for development, for testing, and for artifacts whose
+   threat model is hostile userspace code.** That is a real and common class — pickle
+   deserialisation payloads, install-time code execution, credential harvesting, exfiltration
+   attempts — and it is what the first three components already surface statically. gVisor's
+   Sentry is well matched to it, and it is signed off for it.
+
+2. **Firecracker on real KVM hardware is REQUIRED before this is ever pointed at artifacts
+   whose threat model includes kernel exploitation** — which is the threat class the
+   motivating incident actually represented. Not preferred, not recommended: required. gVisor
+   reduces host kernel surface; it does not remove it, and it was never signed off for an
+   attacker assumed capable of crossing it. Meeting that class needs a hardware
+   virtualization boundary and the infrastructure to run one.
+
+3. **The `EXPERIMENTAL` lock in code enforces exactly this boundary.** The sandbox may not be
+   promoted to "trusted for hostile input" while running on gVisor, because **gVisor was
+   never signed off for that case**. Promotion is a separate future sign-off which has not
+   been given and which, per the sign-off of 2026-07-22, will not be given for a gVisor-only
+   configuration. This is not a documentary convention: `trustlens/sandbox/status.py` refuses
+   the combination, and `tests/test_sandbox_experimental_lock.py` fails if it stops refusing.
+
+The practical consequence for a user: a clean sandbox run on gVisor means *"nothing hostile
+was observed at userspace level in this one execution"*. It does **not** mean the artifact
+carried no kernel-level exploit, and the record must never be read that way. That is why the
+result is `NOT_FOUND_WITHIN_ANALYSED_SCOPE` and never a clean bill of health.
 
 ## 3. Recommended mechanism and boundary
 

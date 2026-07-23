@@ -20,10 +20,6 @@ import pytest
 PACKAGE = Path(__file__).resolve().parents[1] / "trustlens"
 
 #: Modules permitted to spawn a process, each with the reason it is allowed.
-#:
-#: `sandbox` is listed with `allowed=False` on purpose: Phase 3 has not been built, and
-#: until its isolation-mechanism review, threat model and human sign-off are complete it may
-#: not exist. If a sandbox module appears before then, this test fails — which is the point.
 SPAWN_ALLOWLIST: dict[str, str] = {
     "scanner/acquire.py": (
         "remote acquisition; explicitly initiated, never reachable from scan()"
@@ -31,6 +27,11 @@ SPAWN_ALLOWLIST: dict[str, str] = {
     "mapper/rbac_helper.py": (
         "optional Go RBAC helper; explicitly initiated, never reachable from "
         "map-credentials()"
+    ),
+    "sandbox/runsc.py": (
+        "gVisor execution. Added 2026-07-22 under the SCOPED sign-off recorded in "
+        "docs/SIGN_OFF.md SO-1. The only module in the sandbox package that spawns, so the "
+        "set of things able to start a process stays small and reviewed."
     ),
 }
 
@@ -113,27 +114,53 @@ def test_core_analysis_modules_never_import_the_spawning_modules_either():
                     )
 
 
-# ----------------------------------------------------- the Phase 3 guard, ahead of time
+# ----------------------------------------------------- the Phase 3 guard, now a scoped one
 
-def test_no_sandbox_module_exists_yet():
-    """Phase 3 is gated on three things, none of which the agent can self-certify.
+def test_sandbox_code_exists_only_against_a_recorded_sign_off():
+    """Successor to `test_no_sandbox_module_exists_yet`, which was removed 2026-07-22.
 
-    An isolation-mechanism review, a written threat model, and Warren's own sign-off on the
-    conformance-probe suite. Until all three are in place, sandbox execution code must not
-    exist. This test is the mechanical form of that gate: it fails the moment such a module
-    appears, so the gate cannot be passed by simply starting to write code.
+    That test asserted no sandbox module could exist at all. It was removed deliberately, in
+    the commit that recorded the sign-off it was gating on, exactly as its own failure
+    message instructed — not incidentally, and not by weakening it until it passed.
+
+    The gate has **moved rather than disappeared**. Sandbox code may exist, but only while a
+    sign-off record exists to point at. If `docs/SIGN_OFF.md` is deleted or loses SO-1, the
+    sandbox package is no longer authorised and this fails.
     """
     sandbox_modules = [
         str(p.relative_to(PACKAGE))
         for p in _python_modules()
         if "sandbox" in p.stem.lower() or "sandbox" in str(p.parent.name).lower()
     ]
-    assert not sandbox_modules, (
-        f"sandbox module(s) present: {sandbox_modules}. Phase 3 is gated on an "
-        "isolation-mechanism review, a written threat model, and Warren's human sign-off "
-        "on the conformance-probe suite. If those are complete, remove this test in the "
-        "same commit that records them — deliberately, not incidentally."
+    if not sandbox_modules:
+        return
+    sign_off = PACKAGE.parent / "docs" / "SIGN_OFF.md"
+    assert sign_off.exists(), (
+        f"sandbox module(s) present ({sandbox_modules}) with no docs/SIGN_OFF.md. "
+        "Sandbox execution code is authorised by a human sign-off record, not by its own "
+        "existence."
     )
+    text = sign_off.read_text(encoding="utf-8")
+    assert "SO-1" in text and "APPROVED — SCOPED" in text, (
+        "docs/SIGN_OFF.md no longer records the scoped SO-1 approval that authorises the "
+        "sandbox package."
+    )
+
+
+def test_the_sign_off_scope_limits_are_not_quietly_dropped():
+    """The sign-off was SCOPED, and the scope is the load-bearing part.
+
+    A future edit that keeps the approval and drops the exclusions would read as a broader
+    sign-off than the one given. The exclusions are what make it safe to have built this at
+    all, so they are asserted rather than trusted to survive.
+    """
+    text = (PACKAGE.parent / "docs" / "SIGN_OFF.md").read_text(encoding="utf-8")
+    for required in (
+        "Explicitly NOT approved",
+        "kernel-level exploitation",
+        "will not be given for a gVisor-only configuration",
+    ):
+        assert required in text, f"the sign-off record lost its scope limit: {required!r}"
 
 
 #: The only states SANDBOX_THREAT_MODEL.md may declare. `SIGNED OFF` is a claim about a
