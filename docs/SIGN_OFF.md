@@ -57,9 +57,29 @@ and non-weaponized *as written*, not merely as intended.
 
 ---
 
+## SO-2 — Conformance probe suite  *(awaiting review)*
+
+| Field | Value |
+|---|---|
+| **Presented** | 2026-07-23 |
+| **Document** | `docs/PROBE_SUITE_REVIEW.md` |
+| **Code** | `trustlens/sandbox/probes.py`, `trustlens/sandbox/conformance.py` |
+| **Verdict** | **NOT YET GIVEN** — presented for review, not approved |
+
+This gate is separate from SO-1 and non-delegable. The suite runs and passes ground-truth
+validation against real gVisor (12/12 conform inside; 8/12 deviate uncontained), but "it
+passes" is exactly what a human must not accept on trust for a suite that executes operations
+which must be safe *as written*. To sign off, review `docs/PROBE_SUITE_REVIEW.md` and its
+checklist, then record the verdict here as SO-2.
+
+Approving SO-2 would record that the probes are safe to run and sound in what they check. It
+would **not** lift `EXPERIMENTAL`, approve hostile artifacts, or grant gVisor-only promotion.
+
+---
+
 ## Outstanding sign-offs
 
 | Gate | State |
 |---|---|
-| Conformance-probe suite (non-destructive, non-weaponized *as written*) | **NOT GIVEN** — probes do not exist |
+| SO-2 — conformance-probe suite (non-destructive, non-weaponized *as written*) | **PRESENTED, NOT GIVEN** — see `docs/PROBE_SUITE_REVIEW.md` |
 | Promotion out of `EXPERIMENTAL` | **NOT GIVEN** — and not available on a gVisor-only configuration |
