@@ -17,6 +17,7 @@ is **unscheduled**: still deferred, no longer pinned to a phase that has already
 | D2 | `policy_sentry` integration | 2026-07-22 | unscheduled (post-v1) | Actions recorded as opaque strings |
 | D3 | Network-policy reachability | 2026-07-22 | unscheduled (post-v1) | Phase 1 detects metadata endpoints statically; no `network.*` edges exist |
 | D4 | Bandit / external analyser integration | 2026-07-22 | unscheduled (post-v1) | No external tool in any FOUND/NOT_FOUND claim |
+| D5 | `dynamic-import` builtin suffix-match (`__import__`) | 2026-07-23 | unscheduled | Left as-is; shares the fixed re.compile pattern but no benign false positive demonstrated |
 
 ---
 
@@ -92,3 +93,33 @@ demonstrates the shape works.
 **In its place now:** no external tool contributes to any `FOUND` or
 `NOT_FOUND_WITHIN_ANALYSED_SCOPE` claim. Only Bandit has verified failure reporting; Semgrep,
 gitleaks, syft and osv-scanner remain excluded.
+
+## D5 — `dynamic-import` builtin suffix-match (`__import__`)
+
+**Status: not fixed. Deferred 2026-07-23, following the first external study's fix pass.
+Unscheduled.**
+
+The first external study surfaced a false positive where the `exec-eval-builtin` rule's bare
+`compile` target suffix-matched `re.compile` (study `DIVERGENCE_CATALOGUE.md` D1). That rule was
+fixed by qualifying its builtin targets to unqualified calls only (`Rule.match_suffix=False`).
+
+The by-design matcher audit that followed (`study/POST_STUDY_FIXES.md`) checked every call rule
+with a bare target. One other rule shares the same *structural shape*: `dynamic-import` targets
+the bare builtin `__import__`, so `x.__import__(...)` on an arbitrary object would suffix-match.
+
+**Why deferred rather than fixed now.** Unlike `re.compile` / `df.eval` / `model.compile` —
+common, benign calls that are genuinely unrelated to code evaluation — `x.__import__(...)` is
+almost always the real import mechanism, and **no benign false positive has been demonstrated**.
+That absence is the reason to *defer*, not evidence the shape is fine: it shares the exact defect
+pattern that was found by accident on one repo, and it has simply not yet been hit. The honest
+state is "unfixed, same pattern, no demonstrated FP" — recorded here so it is a named, dated item
+rather than a footnote in one session.
+
+**What would unblock it.** Either a demonstrated benign `x.__import__` false positive (fix it),
+or a deliberate decision to apply `match_suffix=False` to `dynamic-import` for consistency
+(qualifying `__import__` to the builtin loses no real coverage — an unqualified `__import__()`
+and `importlib.import_module` both still match exactly). Left as an explicit choice, not made
+silently.
+
+**In its place now:** the rule is unchanged; a bare `__import__` still suffix-matches, with the
+FP risk assessed as negligible but non-zero.

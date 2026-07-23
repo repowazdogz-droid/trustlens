@@ -1,5 +1,21 @@
 # Post-study fixes — the two defects the first external evaluation found
 
+> **Addendum — 2026-07-23.** Both defects the study found are now fixed, as additive commits
+> after the study (the study record stands unchanged at `19d5c5a`):
+> - **Fix 1** (`re.compile` false positive) and **Fix 2** (UTF-8 BOM) — commit `696ce00`.
+> - Corpus re-scan and matcher-audit record — commit `91d0434`.
+>
+> Re-scanning the study's own 8 repos with the fixed scanner: **github-code 3 → 2** FOUND
+> (the false `execution.dynamic_eval` removed); **k9cli 1 FOUND / 30 PARTIAL → 5 FOUND / 0
+> PARTIAL** (BOM resolved, repo now analysed). The other six repos are identical.
+>
+> **The five newly-parseable k9cli findings are unadjudicated relative to the study's scope.**
+> The published study adjudicated the run at `19d5c5a`, where those capabilities were PARTIAL;
+> this addendum claims only that the repo now parses, not that each new FOUND is a true
+> positive. `WRITEUP.md`'s original findings and numbers are unchanged — this is an addendum,
+> not a correction of the record.
+
+
 This document records the fixes made **after** the first external study and their effect on the
 study corpus. **It does not replace or edit the study.** The study
 (`study/PRE_REGISTRATION.md`, `study/WRITEUP.md`, `study/results/`) stands unchanged at commit
