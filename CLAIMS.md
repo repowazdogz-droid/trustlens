@@ -2,15 +2,26 @@
 
 Each component carries its own `CLAIMS.md` stating what its evidence establishes and, next
 to it, what the same evidence does not establish. This file covers the project as a whole.
-Component files, as each phase lands:
+Component files:
 
-- `trustlens/scanner/CLAIMS.md` (Phase 1)
-- `trustlens/credential_mapper/CLAIMS.md` (Phase 2)
-- `trustlens/sandbox/CLAIMS.md` (Phase 3)
-- `trustlens/blast_radius/CLAIMS.md` (Phase 4)
+- [`trustlens/scanner/CLAIMS.md`](trustlens/scanner/CLAIMS.md) (Phase 1)
+- [`trustlens/mapper/CLAIMS.md`](trustlens/mapper/CLAIMS.md) (Phase 2)
+- [`trustlens/sandbox/CLAIMS.md`](trustlens/sandbox/CLAIMS.md) (Phase 3)
+- [`trustlens/blast/CLAIMS.md`](trustlens/blast/CLAIMS.md) (Phase 4)
 
-At Phase 0 only the shared evidence model exists, so only its claims are live. The rest are
-listed as **not yet claimable** rather than stated in advance.
+All four phases are built. Each component's specific establishes/does-not-establish list is
+in its own file; this file states the whole-tool version.
+
+## The sandbox boundary, stated first because it is the easiest thing to over-read
+
+The Phase 3 sandbox is **`EXPERIMENTAL` and gVisor-scoped.** It was signed off (SO-1, SO-2 in
+[`docs/SIGN_OFF.md`](docs/SIGN_OFF.md)) for artifacts whose threat model is **hostile
+userspace code** — and explicitly **not** for artifacts whose threat model includes
+**kernel-level exploitation**, which is the class the July 2026 incident actually
+represented. A clean sandbox run means "nothing hostile was observed at userspace level in
+this one execution," never "the artifact is safe" and never "contained against a kernel
+exploit." The boundary is enforced in code, not documentation: `status.promote()` refuses to
+leave `EXPERIMENTAL` on a gVisor-only configuration, so no edit to this file can widen it.
 
 ## The project claim
 
@@ -54,12 +65,55 @@ listed as **not yet claimable** rather than stated in advance.
   library entirely and writes JSON by hand is caught only by validation, and only if
   validation is run.
 
-## Not yet claimable
+## What the built tool establishes
 
-Nothing in this repository currently establishes anything about scanning, credential
-reachability, sandboxed execution, or blast radius. Those claims become available only
-when the corresponding phase lands with its controls passing, and each will be stated in
-its own component file.
+Whole-tool summary. Each component's file states these in full, with its controls.
+
+**Scanner (Phase 1).** For a local directory, over the scope it records, it states which
+capability-bearing constructs are present in the artifact's own code and configuration — with
+the rule, the file, the line, and what the finding does not establish. It parses Python and
+YAML itself, spawns no processes, and a parse failure is `PARTIAL`, never clean.
+
+**Credential mapper (Phase 2).** From an offline environment description and
+Terraform/Kubernetes-RBAC manifests, it builds a typed reachability graph — which principal
+can assume which role, reach which secret, across the K8s→IAM boundary via the IRSA `:sub`
+condition — with each edge carrying the capture time of the description it rests on. It
+spawns nothing; the optional `rbac` helper wraps the upstream Kubernetes authorizer as a
+separate, explicit command.
+
+**Sandbox (Phase 3).** For one execution under one operator profile, inside gVisor with
+`--network=none`, it records what the artifact did — files touched, network attempted,
+subprocesses spawned — and, via the conformance suite, whether the configured boundary held
+against twelve prohibited-operation probes. It is `EXPERIMENTAL` and gVisor-scoped (see the
+boundary section above); an all-conform run is `NOT_FOUND_WITHIN_ANALYSED_SCOPE`, the weakest
+of the five states.
+
+**Blast-radius (Phase 4).** Offline, it composes the three sources into reachability paths
+from an entry principal to an asset, **every edge labelled by how it was established**
+(declared / statically found / configured / inferred / dynamically observed / dynamically
+blocked / unknown), and **every path rendered at the confidence of its weakest edge** — one
+inferred or `PARTIAL` edge caps the whole path, and a blocked edge marks the path cut. It
+executes nothing and observes nothing itself; a composed path is an inference about
+reachability, not a demonstration of it.
+
+**Across all four:** a record cannot express a completed-clean result over a scope containing
+failures; capture time propagates to anything derived from a description; a sealed record that
+is altered fails validation; and regenerating the shipped example records is byte-identical.
+
+## What the built tool does not establish
+
+The component-level non-claims (each component's file) hold, and in addition, at the whole-tool level:
+
+- **That any path composed across components is traversable end to end.** Edge existence is
+  not path traversability, and every composed path says so.
+- **That a clean result from any component means the artifact is safe.** Each component bounds
+  its own scope; none bounds the artifact.
+- **That the sandbox contains a kernel-level attacker.** It was not signed off for that class
+  (see the boundary section); Firecracker on real KVM hardware is the stated requirement
+  before that class is in scope, and it is not built.
+- **That coverage is constant between runs.** External analysers are optional and absent by
+  default; the deferred items in [`docs/DEFERRED.md`](docs/DEFERRED.md) (IAM conditions,
+  `policy_sentry`, network-policy reachability, external analysers) are gaps, stated.
 
 ## Standing non-claims
 

@@ -8,27 +8,42 @@ containment.**
 
 ---
 
-## Status: Phases 0 and 1 complete.
+## Status: all four phases built.
 
 | Phase | Component | Status |
 |---|---|---|
 | 0 | Grounding + shared evidence model | **complete** |
-| 1 | Dataset and repository trust scanner | **complete** — 10 check families, CLI, verified from a clean clone |
-| 2 | Credential reachability mapper | not started |
-| 3 | Sandboxed dry run | not started — `EXPERIMENTAL` by construction when it lands |
-| 4 | Blast radius simulator and mitigation engine | not started |
+| 1 | Dataset and repository trust scanner | **complete** — 10 check families, CLI, clean-clone verified |
+| 2 | Credential reachability mapper | **complete** — Terraform + Kubernetes RBAC ingest, cross-domain IRSA join, optional Go RBAC helper; partial-but-closed against scope (see [`docs/DEFERRED.md`](docs/DEFERRED.md)) |
+| 3 | Sandboxed dry run | **complete** — gVisor, `EXPERIMENTAL` by construction; 12-probe conformance suite; SO-1 + SO-2 signed off (see [`docs/SIGN_OFF.md`](docs/SIGN_OFF.md)) |
+| 4 | Blast radius simulator | **complete** — composes static + configured + dynamic evidence into reachability paths, each labelled by how it was established |
 
-The scanner performs static analysis only. It does not model an environment, execute
-anything, or simulate a blast radius. It spawns **no processes at all** while scanning, and
-`tests/scanner/test_inertness.py` demonstrates that by detonating live payloads to prove
-they fire, then scanning them with `subprocess`, `os.system` and `socket` replaced by
-objects that raise.
+**The sandbox is `EXPERIMENTAL` and gVisor-scoped.** It was signed off for artifacts whose
+threat model is hostile *userspace* code — not for kernel-exploitation artifacts, which is
+the class the July 2026 incident actually represented. That boundary is enforced in code,
+not just documented: `status.promote()` refuses to leave `EXPERIMENTAL` on a gVisor-only
+configuration. See [`SANDBOX_THREAT_MODEL.md`](SANDBOX_THREAT_MODEL.md) §2.1.
+
+TrustLens is four components over one evidence model, each with its own guarantee. The
+**scanner** performs static analysis only — it spawns **no processes at all** while
+scanning, demonstrated by `tests/scanner/test_inertness.py` (detonate live payloads to prove
+they fire, then scan them with `subprocess`, `os.system` and `socket` replaced by objects
+that raise). The **mapper** models credential reachability from offline configuration and
+spawns nothing. The **sandbox** observes execution inside gVisor and is `EXPERIMENTAL`. The
+**blast-radius** simulator composes all three offline into reachability paths.
 
 ```bash
 pip install -e .
-trustlens scan ./some-dataset-repo        # 0 clean · 1 findings · 2 did not complete
-trustlens plan  https://host/org/repo     # dry run; writes nothing, pins a commit
+trustlens scan ./some-dataset-repo                 # static analysis; 0 clean · 1 findings · 2 did not complete
+trustlens map-credentials ./env-description.json   # offline credential reachability; spawns nothing
+trustlens rbac ./k8s-manifests                     # OPTIONAL: upstream Kubernetes authorizer (Go helper), explicit
+trustlens plan  https://host/org/repo              # dry run; writes nothing, pins a commit
+trustlens acquire https://host/org/repo ./dest --i-am-authorised   # explicit fetch at a pinned commit
+trustlens blast-radius --scan scan.json --env env.json   # offline composition of the above into paths
 ```
+
+The sandbox has no CLI subcommand: running untrusted code is gated behind the `EXPERIMENTAL`
+lock and a human sign-off, so it is a library surface, not a one-command entry point.
 
 Exit code `2` matters: an incomplete analysis never exits `0`, because a caller reading only
 the exit code would otherwise treat "could not finish" as "found nothing".
@@ -111,6 +126,22 @@ Structural discrepancy:
 
 The risk label decomposes into independently visible findings and never replaces them.
 
+## A note on the synthetic "unsafe" fixtures
+
+`examples/repos/unsafe_*` and `tests/fixtures/` ship deliberately dangerous-looking code —
+`subprocess(..., shell=True)`, `pickle.loads`, unsafe YAML tags, credential-shaped paths.
+They exist because a scanner's positive controls must contain what it claims to detect: a
+control set that has never fired on a real trigger is not evidence that it works. Every
+dangerous call sits inside a **never-invoked method**, points at **nothing real** (config
+that resolves nowhere, canary paths), uses **no live credentials**, and makes **no external
+network contact**; each file is labelled in-source as a TrustLens fixture. The inertness
+harness proves the point by detonating armed copies in a temp directory and then showing the
+scanner touches none of it (`tests/scanner/test_inertness.py`).
+
+Because these files carry malware-shaped *patterns*, **automated scanners — GitHub's, an
+AV engine, a corporate proxy — may flag them.** That is expected, not a compromise: the
+patterns are the fixtures' whole purpose. Nothing here is executable as an exploit.
+
 ## Documents
 
 | File | Contents |
@@ -121,7 +152,10 @@ The risk label decomposes into independently visible findings and never replaces
 | [`CLAIMS.md`](CLAIMS.md) | What the evidence establishes, and next to it what it does not |
 | [`LIMITATIONS.md`](LIMITATIONS.md) | Live limitations, including ones inherent to the approach |
 | [`SECURITY.md`](SECURITY.md) | Safe-operation rules and handling of untrusted artifacts |
-| [`SANDBOX_THREAT_MODEL.md`](SANDBOX_THREAT_MODEL.md) | Placeholder — the sandbox does not exist |
+| [`SANDBOX_THREAT_MODEL.md`](SANDBOX_THREAT_MODEL.md) | The sandbox's attacker model, boundary, and the gVisor scope — `SIGNED OFF — SCOPED` |
+| [`docs/SIGN_OFF.md`](docs/SIGN_OFF.md) | The human sign-off record (SO-1 isolation choice, SO-2 probe suite) and what remains ungranted |
+| [`docs/DEFERRED.md`](docs/DEFERRED.md) | Work deliberately deferred, with reasons and what stands in its place |
+| [`docs/COVERAGE_GAPS.md`](docs/COVERAGE_GAPS.md) | Defects found by running rather than by tests — where current coverage ends |
 | [`REPRODUCIBILITY.md`](REPRODUCIBILITY.md) | Clean-clone verification and known reproducibility gaps |
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) | Controls every check must ship with, and claims discipline |
 

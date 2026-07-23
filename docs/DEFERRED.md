@@ -1,25 +1,28 @@
 # Deferred work register
 
 Work that was **decided against for now**, not forgotten. Each item names why it was
-deferred, what it would take, what currently stands in its place, and which phase it is a
-candidate for.
+deferred, what it would take, what currently stands in its place, and its schedule.
 
-The distinction this file exists to preserve: a deliberate deferral has a reason and an
-owner-phase; a forgotten item has neither, and after a few months they are indistinguishable
+The distinction this file exists to preserve: a deliberate deferral has a reason and a
+schedule; a forgotten item has neither, and after a few months they are indistinguishable
 from the outside. Anything that leaves scope goes here with its reasoning intact.
 
-| # | Item | Deferred | Candidate phase | Currently in its place |
+**On the schedule column:** these were originally tagged "Phase 3+". All four phases have now
+shipped *without* them — deliberately, each for the reason stated below — so the honest label
+is **unscheduled**: still deferred, no longer pinned to a phase that has already passed.
+
+| # | Item | Deferred | Schedule | Currently in its place |
 |---|---|---|---|---|
-| D1 | IAM condition evaluation | 2026-07-22 | Phase 3+ | A stated limitation on every IAM-derived edge |
-| D2 | `policy_sentry` integration | 2026-07-22 | Phase 3+ | Actions recorded as opaque strings |
-| D3 | Network-policy reachability | 2026-07-22 | Phase 3+ | Phase 1 detects metadata endpoints statically; no `network.*` edges exist |
-| D4 | Bandit / external analyser integration | 2026-07-22 | Phase 3+ | No external tool in any FOUND/NOT_FOUND claim |
+| D1 | IAM condition evaluation | 2026-07-22 | unscheduled (post-v1) | A stated limitation on every IAM-derived edge |
+| D2 | `policy_sentry` integration | 2026-07-22 | unscheduled (post-v1) | Actions recorded as opaque strings |
+| D3 | Network-policy reachability | 2026-07-22 | unscheduled (post-v1) | Phase 1 detects metadata endpoints statically; no `network.*` edges exist |
+| D4 | Bandit / external analyser integration | 2026-07-22 | unscheduled (post-v1) | No external tool in any FOUND/NOT_FOUND claim |
 
 ---
 
 ## D1 — IAM condition evaluation
 
-**Status: deliberately not built. Candidate for Phase 3 or later.**
+**Status: deliberately not built. Unscheduled (post-v1) — all four phases shipped without it.**
 
 Sound evaluation needs the operator families (`StringEquals`, `StringLike`,
 `StringNotEquals`, `ArnLike`, `IpAddress`, `DateGreaterThan`, `Bool`, `Null`,
@@ -48,7 +51,7 @@ Cedar-shaped policy set. Either is a route, and neither is a small integration.
 
 ## D2 — `policy_sentry` integration
 
-**Status: not built. Candidate for Phase 3 or later.**
+**Status: not built. Unscheduled (post-v1) — all four phases shipped without it.**
 
 Would supply offline AWS action → access-level → ARN-format metadata, so an `s3:GetObject`
 edge could be classified as a *read* rather than left as an opaque action string. MIT,
@@ -63,7 +66,7 @@ database would produce confidently wrong access-level classifications.
 
 ## D3 — Network-policy reachability
 
-**Status: not built. Candidate for Phase 3 or later.**
+**Status: not built. Unscheduled (post-v1) — all four phases shipped without it.**
 
 Would add `network.*` edges from Kubernetes `NetworkPolicy` documents, including the
 link-local metadata-endpoint egress case — the one the Phase 0 example record models by hand
@@ -79,7 +82,7 @@ rather than left implied.
 
 ## D4 — Bandit / external analyser integration
 
-**Status: deferred with a written design precondition. Candidate for Phase 3 or later.**
+**Status: deferred with a written design precondition. Unscheduled (post-v1).**
 
 Governed by `docs/SPEC_external_analyser_integration.md`, whose placement questions were
 decided on 2026-07-22: external analysers stay out of the core scan path, each becoming its

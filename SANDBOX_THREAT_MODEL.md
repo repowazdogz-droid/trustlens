@@ -197,10 +197,12 @@ module — because a guard that has never fired proves nothing.
 - The `runsc` binary is acquired over TLS from the official release channel, checksum
   verified, and pinned. Not rebuilt from source, not fetched at run time.
 
-## 6. Guest model, as it will be built
+## 6. Guest model
 
-Stated as design requirements for code that does not exist yet, so the code can be checked
-against them rather than described afterwards:
+These were written as design requirements before the code existed, so the code could be
+checked against them rather than described afterwards. The sandbox is now built (SO-1, SO-2);
+the requirements below are what it is built to, and remain the standard any change is checked
+against:
 
 - **Filesystem** — the artifact at a fixed path, read-only where the analysis permits. No
   host path is mounted by a name derived from the artifact (§4). No writable host mount.

@@ -60,11 +60,17 @@ Acquired artifacts are never committed to this repository.
 
 ## The sandbox is EXPERIMENTAL and that is enforced, not documented
 
-Phase 3 has not been built. When it is, its status begins as `EXPERIMENTAL` in a
-machine-readable state, and the CLI and API refuse any request that treats it as approved
-for hostile input, trusted for suspected zero-day artifacts, a certified containment
-boundary, or production-safe for arbitrary untrusted execution. There is no flag that
-trivially bypasses this.
+Phase 3 is built. Its status is `EXPERIMENTAL` in a machine-readable state, and it refuses
+any request that treats it as approved for hostile input, trusted for suspected zero-day
+artifacts, a certified containment boundary, or production-safe for arbitrary untrusted
+execution. There is no flag that trivially bypasses this.
+
+**It is gVisor-scoped.** SO-1 and SO-2 ([`docs/SIGN_OFF.md`](docs/SIGN_OFF.md)) signed it off
+for artifacts whose threat model is hostile *userspace* code — **not** for kernel-level
+exploitation, the class the July 2026 incident represented. `status.promote()` refuses to
+leave `EXPERIMENTAL` on a gVisor-only configuration, unconditionally; that promotion is a
+separate sign-off which has not been given and, per SO-1, will not be given while the
+mechanism is gVisor. See [`SANDBOX_THREAT_MODEL.md`](SANDBOX_THREAT_MODEL.md).
 
 Leaving `EXPERIMENTAL` requires a signed or cryptographically hashed review record naming
 the isolation mechanism and version, host configuration, completed conformance probes,
@@ -72,7 +78,7 @@ unresolved failures, threat-model version, reviewer identity, review date, and e
 approved and prohibited use profiles. The runtime validates that record before permitting
 an approved profile. **Editing documentation does not change execution permissions.**
 
-Until then, and in every CLI output, API response, report and evidence record:
+In every CLI output, API response, report and evidence record while `EXPERIMENTAL`:
 
 > EXPERIMENTAL — DO NOT USE FOR SUSPECTED ZERO-DAY OR HOSTILE ARTIFACTS
 
@@ -89,6 +95,30 @@ Not unimplemented features. Boundaries.
 - Persistence, evasion, or anti-detection.
 - Automated exploitation chaining.
 - Probing infrastructure the operator has not initiated analysis of.
+
+## The synthetic "unsafe" fixtures shipped in this repository
+
+TrustLens ships deliberately dangerous-*looking* code under `examples/repos/unsafe_*` and
+`tests/fixtures/`: `subprocess(..., shell=True)`, `pickle.loads`, unsafe YAML tags,
+credential-shaped paths. They are the scanner's positive controls — a control set that never
+fires on a real trigger is not evidence the scanner works, so the triggers must be present.
+
+Every one of these files is safe as shipped:
+
+- Each dangerous call sits inside a **never-invoked method**; nothing runs on import.
+- Each points at **nothing real** — configuration that resolves nowhere, canary paths.
+- **No live credentials**, and **no external network contact**.
+- Each is labelled in-source as a TrustLens fixture.
+
+The inertness harness proves it: it detonates armed copies in a temp directory to show the
+payloads are live, then scans a fresh copy with `subprocess`, `os.system` and `socket`
+replaced by objects that raise, and confirms nothing fired
+(`tests/scanner/test_inertness.py`).
+
+**Expect automated scanners to flag them.** GitHub's scanning, an AV engine, or a corporate
+proxy may pattern-match the malware-shaped constructs. That is the fixtures' purpose, not a
+compromise — none of it is executable as an exploit. This is stated here so the flags are
+anticipated rather than alarming.
 
 ## Reporting a vulnerability in TrustLens
 

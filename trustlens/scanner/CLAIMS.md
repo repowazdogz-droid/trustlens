@@ -359,8 +359,8 @@ authorizer.
 
 Not built, and carried forward as named items in **`docs/DEFERRED.md`** (D1 IAM condition
 evaluation, D2 `policy_sentry`, D3 network-policy reachability, D4 external analysers) —
-each with its reason, its candidate phase, and what stands in its place. They are deferred,
-not forgotten, and the register exists so the two stay distinguishable.
+each with its reason, its schedule (unscheduled/post-v1), and what stands in its place. They
+are deferred, not forgotten, and the register exists so the two stay distinguishable.
 
 **Phase 2 is partial-but-closed against its stated scope.** The mapper, both ingesters, the
 cross-domain join and the optional RBAC helper are built, tested and clean-clone verified.

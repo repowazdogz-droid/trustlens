@@ -1,0 +1,96 @@
+# TrustLens CI
+#
+# ---------------------------------------------------------------------------------------
+# WHAT THIS CI CANNOT DO — read this before trusting a green check as full coverage.
+#
+# It does NOT reproduce the gVisor ground-truth validation of the Phase 3 sandbox. That
+# validation (probes run uncontained -> 8/12 deviate; run inside gVisor -> 12/12 conform,
+# docs/PROBE_SUITE_REVIEW.md) requires a real gVisor sandbox, which needs:
+#   * /dev/kvm or gVisor's systrap platform on a Linux host, and
+#   * runsc installed and the run performed inside a privileged container.
+# Standard GitHub-hosted runners expose neither by default. So everything DOWNSTREAM of
+# "launch a real gVisor sandbox" is verified by hand in a container and recorded, NOT here
+# (docs/COVERAGE_GAPS.md CG-2). This CI covers the Python engine, the evidence model, the
+# process-boundary guard, the count discipline, and the EXPERIMENTAL-lock gate tests — the
+# parts that are reproducible on a stock runner. It is not a substitute for the sandbox
+# ground-truth run, and a green check here does not assert that the sandbox was exercised.
+# ---------------------------------------------------------------------------------------
+
+name: ci
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -e .
+          pip install pytest
+
+      - name: Full test suite
+        run: python -m pytest tests -q
+
+      - name: Process-boundary guard (spawn allowlist + SO-1/SO-2 scope guards)
+        run: python -m pytest tests/test_process_boundary.py -q
+
+      - name: EXPERIMENTAL-lock gate tests
+        # These enforce that the sandbox cannot be promoted out of EXPERIMENTAL on gVisor,
+        # and that no artifact-derived value reaches sandbox launch configuration (§4).
+        run: |
+          python -m pytest tests/test_sandbox_experimental_lock.py -q
+          python -m pytest tests/test_sandbox_config_isolation.py -q
+
+      - name: Count discipline
+        # The commit-msg hook rejects a commit whose stated counts disagree with the ones
+        # read from the tools. Install the hook path so the discipline is live CI-side, and
+        # run stats.py as the authoritative check — it reads counts from pytest and exits
+        # non-zero on any failure (scripts/stats.py:159).
+        run: |
+          git config core.hooksPath .githooks
+          python scripts/stats.py
+
+      - name: Example records regenerate byte-identically
+        # The evidence model's determinism claim: regenerating the shipped example records
+        # must produce no diff. A change here means a record is no longer reproducible.
+        run: |
+          PYTHONPATH=. python examples/generate_examples.py
+          git diff --exit-code examples/records/
+
+  clean-clone:
+    # Mirrors the project's standing clean-clone verification: clone the committed state into
+    # a FRESH directory and run the suite there, so nothing can pass by depending on
+    # uncommitted or working-tree state.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Clone committed state into a fresh directory
+        run: git clone --no-local . ../trustlens-cc
+
+      - name: Install and verify in the clean clone
+        working-directory: ../trustlens-cc
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -e .
+          pip install pytest
+          python -m pytest tests -q
+          PYTHONPATH=. python examples/generate_examples.py
+          git diff --exit-code examples/records/
