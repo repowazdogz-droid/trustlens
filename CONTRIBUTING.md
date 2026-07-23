@@ -195,3 +195,32 @@ In descending order of preference:
 - **Never contact anything live to generate it.** Mock credentials, `--dry-run`, published
   release artifacts. The Terraform fixture was generated with `access_key = "mock"` and was
   never applied.
+
+## Required: verify the artifact people receive, not the artifact you built
+
+**A verification must execute the path a stranger actually takes to the delivered artifact —
+the published clone, the documented setup command, the shipped bundle — not the local working
+copy you produced it from.** This is a required step, not diligence, for the same reason the
+real-input rule is: a check that examines the source you already have cannot see a defect that
+lives in the gap between that source and what someone else receives.
+
+The record, which is why this is a rule and not a habit — three defects, one class:
+
+| Gap | Defect | Invisible to | Found only by |
+|---|---|---|---|
+| CI vs README | The documented setup (`pip install -r requirements.txt`) never installed pytest, so `pytest tests` failed; CI passed because CI ran its own `pip install pytest` | reading the README; running CI | executing the README's own steps verbatim in a fresh clone |
+| Local vs public clone | GitHub's default branch pointed at a nonexistent `main` while only `master` was pushed, so a public clone checked out **nothing** | `git clone /local/path` (checks out the local default); every source check | cloning from the public `https://` URL a reader uses |
+| Source vs bundle (paper) | The shipped `.zip` was stale and contained **none** of the revision — the source tree was correct, the delivered artifact was not | inspecting the source tree | opening the actual bundle that would ship |
+
+**The general form.** Checking an output against the inputs it was built from is a
+*tautology*, not a verification: of course the thing you built matches the thing you built
+from. Verification begins only where the delivered artifact and your local context can
+*differ* — a different install command, a different default branch, a stale re-export, a
+different machine. Every one of these three was green on every check that stayed inside the
+source, and red the instant the reader's actual path was walked.
+
+So: name the recipient and the exact path they take (clone URL, copy-paste block, download
+link), then **execute that path from a clean context** — a fresh clone, a fresh checkout of
+the bundle, a machine without your environment. If you cannot execute it, say so; do not
+substitute a local stand-in and report it as the same thing. A local path substitution
+"verifies" the tautology and leaves the real gap exactly where it was.
