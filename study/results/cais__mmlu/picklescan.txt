@@ -1,0 +1,7 @@
+----------- SCAN SUMMARY -----------
+Scanned files: 0
+Infected files: 0
+Suspicious globals: 0
+Dangerous globals: 0
+
+--STDERR--

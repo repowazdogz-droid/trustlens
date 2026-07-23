@@ -324,3 +324,35 @@ post-hoc reactions to results.
   a comparator in its own right; **Guardian-the-platform explicitly not evaluated, no claim
   made**; both negative controls retained (selecting on execution surface would otherwise make
   the result tautological).
+
+- **A4 (2026-07-23, Phase 1, control decision — recorded before any scan result was
+  interpreted).** The human review flagged `Benjy/typed_digital_signatures` as a degenerate
+  (empty) control. **On verification this premise was false**: the non-recursive HF `tree/main`
+  endpoint (used at enumeration) lists only top-level files, and Benjy's data lives in
+  subdirectories. A **recursive** tree shows Benjy ships **969 image files** (`Alex_Brush/*.png`
+  …) and `anisoleai/fineweb-tokenized` ships **948 parquet shards** — both are genuine
+  passive-data datasets with **no `.py` anywhere**. **Decision: KEEP both controls, no
+  replacement.** This is option (a), but *not* "accept a degenerate control with a limitation" —
+  the degeneracy was an artifact of the non-recursive listing and does not exist. My earlier
+  report calling Benjy "README-only" was wrong and is corrected here. (Lesson, recorded: the
+  `tree/main` endpoint is non-recursive; a classifier built on it sees only the repo root.)
+
+- **A5 (2026-07-23, Phase 1, enumeration-fidelity note).** The enumeration classified repos
+  from the non-recursive `tree/main` (repo-root files). This is **faithful to the sealed
+  Stratum-A criterion**, which specifies a "**repo-root** `*.py` loading script" — root-level
+  `.py` is exactly what `tree/main` shows, and all 6 selected Stratum-A repos have root-level
+  `.py`. It does **not** capture `.py` located only in subdirectories, which the sealed
+  criterion did not require (a recursive re-selection that broadened to "`.py` anywhere" pulls
+  in subdir *app* code like `xlangai/.../multi_apps/food.py`, a different population — and that
+  recursive check was itself unreliable, misclassifying `github-code` via tree pagination). The
+  sealed criterion's second clause (`auto_map`/remote-code config) was not separately tested; it
+  is immaterial for datasets (a models concept) and no model-repo fallback was needed.
+  **Ranking drift:** HF download counts shift over time, so download-rank order is not stable
+  across runs; the sealed method did not pin a snapshot. Mitigation: each repo's download count
+  **and** commit SHA were recorded at selection, making the corpus reproducible as-of-selection.
+
+- **A6 (2026-07-23, Phase 1, comparator-execution fix).** modelscan was first invoked with an
+  unsupported `--json` flag and produced only a usage error on all 8 repos (never ran). This was
+  a flag error, not "cannot run," so it was corrected to `-r json -o <file>` and re-run on all
+  8. picklescan and Bandit ran correctly on first invocation. Recorded per §4's "not run:
+  reason" discipline — here the reason was operator error, now fixed.

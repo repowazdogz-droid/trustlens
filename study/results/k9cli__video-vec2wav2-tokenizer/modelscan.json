@@ -1,0 +1,21 @@
+{
+ "summary": {
+  "total_issues_by_severity": {
+   "LOW": 0,
+   "MEDIUM": 0,
+   "HIGH": 0,
+   "CRITICAL": 0
+  },
+  "total_issues": 0,
+  "input_path": "corpus/k9cli__video-vec2wav2-tokenizer",
+  "absolute_path": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer",
+  "modelscan_version": "0.8.8",
+  "timestamp": "2026-07-23T14:58:01.755643",
+  "scanned": {
+   "total_scanned": 0
+  }
+ },
+ "issues": [],
+ "errors": "[916420 error entries dropped for size \u2014 all non-model files modelscan could not process; sample: [{'category': 'PICKLE_GENOPS', 'description': \"Parsing error: at position 0, opcode b'v' unknown\", 'source': 'dataset/K770mXBzg8f0Vm2/segments_00313.dat'}, {'category': 'PICKLE_GENOPS', 'description': \"Parsing error: at position 0, opcode b'v' unknown\", 'source': 'dataset/K770mXBzg8f0Vm2/segments_00307.dat'}]]",
+ "_note": "errors list (916420 entries) replaced with count+sample; issues=0 preserved"
+}

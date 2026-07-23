@@ -1,0 +1,167 @@
+{
+  "errors": [],
+  "generated_at": "2026-07-23T13:25:47Z",
+  "metrics": {
+    "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/codeparrot__github-code/github-code.py": {
+      "CONFIDENCE.HIGH": 4,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 4,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 156,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/codeparrot__github-code/github_preprocessing.py": {
+      "CONFIDENCE.HIGH": 2,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 1,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 108,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "_totals": {
+      "CONFIDENCE.HIGH": 6,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 1,
+      "SEVERITY.LOW": 4,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 264,
+      "nosec": 0,
+      "skipped_tests": 0
+    }
+  },
+  "results": [
+    {
+      "code": "113         \n114         assert all([language in _LANG_CONFIGS for language in languages]), f\"Language not in {_LANG_CONFIGS}.\"\n115         assert all([license in _LICENSE_CONFIGS for license in licenses]), f\"License not in {_LICENSE_CONFIGS}.\"\n",
+      "col_offset": 8,
+      "end_col_offset": 110,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/codeparrot__github-code/github-code.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 114,
+      "line_range": [
+        114
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "114         assert all([language in _LANG_CONFIGS for language in languages]), f\"Language not in {_LANG_CONFIGS}.\"\n115         assert all([license in _LICENSE_CONFIGS for license in licenses]), f\"License not in {_LICENSE_CONFIGS}.\"\n116         \n",
+      "col_offset": 8,
+      "end_col_offset": 112,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/codeparrot__github-code/github-code.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 115,
+      "line_range": [
+        115
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "117         if \"all\" in languages:\n118             assert len(languages)==1, \"Passed 'all' together with other languages.\"\n119             self.filter_languages = False\n",
+      "col_offset": 12,
+      "end_col_offset": 83,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/codeparrot__github-code/github-code.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 118,
+      "line_range": [
+        118
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "123         if \"all\" in licenses:\n124             assert len(licenses)==1, \"Passed 'all' together with other licenses.\"\n125             self.filter_licenses = False\n",
+      "col_offset": 12,
+      "end_col_offset": 81,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/codeparrot__github-code/github-code.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 124,
+      "line_range": [
+        124
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "30 def hash_func(text):\n31     return hashlib.md5(re.sub(PATTERN, '', text).encode(\"utf-8\")).hexdigest()\n32 \n",
+      "col_offset": 11,
+      "end_col_offset": 65,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/codeparrot__github-code/github_preprocessing.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 327,
+        "link": "https://cwe.mitre.org/data/definitions/327.html"
+      },
+      "issue_severity": "HIGH",
+      "issue_text": "Use of weak MD5 hash for security. Consider usedforsecurity=False",
+      "line_number": 31,
+      "line_range": [
+        31
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b324_hashlib.html",
+      "test_id": "B324",
+      "test_name": "hashlib"
+    },
+    {
+      "code": "94 t_start = time.time()\n95 ds = load_dataset(args.dataset_name, split=\"train\", chunksize=40<<20)\n96 print(f\"Time to load dataset: {time.time()-t_start:.2f}\")\n",
+      "col_offset": 5,
+      "end_col_offset": 69,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/codeparrot__github-code/github_preprocessing.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 494,
+        "link": "https://cwe.mitre.org/data/definitions/494.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Unsafe Hugging Face Hub download without revision pinning in load_dataset()",
+      "line_number": 95,
+      "line_range": [
+        95
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b615_huggingface_unsafe_download.html",
+      "test_id": "B615",
+      "test_name": "huggingface_unsafe_download"
+    }
+  ]
+}

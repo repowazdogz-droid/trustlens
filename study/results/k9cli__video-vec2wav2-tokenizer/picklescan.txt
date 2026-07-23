@@ -1,0 +1,14 @@
+[per-file listing of 919,499 scanned LFS-pointer files dropped for size; 0 infected. Summary follows.]
+
+WARNING: could not parse /private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/dataset/myDP7AygazIbgvp/segments_00120.dat as pickle: at position 0, opcode b'v' unknown
+WARNING: could not parse /private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/dataset/myDP7AygazIbgvp/segments_00134.dat as pickle: at position 0, opcode b'v' unknown
+WARNING: could not parse /private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/dataset/myDP7AygazIbgvp/segments_00108.dat as pickle: at position 0, opcode b'v' unknown
+WARNING: could not parse /private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/dataset/myDP7AygazIbgvp/segments_00322.dat as pickle: at position 0, opcode b'v' unknown
+WARNING: could not parse /private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/dataset/myDP7AygazIbgvp/segments_00336.dat as pickle: at position 0, opcode b'v' unknown
+----------- SCAN SUMMARY -----------
+Scanned files: 919499
+Infected files: 0
+Suspicious globals: 0
+Dangerous globals: 0
+
+--STDERR--

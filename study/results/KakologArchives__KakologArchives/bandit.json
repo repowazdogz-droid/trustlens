@@ -1,0 +1,74 @@
+{
+  "errors": [],
+  "generated_at": "2026-07-23T13:26:14Z",
+  "metrics": {
+    "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/KakologArchives__KakologArchives/KakologArchives.py": {
+      "CONFIDENCE.HIGH": 2,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 1,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 86,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "_totals": {
+      "CONFIDENCE.HIGH": 2,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 1,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 86,
+      "nosec": 0,
+      "skipped_tests": 0
+    }
+  },
+  "results": [
+    {
+      "code": "3 import json\n4 import xml.etree.ElementTree as ET\n5 from datasets import BuilderConfig, DatasetInfo, DownloadManager, GeneratorBasedBuilder, Features, SplitGenerator, Value\n",
+      "col_offset": 0,
+      "end_col_offset": 34,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/KakologArchives__KakologArchives/KakologArchives.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 20,
+        "link": "https://cwe.mitre.org/data/definitions/20.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Using xml.etree.ElementTree to parse untrusted XML data is known to be vulnerable to XML attacks. Replace xml.etree.ElementTree with the equivalent defusedxml package, or make sure defusedxml.defuse_stdlib() is called.",
+      "line_number": 4,
+      "line_range": [
+        4
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_imports.html#b405-import-xml-etree",
+      "test_id": "B405",
+      "test_name": "blacklist"
+    },
+    {
+      "code": "76                 contents = '<?xml version=\"1.0\" encoding=\"UTF-8\"?><packet>' + f.read() + '</packet>'\n77                 root = ET.fromstring(contents)\n78                 for idx, chat in enumerate(root.iter('chat')):\n",
+      "col_offset": 23,
+      "end_col_offset": 46,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/KakologArchives__KakologArchives/KakologArchives.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 20,
+        "link": "https://cwe.mitre.org/data/definitions/20.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Using xml.etree.ElementTree.fromstring to parse untrusted XML data is known to be vulnerable to XML attacks. Replace xml.etree.ElementTree.fromstring with its defusedxml equivalent function or make sure defusedxml.defuse_stdlib() is called",
+      "line_number": 77,
+      "line_range": [
+        77
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_calls.html#b313-b320-xml-bad-elementtree",
+      "test_id": "B314",
+      "test_name": "blacklist"
+    }
+  ]
+}

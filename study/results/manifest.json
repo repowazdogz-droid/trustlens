@@ -1,0 +1,688 @@
+[
+  {
+    "id": "codeparrot/github-code",
+    "stratum": "A",
+    "downloads": 5701917,
+    "pinned_sha": "b5661e6b17396364b2bcf8e68977b0d28e1ebd19",
+    "actual_sha": "b5661e6b17396364b2bcf8e68977b0d28e1ebd19",
+    "sha_match": true,
+    "n_files": 1132,
+    "py_files": [
+      "github-code.py",
+      "github_preprocessing.py"
+    ],
+    "trustlens_exit": 1,
+    "trustlens": {
+      "n_findings": 33,
+      "by_status": {
+        "NOT_FOUND_WITHIN_ANALYSED_SCOPE": [
+          "template.injection_surface",
+          "template.expression_evaluation",
+          "execution.deserialization",
+          "cloud.credential_file_access",
+          "cloud.metadata_endpoint",
+          "cloud.sdk_credential_discovery",
+          "container.docker_socket",
+          "env.credential_pattern_read",
+          "env.enumeration",
+          "env.named_read",
+          "execution.build_hook",
+          "execution.deserialization",
+          "execution.dynamic_import",
+          "filesystem.archive_extraction",
+          "filesystem.delete",
+          "filesystem.path_traversal",
+          "filesystem.permission_change",
+          "filesystem.read_sensitive_path",
+          "k8s.api_access",
+          "k8s.serviceaccount_token_access",
+          "network.dns",
+          "network.listen",
+          "network.outbound",
+          "network.package_fetch",
+          "package.install_at_runtime",
+          "package.manager_invocation",
+          "process.shell",
+          "process.subprocess",
+          "execution.dynamic_import",
+          "execution.build_hook"
+        ],
+        "FOUND": [
+          "execution.dynamic_eval",
+          "filesystem.write",
+          "execution.loader_script"
+        ]
+      },
+      "scope_failed": [],
+      "declared_capabilities": [],
+      "contradictions": [],
+      "vacuous": false
+    },
+    "picklescan_exit": 0,
+    "bandit_exit": 1,
+    "modelscan_exit": 4
+  },
+  {
+    "id": "KakologArchives/KakologArchives",
+    "stratum": "A",
+    "downloads": 1709636,
+    "pinned_sha": "acc47c47da0cc227f4823c99b5dfce7ce213d62a",
+    "actual_sha": "a0712d0e5a197071f3b7cdf69bd5497eea727988",
+    "sha_match": false,
+    "n_files": 171350,
+    "py_files": [
+      "KakologArchives.py"
+    ],
+    "trustlens_exit": 1,
+    "trustlens": {
+      "n_findings": 33,
+      "by_status": {
+        "NOT_FOUND_WITHIN_ANALYSED_SCOPE": [
+          "template.injection_surface",
+          "template.expression_evaluation",
+          "execution.deserialization",
+          "cloud.credential_file_access",
+          "cloud.metadata_endpoint",
+          "cloud.sdk_credential_discovery",
+          "container.docker_socket",
+          "env.credential_pattern_read",
+          "env.enumeration",
+          "env.named_read",
+          "execution.build_hook",
+          "execution.deserialization",
+          "execution.dynamic_eval",
+          "execution.dynamic_import",
+          "filesystem.archive_extraction",
+          "filesystem.delete",
+          "filesystem.path_traversal",
+          "filesystem.permission_change",
+          "filesystem.read_sensitive_path",
+          "filesystem.write",
+          "k8s.api_access",
+          "k8s.serviceaccount_token_access",
+          "network.dns",
+          "network.listen",
+          "network.outbound",
+          "network.package_fetch",
+          "package.install_at_runtime",
+          "package.manager_invocation",
+          "process.shell",
+          "process.subprocess",
+          "execution.dynamic_import",
+          "execution.build_hook"
+        ],
+        "FOUND": [
+          "execution.loader_script"
+        ]
+      },
+      "scope_failed": [],
+      "declared_capabilities": [],
+      "contradictions": [],
+      "vacuous": false
+    },
+    "picklescan_exit": 0,
+    "bandit_exit": 1,
+    "modelscan_exit": 4
+  },
+  {
+    "id": "k9cli/video-vec2wav2-tokenizer",
+    "stratum": "A",
+    "downloads": 1371523,
+    "pinned_sha": "b6a854a19665f4590568e7ee29bb913953fad0df",
+    "actual_sha": "b6a854a19665f4590568e7ee29bb913953fad0df",
+    "sha_match": true,
+    "n_files": 919539,
+    "py_files": [
+      "__init__.py",
+      "dataset_builder.py",
+      "pipeline.py",
+      "statistics.py",
+      "main.py",
+      "__main__.py",
+      "transcription/transcriber.py",
+      "transcription/__init__.py",
+      "segmentation/__init__.py",
+      "segmentation/segmenter.py",
+      "training/train_wav2vec2.py",
+      "training/__init__.py",
+      "features/__init__.py",
+      "features/extractor.py",
+      "tests/conftest.py",
+      "tests/test_segmentation.py",
+      "tests/test_features.py",
+      "tests/test_dataset_and_stats.py",
+      "tests/__init__.py",
+      "tests/test_io.py",
+      "tests/test_config.py",
+      "tests/test_cli.py",
+      "utils/logging.py",
+      "utils/config.py",
+      "utils/io.py",
+      "utils/__init__.py",
+      "cli/__init__.py",
+      "cli/commands.py",
+      "audio/__init__.py",
+      "audio/extractor.py"
+    ],
+    "trustlens_exit": 2,
+    "trustlens": {
+      "n_findings": 33,
+      "by_status": {
+        "PARTIAL": [
+          "template.injection_surface",
+          "template.expression_evaluation",
+          "execution.deserialization",
+          "cloud.credential_file_access",
+          "cloud.metadata_endpoint",
+          "cloud.sdk_credential_discovery",
+          "container.docker_socket",
+          "env.credential_pattern_read",
+          "env.enumeration",
+          "env.named_read",
+          "execution.build_hook",
+          "execution.deserialization",
+          "execution.dynamic_eval",
+          "execution.dynamic_import",
+          "filesystem.archive_extraction",
+          "filesystem.delete",
+          "filesystem.path_traversal",
+          "filesystem.permission_change",
+          "filesystem.read_sensitive_path",
+          "filesystem.write",
+          "k8s.api_access",
+          "k8s.serviceaccount_token_access",
+          "network.dns",
+          "network.listen",
+          "network.outbound",
+          "network.package_fetch",
+          "package.install_at_runtime",
+          "package.manager_invocation",
+          "process.shell",
+          "process.subprocess"
+        ],
+        "FOUND": [
+          "execution.loader_script"
+        ],
+        "NOT_FOUND_WITHIN_ANALYSED_SCOPE": [
+          "execution.dynamic_import",
+          "execution.build_hook"
+        ]
+      },
+      "scope_failed": [
+        {
+          "kind": "parse_error",
+          "path": "__init__.py",
+          "reason": "SyntaxError: invalid non-printable character U+FEFF (line 1)"
+        },
+        {
+          "kind": "parse_error",
+          "path": "__main__.py",
+          "reason": "SyntaxError: invalid non-printable character U+FEFF (line 1)"
+        },
+        {
+          "kind": "parse_error",
+          "path": "audio/__init__.py",
+          "reason": "SyntaxError: invalid non-printable character U+FEFF (line 1)"
+        },
+        {
+          "kind": "parse_error",
+          "path": "audio/extractor.py",
+          "reason": "SyntaxError: invalid non-printable character U+FEFF (line 1)"
+        },
+        {
+          "kind": "parse_error",
+          "path": "cli/__init__.py",
+          "reason": "SyntaxError: invalid non-printable character U+FEFF (line 1)"
+        },
+        {
+          "kind": "parse_error",
+          "path": "cli/commands.py",
+          "reason": "SyntaxError: invalid non-printable character U+FEFF (line 1)"
+        },
+        {
+          "kind": "parse_error",
+          "path": "dataset_builder.py",
+          "reason": "SyntaxError: invalid non-printable character U+FEFF (line 1)"
+        },
+        {
+          "kind": "parse_error",
+          "path": "features/__init__.py",
+          "reason": "SyntaxError: invalid non-printable character U+FEFF (line 1)"
+        },
+        {
+          "kind": "parse_error",
+          "path": "features/extractor.py",
+          "reason": "SyntaxError: invalid non-printable character U+FEFF (line 1)"
+        },
+        {
+          "kind": "parse_error",
+          "path": "main.py",
+          "reason": "SyntaxError: invalid non-printable character U+FEFF (line 1)"
+        },
+        {
+          "kind": "parse_error",
+          "path": "pipeline.py",
+          "reason": "SyntaxError: invalid non-printable character U+FEFF (line 1)"
+        },
+        {
+          "kind": "parse_error",
+          "path": "segmentation/__init__.py",
+          "reason": "SyntaxError: invalid non-printable character U+FEFF (line 1)"
+        },
+        {
+          "kind": "parse_error",
+          "path": "segmentation/segmenter.py",
+          "reason": "SyntaxError: invalid non-printable character U+FEFF (line 1)"
+        },
+        {
+          "kind": "parse_error",
+          "path": "statistics.py",
+          "reason": "SyntaxError: invalid non-printable character U+FEFF (line 1)"
+        },
+        {
+          "kind": "parse_error",
+          "path": "tests/__init__.py",
+          "reason": "SyntaxError: invalid non-printable character U+FEFF (line 1)"
+        },
+        {
+          "kind": "parse_error",
+          "path": "tests/conftest.py",
+          "reason": "SyntaxError: invalid non-printable character U+FEFF (line 1)"
+        },
+        {
+          "kind": "parse_error",
+          "path": "tests/test_cli.py",
+          "reason": "SyntaxError: invalid non-printable character U+FEFF (line 1)"
+        },
+        {
+          "kind": "parse_error",
+          "path": "tests/test_config.py",
+          "reason": "SyntaxError: invalid non-printable character U+FEFF (line 1)"
+        },
+        {
+          "kind": "parse_error",
+          "path": "tests/test_dataset_and_stats.py",
+          "reason": "SyntaxError: invalid non-printable character U+FEFF (line 1)"
+        },
+        {
+          "kind": "parse_error",
+          "path": "tests/test_features.py",
+          "reason": "SyntaxError: invalid non-printable character U+FEFF (line 1)"
+        },
+        {
+          "kind": "parse_error",
+          "path": "tests/test_io.py",
+          "reason": "SyntaxError: invalid non-printable character U+FEFF (line 1)"
+        },
+        {
+          "kind": "parse_error",
+          "path": "tests/test_segmentation.py",
+          "reason": "SyntaxError: invalid non-printable character U+FEFF (line 1)"
+        },
+        {
+          "kind": "parse_error",
+          "path": "training/__init__.py",
+          "reason": "SyntaxError: invalid non-printable character U+FEFF (line 1)"
+        },
+        {
+          "kind": "parse_error",
+          "path": "training/train_wav2vec2.py",
+          "reason": "SyntaxError: invalid non-printable character U+FEFF (line 1)"
+        },
+        {
+          "kind": "parse_error",
+          "path": "transcription/__init__.py",
+          "reason": "SyntaxError: invalid non-printable character U+FEFF (line 1)"
+        },
+        {
+          "kind": "parse_error",
+          "path": "transcription/transcriber.py",
+          "reason": "SyntaxError: invalid non-printable character U+FEFF (line 1)"
+        },
+        {
+          "kind": "parse_error",
+          "path": "utils/__init__.py",
+          "reason": "SyntaxError: invalid non-printable character U+FEFF (line 1)"
+        },
+        {
+          "kind": "parse_error",
+          "path": "utils/config.py",
+          "reason": "SyntaxError: invalid non-printable character U+FEFF (line 1)"
+        },
+        {
+          "kind": "parse_error",
+          "path": "utils/io.py",
+          "reason": "SyntaxError: invalid non-printable character U+FEFF (line 1)"
+        },
+        {
+          "kind": "parse_error",
+          "path": "utils/logging.py",
+          "reason": "SyntaxError: invalid non-printable character U+FEFF (line 1)"
+        }
+      ],
+      "declared_capabilities": [
+        "package.install_at_runtime",
+        "package.install_at_runtime",
+        "package.install_at_runtime"
+      ],
+      "contradictions": [],
+      "vacuous": false
+    },
+    "picklescan_exit": 0,
+    "bandit_exit": 1,
+    "modelscan_exit": 4
+  },
+  {
+    "id": "HuggingFaceFW/fineweb",
+    "stratum": "A",
+    "downloads": 660389,
+    "pinned_sha": "9bb295ddab0e05d785b879661af7260fed5140fc",
+    "actual_sha": "9bb295ddab0e05d785b879661af7260fed5140fc",
+    "sha_match": true,
+    "n_files": 28147,
+    "py_files": [
+      "lighteval_tasks.py"
+    ],
+    "trustlens_exit": 0,
+    "trustlens": {
+      "n_findings": 33,
+      "by_status": {
+        "NOT_FOUND_WITHIN_ANALYSED_SCOPE": [
+          "template.injection_surface",
+          "template.expression_evaluation",
+          "execution.deserialization",
+          "cloud.credential_file_access",
+          "cloud.metadata_endpoint",
+          "cloud.sdk_credential_discovery",
+          "container.docker_socket",
+          "env.credential_pattern_read",
+          "env.enumeration",
+          "env.named_read",
+          "execution.build_hook",
+          "execution.deserialization",
+          "execution.dynamic_eval",
+          "execution.dynamic_import",
+          "filesystem.archive_extraction",
+          "filesystem.delete",
+          "filesystem.path_traversal",
+          "filesystem.permission_change",
+          "filesystem.read_sensitive_path",
+          "filesystem.write",
+          "k8s.api_access",
+          "k8s.serviceaccount_token_access",
+          "network.dns",
+          "network.listen",
+          "network.outbound",
+          "network.package_fetch",
+          "package.install_at_runtime",
+          "package.manager_invocation",
+          "process.shell",
+          "process.subprocess",
+          "execution.loader_script",
+          "execution.dynamic_import",
+          "execution.build_hook"
+        ]
+      },
+      "scope_failed": [],
+      "declared_capabilities": [
+        "execution.loader_script"
+      ],
+      "contradictions": [],
+      "vacuous": false
+    },
+    "picklescan_exit": 0,
+    "bandit_exit": 0,
+    "modelscan_exit": 4
+  },
+  {
+    "id": "cais/mmlu",
+    "stratum": "A",
+    "downloads": 453576,
+    "pinned_sha": "c30699e8356da336a370243923dbaf21066bb9fe",
+    "actual_sha": "c30699e8356da336a370243923dbaf21066bb9fe",
+    "sha_match": true,
+    "n_files": 181,
+    "py_files": [
+      "hendrycks_test.py"
+    ],
+    "trustlens_exit": 1,
+    "trustlens": {
+      "n_findings": 33,
+      "by_status": {
+        "NOT_FOUND_WITHIN_ANALYSED_SCOPE": [
+          "template.injection_surface",
+          "template.expression_evaluation",
+          "execution.deserialization",
+          "cloud.credential_file_access",
+          "cloud.metadata_endpoint",
+          "cloud.sdk_credential_discovery",
+          "container.docker_socket",
+          "env.credential_pattern_read",
+          "env.enumeration",
+          "env.named_read",
+          "execution.build_hook",
+          "execution.deserialization",
+          "execution.dynamic_eval",
+          "execution.dynamic_import",
+          "filesystem.archive_extraction",
+          "filesystem.delete",
+          "filesystem.path_traversal",
+          "filesystem.permission_change",
+          "filesystem.read_sensitive_path",
+          "filesystem.write",
+          "k8s.api_access",
+          "k8s.serviceaccount_token_access",
+          "network.dns",
+          "network.listen",
+          "network.outbound",
+          "network.package_fetch",
+          "package.install_at_runtime",
+          "package.manager_invocation",
+          "process.shell",
+          "process.subprocess",
+          "execution.dynamic_import",
+          "execution.build_hook"
+        ],
+        "FOUND": [
+          "execution.loader_script"
+        ]
+      },
+      "scope_failed": [],
+      "declared_capabilities": [
+        "execution.loader_script"
+      ],
+      "contradictions": [
+        "DVR-execution.loader_script"
+      ],
+      "vacuous": false
+    },
+    "picklescan_exit": 0,
+    "bandit_exit": 0,
+    "modelscan_exit": 4
+  },
+  {
+    "id": "espnet/yodas",
+    "stratum": "A",
+    "downloads": 367415,
+    "pinned_sha": "52c5a1b9730a136bfd7c4513d4962c70d4e50530",
+    "actual_sha": "52c5a1b9730a136bfd7c4513d4962c70d4e50530",
+    "sha_match": true,
+    "n_files": 111889,
+    "py_files": [
+      "yodas.py",
+      "meta.py"
+    ],
+    "trustlens_exit": 1,
+    "trustlens": {
+      "n_findings": 33,
+      "by_status": {
+        "NOT_FOUND_WITHIN_ANALYSED_SCOPE": [
+          "template.injection_surface",
+          "template.expression_evaluation",
+          "execution.deserialization",
+          "cloud.credential_file_access",
+          "cloud.metadata_endpoint",
+          "cloud.sdk_credential_discovery",
+          "container.docker_socket",
+          "env.credential_pattern_read",
+          "env.enumeration",
+          "env.named_read",
+          "execution.build_hook",
+          "execution.deserialization",
+          "execution.dynamic_eval",
+          "execution.dynamic_import",
+          "filesystem.delete",
+          "filesystem.path_traversal",
+          "filesystem.permission_change",
+          "filesystem.read_sensitive_path",
+          "filesystem.write",
+          "k8s.api_access",
+          "k8s.serviceaccount_token_access",
+          "network.dns",
+          "network.listen",
+          "network.outbound",
+          "network.package_fetch",
+          "package.install_at_runtime",
+          "package.manager_invocation",
+          "process.shell",
+          "process.subprocess",
+          "execution.dynamic_import",
+          "execution.build_hook"
+        ],
+        "FOUND": [
+          "filesystem.archive_extraction",
+          "execution.loader_script"
+        ]
+      },
+      "scope_failed": [],
+      "declared_capabilities": [
+        "execution.loader_script"
+      ],
+      "contradictions": [
+        "DVR-execution.loader_script"
+      ],
+      "vacuous": false
+    },
+    "picklescan_exit": 0,
+    "bandit_exit": 0,
+    "modelscan_exit": 4
+  },
+  {
+    "id": "anisoleai/fineweb-tokenized",
+    "stratum": "B",
+    "downloads": 8553360,
+    "pinned_sha": "ef1311f460b42138d7a2d18f51e9cc38cedda089",
+    "actual_sha": "ef1311f460b42138d7a2d18f51e9cc38cedda089",
+    "sha_match": true,
+    "n_files": 2499,
+    "py_files": [],
+    "trustlens_exit": 0,
+    "trustlens": {
+      "n_findings": 33,
+      "by_status": {
+        "NOT_FOUND_WITHIN_ANALYSED_SCOPE": [
+          "template.injection_surface",
+          "template.expression_evaluation",
+          "execution.deserialization",
+          "cloud.credential_file_access",
+          "cloud.metadata_endpoint",
+          "cloud.sdk_credential_discovery",
+          "container.docker_socket",
+          "env.credential_pattern_read",
+          "env.enumeration",
+          "env.named_read",
+          "execution.build_hook",
+          "execution.deserialization",
+          "execution.dynamic_eval",
+          "execution.dynamic_import",
+          "filesystem.archive_extraction",
+          "filesystem.delete",
+          "filesystem.path_traversal",
+          "filesystem.permission_change",
+          "filesystem.read_sensitive_path",
+          "filesystem.write",
+          "k8s.api_access",
+          "k8s.serviceaccount_token_access",
+          "network.dns",
+          "network.listen",
+          "network.outbound",
+          "network.package_fetch",
+          "package.install_at_runtime",
+          "package.manager_invocation",
+          "process.shell",
+          "process.subprocess",
+          "execution.loader_script",
+          "execution.dynamic_import",
+          "execution.build_hook"
+        ]
+      },
+      "scope_failed": [],
+      "declared_capabilities": [
+        "execution.loader_script"
+      ],
+      "contradictions": [],
+      "vacuous": false
+    },
+    "picklescan_exit": 0,
+    "bandit_exit": 0,
+    "modelscan_exit": 4
+  },
+  {
+    "id": "Benjy/typed_digital_signatures",
+    "stratum": "B",
+    "downloads": 2376015,
+    "pinned_sha": "b2b7e3766c7b1a39430d44b9dbb96e915c819332",
+    "actual_sha": "b2b7e3766c7b1a39430d44b9dbb96e915c819332",
+    "sha_match": true,
+    "n_files": 32845,
+    "py_files": [],
+    "trustlens_exit": 0,
+    "trustlens": {
+      "n_findings": 33,
+      "by_status": {
+        "NOT_FOUND_WITHIN_ANALYSED_SCOPE": [
+          "template.injection_surface",
+          "template.expression_evaluation",
+          "execution.deserialization",
+          "cloud.credential_file_access",
+          "cloud.metadata_endpoint",
+          "cloud.sdk_credential_discovery",
+          "container.docker_socket",
+          "env.credential_pattern_read",
+          "env.enumeration",
+          "env.named_read",
+          "execution.build_hook",
+          "execution.deserialization",
+          "execution.dynamic_eval",
+          "execution.dynamic_import",
+          "filesystem.archive_extraction",
+          "filesystem.delete",
+          "filesystem.path_traversal",
+          "filesystem.permission_change",
+          "filesystem.read_sensitive_path",
+          "filesystem.write",
+          "k8s.api_access",
+          "k8s.serviceaccount_token_access",
+          "network.dns",
+          "network.listen",
+          "network.outbound",
+          "network.package_fetch",
+          "package.install_at_runtime",
+          "package.manager_invocation",
+          "process.shell",
+          "process.subprocess",
+          "execution.loader_script",
+          "execution.dynamic_import",
+          "execution.build_hook"
+        ]
+      },
+      "scope_failed": [],
+      "declared_capabilities": [],
+      "contradictions": [],
+      "vacuous": false
+    },
+    "picklescan_exit": 0,
+    "bandit_exit": 0,
+    "modelscan_exit": 4
+  }
+]

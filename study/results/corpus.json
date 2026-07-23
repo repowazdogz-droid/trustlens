@@ -1,0 +1,726 @@
+{
+  "stratum_A": [
+    {
+      "kind": "datasets",
+      "id": "codeparrot/github-code",
+      "downloads": 5701917,
+      "sha": "b5661e6b17396364b2bcf8e68977b0d28e1ebd19",
+      "files": [
+        ".gitattributes",
+        "README.md",
+        "github-code-stats-alpha.png",
+        "github-code.py",
+        "github_preprocessing.py",
+        "query.sql"
+      ],
+      "py": [
+        "github-code.py",
+        "github_preprocessing.py"
+      ]
+    },
+    {
+      "kind": "datasets",
+      "id": "KakologArchives/KakologArchives",
+      "downloads": 1709636,
+      "sha": "acc47c47da0cc227f4823c99b5dfce7ce213d62a",
+      "files": [
+        ".gitattributes",
+        "KakologArchives.py",
+        "README.md",
+        "dataset_structure.json"
+      ],
+      "py": [
+        "KakologArchives.py"
+      ]
+    },
+    {
+      "kind": "datasets",
+      "id": "k9cli/video-vec2wav2-tokenizer",
+      "downloads": 1371523,
+      "sha": "b6a854a19665f4590568e7ee29bb913953fad0df",
+      "files": [
+        ".gitattributes",
+        ".gitignore",
+        "README.md",
+        "__init__.py",
+        "__main__.py",
+        "config.yaml",
+        "dataset_builder.py",
+        "main.py",
+        "pipeline.py",
+        "pyproject.toml",
+        "requirements.txt",
+        "statistics.py"
+      ],
+      "py": [
+        "__init__.py",
+        "__main__.py",
+        "dataset_builder.py",
+        "main.py",
+        "pipeline.py",
+        "statistics.py"
+      ]
+    },
+    {
+      "kind": "datasets",
+      "id": "HuggingFaceFW/fineweb",
+      "downloads": 660389,
+      "sha": "9bb295ddab0e05d785b879661af7260fed5140fc",
+      "files": [
+        ".gitattributes",
+        "README.md",
+        "eval_results.csv",
+        "lighteval_tasks.py"
+      ],
+      "py": [
+        "lighteval_tasks.py"
+      ]
+    },
+    {
+      "kind": "datasets",
+      "id": "cais/mmlu",
+      "downloads": 453576,
+      "sha": "c30699e8356da336a370243923dbaf21066bb9fe",
+      "files": [
+        ".gitattributes",
+        "README.md",
+        "data.tar",
+        "dataset_infos.json",
+        "hendrycks_test.py"
+      ],
+      "py": [
+        "hendrycks_test.py"
+      ]
+    },
+    {
+      "kind": "datasets",
+      "id": "espnet/yodas",
+      "downloads": 367415,
+      "sha": "52c5a1b9730a136bfd7c4513d4962c70d4e50530",
+      "files": [
+        ".gitattributes",
+        "README.md",
+        "meta.py",
+        "yodas.py"
+      ],
+      "py": [
+        "meta.py",
+        "yodas.py"
+      ]
+    }
+  ],
+  "stratum_B": [
+    {
+      "kind": "datasets",
+      "id": "anisoleai/fineweb-tokenized",
+      "downloads": 8553360,
+      "sha": "ef1311f460b42138d7a2d18f51e9cc38cedda089",
+      "files": [
+        ".gitattributes",
+        "README.md",
+        "tokenizer.json"
+      ],
+      "py": []
+    },
+    {
+      "kind": "datasets",
+      "id": "Benjy/typed_digital_signatures",
+      "downloads": 2376015,
+      "sha": "b2b7e3766c7b1a39430d44b9dbb96e915c819332",
+      "files": [
+        ".gitattributes",
+        "README.md"
+      ],
+      "py": []
+    }
+  ],
+  "selection_log": [
+    {
+      "kind": "datasets",
+      "rank_in_kind": 1,
+      "id": "anisoleai/fineweb-tokenized",
+      "downloads": 8553360,
+      "gated": false,
+      "n_files": 3,
+      "py": [],
+      "decision": "include_B",
+      "reason": "pure-data (no .py)",
+      "sha": "ef1311f460b42138d7a2d18f51e9cc38cedda089"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 2,
+      "id": "codeparrot/github-code",
+      "downloads": 5701917,
+      "gated": false,
+      "n_files": 6,
+      "py": [
+        "github-code.py",
+        "github_preprocessing.py"
+      ],
+      "decision": "include_A",
+      "reason": "code-bearing: py=['github-code.py', 'github_preprocessing.py']",
+      "sha": "b5661e6b17396364b2bcf8e68977b0d28e1ebd19"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 3,
+      "id": "Benjy/typed_digital_signatures",
+      "downloads": 2376015,
+      "gated": false,
+      "n_files": 2,
+      "py": [],
+      "decision": "include_B",
+      "reason": "pure-data (no .py)",
+      "sha": "b2b7e3766c7b1a39430d44b9dbb96e915c819332"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 4,
+      "id": "huggingface/documentation-images",
+      "downloads": 2111419,
+      "gated": false,
+      "n_files": 272,
+      "py": [],
+      "decision": "skip_B",
+      "reason": "not code-bearing; B full or is model"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 5,
+      "id": "allenai/c4",
+      "downloads": 1753036,
+      "gated": false,
+      "n_files": 2,
+      "py": [],
+      "decision": "skip_B",
+      "reason": "not code-bearing; B full or is model"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 6,
+      "id": "ksolovev/FineNews",
+      "downloads": 1737703,
+      "gated": false,
+      "n_files": 1,
+      "py": [],
+      "decision": "skip_B",
+      "reason": "not code-bearing; B full or is model"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 7,
+      "id": "hf-doc-build/doc-build-dev",
+      "downloads": 1735874,
+      "gated": false,
+      "n_files": 4,
+      "py": [],
+      "decision": "skip_B",
+      "reason": "not code-bearing; B full or is model"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 8,
+      "id": "KakologArchives/KakologArchives",
+      "downloads": 1709636,
+      "gated": false,
+      "n_files": 4,
+      "py": [
+        "KakologArchives.py"
+      ],
+      "decision": "include_A",
+      "reason": "code-bearing: py=['KakologArchives.py']",
+      "sha": "acc47c47da0cc227f4823c99b5dfce7ce213d62a"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 9,
+      "id": "ryanmarten/OpenThoughts-1k-sample",
+      "downloads": 1534979,
+      "gated": false,
+      "n_files": 5,
+      "py": [],
+      "decision": "skip_B",
+      "reason": "not code-bearing; B full or is model"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 10,
+      "id": "hallucinations-leaderboard/results",
+      "downloads": 1512825,
+      "gated": false,
+      "n_files": 3,
+      "py": [],
+      "decision": "skip_B",
+      "reason": "not code-bearing; B full or is model"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 11,
+      "id": "ayuo/hd_tmp",
+      "downloads": 1470692,
+      "gated": false,
+      "n_files": 13,
+      "py": [],
+      "decision": "skip_B",
+      "reason": "not code-bearing; B full or is model"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 12,
+      "id": "Salesforce/wikitext",
+      "downloads": 1428039,
+      "gated": false,
+      "n_files": 2,
+      "py": [],
+      "decision": "skip_B",
+      "reason": "not code-bearing; B full or is model"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 13,
+      "id": "banned-historical-archives/banned-historical-archives",
+      "downloads": 1378543,
+      "gated": false,
+      "n_files": 4,
+      "py": [],
+      "decision": "skip_B",
+      "reason": "not code-bearing; B full or is model"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 14,
+      "id": "k9cli/video-vec2wav2-tokenizer",
+      "downloads": 1371523,
+      "gated": false,
+      "n_files": 12,
+      "py": [
+        "__init__.py",
+        "__main__.py",
+        "dataset_builder.py",
+        "main.py",
+        "pipeline.py",
+        "statistics.py"
+      ],
+      "decision": "include_A",
+      "reason": "code-bearing: py=['__init__.py', '__main__.py', 'dataset_builder.py', 'main.py', 'pipeline.py']",
+      "sha": "b6a854a19665f4590568e7ee29bb913953fad0df"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 15,
+      "id": "m-a-p/FineFineWeb",
+      "downloads": 1229149,
+      "gated": false,
+      "n_files": 2,
+      "py": [],
+      "decision": "skip_B",
+      "reason": "not code-bearing; B full or is model"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 16,
+      "id": "xlangai/ubuntu_osworld_file_cache",
+      "downloads": 1181061,
+      "gated": false,
+      "n_files": 3,
+      "py": [],
+      "decision": "skip_B",
+      "reason": "not code-bearing; B full or is model"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 17,
+      "id": "nvidia/PhysicalAI-Robotics-GR00T-X-Embodiment-Sim",
+      "downloads": 1115290,
+      "gated": false,
+      "n_files": 2,
+      "py": [],
+      "decision": "skip_B",
+      "reason": "not code-bearing; B full or is model"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 18,
+      "id": "openai/gsm8k",
+      "downloads": 959558,
+      "gated": false,
+      "n_files": 3,
+      "py": [],
+      "decision": "skip_B",
+      "reason": "not code-bearing; B full or is model"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 19,
+      "id": "HennyPr/ps2_hf2",
+      "downloads": 779856,
+      "gated": false,
+      "n_files": 1000,
+      "py": [],
+      "decision": "skip_B",
+      "reason": "not code-bearing; B full or is model"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 20,
+      "id": "XDOF/ABC-130k",
+      "downloads": 769724,
+      "gated": "auto",
+      "decision": "exclude",
+      "reason": "gated=auto disabled=False"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 21,
+      "id": "genrobot2025/10Kh-RealOmin-OpenData",
+      "downloads": 741683,
+      "gated": "auto",
+      "decision": "exclude",
+      "reason": "gated=auto disabled=False"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 22,
+      "id": "applied-ai-018/pretraining_v1-omega_books",
+      "downloads": 711564,
+      "gated": false,
+      "n_files": 2,
+      "py": [],
+      "decision": "skip_B",
+      "reason": "not code-bearing; B full or is model"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 23,
+      "id": "mvp-lab/LLaVA-OneVision-1.5-Mid-Training-85M",
+      "downloads": 683108,
+      "gated": false,
+      "n_files": 2,
+      "py": [],
+      "decision": "skip_B",
+      "reason": "not code-bearing; B full or is model"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 24,
+      "id": "IPEC-COMMUNITY/language_table_lerobot",
+      "downloads": 678315,
+      "gated": false,
+      "n_files": 2,
+      "py": [],
+      "decision": "skip_B",
+      "reason": "not code-bearing; B full or is model"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 25,
+      "id": "HuggingFaceFW/fineweb",
+      "downloads": 660389,
+      "gated": false,
+      "n_files": 4,
+      "py": [
+        "lighteval_tasks.py"
+      ],
+      "decision": "include_A",
+      "reason": "code-bearing: py=['lighteval_tasks.py']",
+      "sha": "9bb295ddab0e05d785b879661af7260fed5140fc"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 26,
+      "id": "artur-muratov/multilingual-speech-commands-15lang",
+      "downloads": 636139,
+      "gated": false,
+      "n_files": 7,
+      "py": [],
+      "decision": "skip_B",
+      "reason": "not code-bearing; B full or is model"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 27,
+      "id": "Maximilians/ps2_hf1",
+      "downloads": 602846,
+      "gated": false,
+      "n_files": 1000,
+      "py": [],
+      "decision": "skip_B",
+      "reason": "not code-bearing; B full or is model"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 28,
+      "id": "Kthera/pesoz",
+      "downloads": 588573,
+      "gated": false,
+      "n_files": 46,
+      "py": [],
+      "decision": "skip_B",
+      "reason": "not code-bearing; B full or is model"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 29,
+      "id": "mteb/results",
+      "downloads": 551797,
+      "gated": false,
+      "n_files": 2,
+      "py": [],
+      "decision": "skip_B",
+      "reason": "not code-bearing; B full or is model"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 30,
+      "id": "jat-project/jat-dataset-tokenized",
+      "downloads": 544599,
+      "gated": false,
+      "n_files": 2,
+      "py": [],
+      "decision": "skip_B",
+      "reason": "not code-bearing; B full or is model"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 31,
+      "id": "angie-chen55/python-github-code",
+      "downloads": 542264,
+      "gated": false,
+      "n_files": 1,
+      "py": [],
+      "decision": "skip_B",
+      "reason": "not code-bearing; B full or is model"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 32,
+      "id": "Emmyc2/psp",
+      "downloads": 539126,
+      "gated": false,
+      "n_files": 986,
+      "py": [],
+      "decision": "skip_B",
+      "reason": "not code-bearing; B full or is model"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 33,
+      "id": "jat-project/jat-dataset",
+      "downloads": 518023,
+      "gated": false,
+      "n_files": 2,
+      "py": [],
+      "decision": "skip_B",
+      "reason": "not code-bearing; B full or is model"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 34,
+      "id": "wegrthj/kbcpjv-v654-data",
+      "downloads": 501742,
+      "gated": false,
+      "n_files": 1,
+      "py": [],
+      "decision": "skip_B",
+      "reason": "not code-bearing; B full or is model"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 35,
+      "id": "IPEC-COMMUNITY/droid_lerobot",
+      "downloads": 485520,
+      "gated": false,
+      "n_files": 2,
+      "py": [],
+      "decision": "skip_B",
+      "reason": "not code-bearing; B full or is model"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 36,
+      "id": "Chelsea707/arxiv-cs-2020-2025-pdfs",
+      "downloads": 484819,
+      "gated": false,
+      "n_files": 2,
+      "py": [],
+      "decision": "skip_B",
+      "reason": "not code-bearing; B full or is model"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 37,
+      "id": "WINGNUS/ACL-OCL",
+      "downloads": 475005,
+      "gated": false,
+      "n_files": 12,
+      "py": [],
+      "decision": "skip_B",
+      "reason": "not code-bearing; B full or is model"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 38,
+      "id": "princeton-nlp/SWE-bench_Verified",
+      "downloads": 474544,
+      "gated": false,
+      "n_files": 2,
+      "py": [],
+      "decision": "skip_B",
+      "reason": "not code-bearing; B full or is model"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 39,
+      "id": "cais/mmlu",
+      "downloads": 453576,
+      "gated": false,
+      "n_files": 5,
+      "py": [
+        "hendrycks_test.py"
+      ],
+      "decision": "include_A",
+      "reason": "code-bearing: py=['hendrycks_test.py']",
+      "sha": "c30699e8356da336a370243923dbaf21066bb9fe"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 40,
+      "id": "EssentialAI/essential-web-v1.0",
+      "downloads": 441378,
+      "gated": false,
+      "n_files": 2,
+      "py": [],
+      "decision": "skip_B",
+      "reason": "not code-bearing; B full or is model"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 41,
+      "id": "Dagonulca/figofigofigofigo",
+      "downloads": 440211,
+      "gated": false,
+      "n_files": 1,
+      "py": [],
+      "decision": "skip_B",
+      "reason": "not code-bearing; B full or is model"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 42,
+      "id": "uoft-cs/cifar10",
+      "downloads": 424611,
+      "gated": false,
+      "n_files": 2,
+      "py": [],
+      "decision": "skip_B",
+      "reason": "not code-bearing; B full or is model"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 43,
+      "id": "allenai/ai2_arc",
+      "downloads": 410821,
+      "gated": false,
+      "n_files": 2,
+      "py": [],
+      "decision": "skip_B",
+      "reason": "not code-bearing; B full or is model"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 44,
+      "id": "nyu-mll/glue",
+      "downloads": 409623,
+      "gated": false,
+      "n_files": 2,
+      "py": [],
+      "decision": "skip_B",
+      "reason": "not code-bearing; B full or is model"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 45,
+      "id": "mhaamh19/prophet-mosque-library",
+      "downloads": 387916,
+      "gated": false,
+      "n_files": 3,
+      "py": [],
+      "decision": "skip_B",
+      "reason": "not code-bearing; B full or is model"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 46,
+      "id": "updatebao/geonamebase_1",
+      "downloads": 382417,
+      "gated": false,
+      "n_files": 2,
+      "py": [],
+      "decision": "skip_B",
+      "reason": "not code-bearing; B full or is model"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 47,
+      "id": "permutans/arxiv-papers-by-subject",
+      "downloads": 377260,
+      "gated": false,
+      "n_files": 2,
+      "py": [],
+      "decision": "skip_B",
+      "reason": "not code-bearing; B full or is model"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 48,
+      "id": "cadene/droid_1.0.1",
+      "downloads": 374079,
+      "gated": false,
+      "n_files": 2,
+      "py": [],
+      "decision": "skip_B",
+      "reason": "not code-bearing; B full or is model"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 49,
+      "id": "HuggingFaceFW/fineweb-edu",
+      "downloads": 372923,
+      "gated": false,
+      "n_files": 2,
+      "py": [],
+      "decision": "skip_B",
+      "reason": "not code-bearing; B full or is model"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 50,
+      "id": "xlangai/osworld_v2_assets",
+      "downloads": 369697,
+      "gated": "auto",
+      "decision": "exclude",
+      "reason": "gated=auto disabled=False"
+    },
+    {
+      "kind": "datasets",
+      "rank_in_kind": 51,
+      "id": "espnet/yodas",
+      "downloads": 367415,
+      "gated": false,
+      "n_files": 4,
+      "py": [
+        "meta.py",
+        "yodas.py"
+      ],
+      "decision": "include_A",
+      "reason": "code-bearing: py=['meta.py', 'yodas.py']",
+      "sha": "52c5a1b9730a136bfd7c4513d4962c70d4e50530"
+    }
+  ],
+  "counts": {
+    "A": 6,
+    "B": 2,
+    "considered": 51
+  }
+}

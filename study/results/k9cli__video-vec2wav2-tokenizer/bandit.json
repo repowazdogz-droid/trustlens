@@ -1,0 +1,1799 @@
+{
+  "errors": [],
+  "generated_at": "2026-07-23T13:32:11Z",
+  "metrics": {
+    "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/__init__.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 4,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/__main__.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 6,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/audio/__init__.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 9,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/audio/extractor.py": {
+      "CONFIDENCE.HIGH": 2,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 2,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 127,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/cli/__init__.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 4,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/cli/commands.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 157,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/dataset_builder.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 38,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/features/__init__.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 4,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/features/extractor.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 142,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/main.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 6,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/pipeline.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 101,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/segmentation/__init__.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 4,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/segmentation/segmenter.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 96,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/statistics.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 49,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/__init__.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 1,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/conftest.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 22,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_cli.py": {
+      "CONFIDENCE.HIGH": 7,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 7,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 28,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_config.py": {
+      "CONFIDENCE.HIGH": 12,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 12,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 37,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_dataset_and_stats.py": {
+      "CONFIDENCE.HIGH": 14,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 14,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 49,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_features.py": {
+      "CONFIDENCE.HIGH": 10,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 10,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 31,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_io.py": {
+      "CONFIDENCE.HIGH": 10,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 10,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 44,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_segmentation.py": {
+      "CONFIDENCE.HIGH": 12,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 12,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 38,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/training/__init__.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 4,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/training/train_wav2vec2.py": {
+      "CONFIDENCE.HIGH": 1,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 1,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 1,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 216,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/transcription/__init__.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 7,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/transcription/transcriber.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 107,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/utils/__init__.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 24,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/utils/config.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 109,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/utils/io.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 93,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/utils/logging.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 25,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "_totals": {
+      "CONFIDENCE.HIGH": 68,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 1,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 68,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 1582,
+      "nosec": 0,
+      "skipped_tests": 0
+    }
+  },
+  "results": [
+    {
+      "code": "10 import shutil\n11 import subprocess\n12 from dataclasses import dataclass\n",
+      "col_offset": 0,
+      "end_col_offset": 17,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/audio/extractor.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 78,
+        "link": "https://cwe.mitre.org/data/definitions/78.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Consider possible security implications associated with the subprocess module.",
+      "line_number": 11,
+      "line_range": [
+        11
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_imports.html#b404-import-subprocess",
+      "test_id": "B404",
+      "test_name": "blacklist"
+    },
+    {
+      "code": "79         logger.debug(\"Running ffmpeg: %s\", \" \".join(cmd))\n80         proc = subprocess.run(cmd, capture_output=True, text=True)\n81         if proc.returncode != 0:\n",
+      "col_offset": 15,
+      "end_col_offset": 66,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/audio/extractor.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 78,
+        "link": "https://cwe.mitre.org/data/definitions/78.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "subprocess call - check for execution of untrusted input.",
+      "line_number": 80,
+      "line_range": [
+        80
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b603_subprocess_without_shell_equals_true.html",
+      "test_id": "B603",
+      "test_name": "subprocess_without_shell_equals_true"
+    },
+    {
+      "code": "14     args = parser.parse_args([\"process\", \"./videos\", \"--extract-features\"])\n15     assert args.command == \"process\"\n16     assert args.input == \"./videos\"\n",
+      "col_offset": 4,
+      "end_col_offset": 36,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_cli.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 15,
+      "line_range": [
+        15
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "15     assert args.command == \"process\"\n16     assert args.input == \"./videos\"\n17     assert args.extract_features is True\n",
+      "col_offset": 4,
+      "end_col_offset": 35,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_cli.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 16,
+      "line_range": [
+        16
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "16     assert args.input == \"./videos\"\n17     assert args.extract_features is True\n18 \n",
+      "col_offset": 4,
+      "end_col_offset": 40,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_cli.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 17,
+      "line_range": [
+        17
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "29     args = parser.parse_args([command, \"./input\"])\n30     assert args.command == command\n31 \n",
+      "col_offset": 4,
+      "end_col_offset": 34,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_cli.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 30,
+      "line_range": [
+        30
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "34     fixed = Config(speaker_mode=\"fixed\", default_speaker=\"speaker_001\")\n35     assert assign_speaker(fixed, video_index=3, file_index=7) == \"speaker_001\"\n36 \n",
+      "col_offset": 4,
+      "end_col_offset": 78,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_cli.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 35,
+      "line_range": [
+        35
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "37     per_video = Config(speaker_mode=\"per_video\")\n38     assert assign_speaker(per_video, video_index=3, file_index=7) == \"speaker_003\"\n39 \n",
+      "col_offset": 4,
+      "end_col_offset": 82,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_cli.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 38,
+      "line_range": [
+        38
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "40     per_file = Config(speaker_mode=\"per_file\")\n41     assert assign_speaker(per_file, video_index=3, file_index=7) == \"speaker_007\"\n",
+      "col_offset": 4,
+      "end_col_offset": 81,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_cli.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 41,
+      "line_range": [
+        41
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "13     cfg = load_config()\n14     assert cfg.sample_rate == 16000\n15     assert cfg.channels == 1\n",
+      "col_offset": 4,
+      "end_col_offset": 35,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_config.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 14,
+      "line_range": [
+        14
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "14     assert cfg.sample_rate == 16000\n15     assert cfg.channels == 1\n16     assert cfg.audio_dir == Path(cfg.output_dir) / \"audio\"\n",
+      "col_offset": 4,
+      "end_col_offset": 28,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_config.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 15,
+      "line_range": [
+        15
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "15     assert cfg.channels == 1\n16     assert cfg.audio_dir == Path(cfg.output_dir) / \"audio\"\n17 \n",
+      "col_offset": 4,
+      "end_col_offset": 58,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_config.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 16,
+      "line_range": [
+        16
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "20     cfg = load_config(overrides={\"sample_rate\": 8000, \"device\": \"cpu\"})\n21     assert cfg.sample_rate == 8000\n22     assert cfg.device == \"cpu\"\n",
+      "col_offset": 4,
+      "end_col_offset": 34,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_config.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 21,
+      "line_range": [
+        21
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "21     assert cfg.sample_rate == 8000\n22     assert cfg.device == \"cpu\"\n23 \n",
+      "col_offset": 4,
+      "end_col_offset": 30,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_config.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 22,
+      "line_range": [
+        22
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "26     cfg = load_config(overrides={\"device\": None})\n27     assert cfg.device == \"auto\"  # default preserved\n28 \n",
+      "col_offset": 4,
+      "end_col_offset": 31,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_config.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 27,
+      "line_range": [
+        27
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "33     cfg = load_config(p)\n34     assert cfg.whisper_model == \"tiny\"\n35     assert cfg.sample_rate == 22050\n",
+      "col_offset": 4,
+      "end_col_offset": 38,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_config.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 34,
+      "line_range": [
+        34
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "34     assert cfg.whisper_model == \"tiny\"\n35     assert cfg.sample_rate == 22050\n36 \n",
+      "col_offset": 4,
+      "end_col_offset": 35,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_config.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 35,
+      "line_range": [
+        35
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "51     cfg = Config(output_dir=\"out\")\n52     assert cfg.metadata_csv == Path(\"out/metadata.csv\")\n53     assert cfg.dataset_jsonl == Path(\"out/dataset.jsonl\")\n",
+      "col_offset": 4,
+      "end_col_offset": 55,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_config.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 52,
+      "line_range": [
+        52
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "52     assert cfg.metadata_csv == Path(\"out/metadata.csv\")\n53     assert cfg.dataset_jsonl == Path(\"out/dataset.jsonl\")\n54     assert cfg.tts_metadata_csv == Path(\"out/tts_metadata.csv\")\n",
+      "col_offset": 4,
+      "end_col_offset": 57,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_config.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 53,
+      "line_range": [
+        53
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "53     assert cfg.dataset_jsonl == Path(\"out/dataset.jsonl\")\n54     assert cfg.tts_metadata_csv == Path(\"out/tts_metadata.csv\")\n55     assert cfg.report_json == Path(\"out/report.json\")\n",
+      "col_offset": 4,
+      "end_col_offset": 63,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_config.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 54,
+      "line_range": [
+        54
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "54     assert cfg.tts_metadata_csv == Path(\"out/tts_metadata.csv\")\n55     assert cfg.report_json == Path(\"out/report.json\")\n",
+      "col_offset": 4,
+      "end_col_offset": 53,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_config.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 55,
+      "line_range": [
+        55
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "28     lines = path.read_text(encoding=\"utf-8\").splitlines()\n29     assert lines[0] == \"000001.wav|Hello world\"\n30     assert lines[1] == \"000002.wav|How are you\"\n",
+      "col_offset": 4,
+      "end_col_offset": 47,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_dataset_and_stats.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 29,
+      "line_range": [
+        29
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "29     assert lines[0] == \"000001.wav|Hello world\"\n30     assert lines[1] == \"000002.wav|How are you\"\n31 \n",
+      "col_offset": 4,
+      "end_col_offset": 47,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_dataset_and_stats.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 30,
+      "line_range": [
+        30
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "36     first = json.loads(path.read_text(encoding=\"utf-8\").splitlines()[0])\n37     assert first[\"audio\"] == \"audio/000001.wav\"\n38     assert first[\"text\"] == \"Hello world\"\n",
+      "col_offset": 4,
+      "end_col_offset": 47,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_dataset_and_stats.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 37,
+      "line_range": [
+        37
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "37     assert first[\"audio\"] == \"audio/000001.wav\"\n38     assert first[\"text\"] == \"Hello world\"\n39     assert first[\"duration\"] == 2.5\n",
+      "col_offset": 4,
+      "end_col_offset": 41,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_dataset_and_stats.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 38,
+      "line_range": [
+        38
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "38     assert first[\"text\"] == \"Hello world\"\n39     assert first[\"duration\"] == 2.5\n40 \n",
+      "col_offset": 4,
+      "end_col_offset": 35,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_dataset_and_stats.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 39,
+      "line_range": [
+        39
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "45     lines = path.read_text(encoding=\"utf-8\").splitlines()\n46     assert lines[0] == \"000001.wav|spk1|Hello world\"\n47 \n",
+      "col_offset": 4,
+      "end_col_offset": 52,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_dataset_and_stats.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 46,
+      "line_range": [
+        46
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "51     report = build_report(entries, total_videos=2, total_audio_files=3)\n52     assert report.total_segments == 3\n53     assert report.total_audio_files == 3\n",
+      "col_offset": 4,
+      "end_col_offset": 37,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_dataset_and_stats.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 52,
+      "line_range": [
+        52
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "52     assert report.total_segments == 3\n53     assert report.total_audio_files == 3\n54     assert report.total_videos == 2\n",
+      "col_offset": 4,
+      "end_col_offset": 40,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_dataset_and_stats.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 53,
+      "line_range": [
+        53
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "53     assert report.total_audio_files == 3\n54     assert report.total_videos == 2\n55     assert abs(report.total_duration - 7.0) < 1e-6\n",
+      "col_offset": 4,
+      "end_col_offset": 35,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_dataset_and_stats.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 54,
+      "line_range": [
+        54
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "54     assert report.total_videos == 2\n55     assert abs(report.total_duration - 7.0) < 1e-6\n56     assert abs(report.average_segment_length - 7.0 / 3) < 1e-6\n",
+      "col_offset": 4,
+      "end_col_offset": 50,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_dataset_and_stats.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 55,
+      "line_range": [
+        55
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "55     assert abs(report.total_duration - 7.0) < 1e-6\n56     assert abs(report.average_segment_length - 7.0 / 3) < 1e-6\n57     assert report.language_distribution == {\"en\": 2, \"de\": 1}\n",
+      "col_offset": 4,
+      "end_col_offset": 62,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_dataset_and_stats.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 56,
+      "line_range": [
+        56
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "56     assert abs(report.average_segment_length - 7.0 / 3) < 1e-6\n57     assert report.language_distribution == {\"en\": 2, \"de\": 1}\n58 \n",
+      "col_offset": 4,
+      "end_col_offset": 61,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_dataset_and_stats.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 57,
+      "line_range": [
+        57
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "61     data = json.loads(path.read_text(encoding=\"utf-8\"))\n62     assert data[\"total_segments\"] == 3\n63     assert data[\"language_distribution\"][\"en\"] == 2\n",
+      "col_offset": 4,
+      "end_col_offset": 38,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_dataset_and_stats.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 62,
+      "line_range": [
+        62
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "62     assert data[\"total_segments\"] == 3\n63     assert data[\"language_distribution\"][\"en\"] == 2\n",
+      "col_offset": 4,
+      "end_col_offset": 51,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_dataset_and_stats.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 63,
+      "line_range": [
+        63
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "21     mel = compute_mel_spectrogram(samples, sr, n_mels=80)\n22     assert mel.shape[0] == 80\n23     assert mel.dtype == np.float32\n",
+      "col_offset": 4,
+      "end_col_offset": 29,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_features.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 22,
+      "line_range": [
+        22
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "22     assert mel.shape[0] == 80\n23     assert mel.dtype == np.float32\n24     assert mel.shape[1] > 0\n",
+      "col_offset": 4,
+      "end_col_offset": 34,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_features.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 23,
+      "line_range": [
+        23
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "23     assert mel.dtype == np.float32\n24     assert mel.shape[1] > 0\n25 \n",
+      "col_offset": 4,
+      "end_col_offset": 27,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_features.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 24,
+      "line_range": [
+        24
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "32     bin_path = features_dir / \"train.bin\"\n33     assert bin_path.exists()\n34     assert dat_path.exists()\n",
+      "col_offset": 4,
+      "end_col_offset": 28,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_features.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 33,
+      "line_range": [
+        33
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "33     assert bin_path.exists()\n34     assert dat_path.exists()\n35 \n",
+      "col_offset": 4,
+      "end_col_offset": 28,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_features.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 34,
+      "line_range": [
+        34
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "36     records = [json.loads(line) for line in dat_path.read_text().splitlines() if line]\n37     assert len(records) == 2\n38 \n",
+      "col_offset": 4,
+      "end_col_offset": 28,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_features.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 37,
+      "line_range": [
+        37
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "39     audio, mel = read_feature_record(bin_path, records[0])\n40     assert audio.dtype == np.float32\n41     assert mel.shape == tuple(records[0][\"mel_shape\"])\n",
+      "col_offset": 4,
+      "end_col_offset": 36,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_features.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 40,
+      "line_range": [
+        40
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "40     assert audio.dtype == np.float32\n41     assert mel.shape == tuple(records[0][\"mel_shape\"])\n42     assert records[0][\"sample_rate\"] == 16000\n",
+      "col_offset": 4,
+      "end_col_offset": 54,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_features.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 41,
+      "line_range": [
+        41
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "41     assert mel.shape == tuple(records[0][\"mel_shape\"])\n42     assert records[0][\"sample_rate\"] == 16000\n43     assert records[0][\"duration\"] > 0\n",
+      "col_offset": 4,
+      "end_col_offset": 45,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_features.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 42,
+      "line_range": [
+        42
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "42     assert records[0][\"sample_rate\"] == 16000\n43     assert records[0][\"duration\"] > 0\n",
+      "col_offset": 4,
+      "end_col_offset": 37,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_features.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 43,
+      "line_range": [
+        43
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "20     seg = Segment(start=0.0, end=2.5, text=\"example sentence\")\n21     assert seg.duration == 2.5\n22     assert seg.to_dict() == {\"start\": 0.0, \"end\": 2.5, \"text\": \"example sentence\"}\n",
+      "col_offset": 4,
+      "end_col_offset": 30,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_io.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 21,
+      "line_range": [
+        21
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "21     assert seg.duration == 2.5\n22     assert seg.to_dict() == {\"start\": 0.0, \"end\": 2.5, \"text\": \"example sentence\"}\n23     assert Segment.from_dict(seg.to_dict()) == seg\n",
+      "col_offset": 4,
+      "end_col_offset": 82,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_io.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 22,
+      "line_range": [
+        22
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "22     assert seg.to_dict() == {\"start\": 0.0, \"end\": 2.5, \"text\": \"example sentence\"}\n23     assert Segment.from_dict(seg.to_dict()) == seg\n24 \n",
+      "col_offset": 4,
+      "end_col_offset": 50,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_io.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 23,
+      "line_range": [
+        23
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "28     row = entry.to_jsonl_dict()\n29     assert row == {\"audio\": \"audio/000001.wav\", \"text\": \"Hello world\", \"duration\": 2.5}\n30 \n",
+      "col_offset": 4,
+      "end_col_offset": 87,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_io.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 29,
+      "line_range": [
+        29
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "35     )\n36     assert entry.to_jsonl_dict()[\"speaker\"] == \"speaker_002\"\n37 \n",
+      "col_offset": 4,
+      "end_col_offset": 60,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_io.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 36,
+      "line_range": [
+        36
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "39 def test_clip_index_name() -> None:\n40     assert clip_index_name(1) == \"000001.wav\"\n41     assert clip_index_name(42) == \"000042.wav\"\n",
+      "col_offset": 4,
+      "end_col_offset": 45,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_io.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 40,
+      "line_range": [
+        40
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "40     assert clip_index_name(1) == \"000001.wav\"\n41     assert clip_index_name(42) == \"000042.wav\"\n42 \n",
+      "col_offset": 4,
+      "end_col_offset": 46,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_io.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 41,
+      "line_range": [
+        41
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "46     path = tmp_path / \"out.jsonl\"\n47     assert write_jsonl(path, rows) == 2\n48     assert list(read_jsonl(path)) == rows\n",
+      "col_offset": 4,
+      "end_col_offset": 39,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_io.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 47,
+      "line_range": [
+        47
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "47     assert write_jsonl(path, rows) == 2\n48     assert list(read_jsonl(path)) == rows\n49 \n",
+      "col_offset": 4,
+      "end_col_offset": 41,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_io.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 48,
+      "line_range": [
+        48
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "56     found = [p.name for p in iter_video_files(tmp_path)]\n57     assert found == [\"a.mp4\", \"b.mkv\"]\n58 \n",
+      "col_offset": 4,
+      "end_col_offset": 38,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_io.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 57,
+      "line_range": [
+        57
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "14     out = normalize_segments(segs, min_length=1.0, max_length=20.0)\n15     assert len(out) == 1\n16     assert out[0].text == \"ok\"\n",
+      "col_offset": 4,
+      "end_col_offset": 24,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_segmentation.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 15,
+      "line_range": [
+        15
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "15     assert len(out) == 1\n16     assert out[0].text == \"ok\"\n17 \n",
+      "col_offset": 4,
+      "end_col_offset": 30,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_segmentation.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 16,
+      "line_range": [
+        16
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "21     out = normalize_segments(segs, min_length=1.0, max_length=20.0)\n22     assert len(out) == 3  # ceil(50/20)\n23     assert out[0].text == \"long\"\n",
+      "col_offset": 4,
+      "end_col_offset": 24,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_segmentation.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 22,
+      "line_range": [
+        22
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "22     assert len(out) == 3  # ceil(50/20)\n23     assert out[0].text == \"long\"\n24     assert out[1].text == \"\"  # text not duplicated\n",
+      "col_offset": 4,
+      "end_col_offset": 32,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_segmentation.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 23,
+      "line_range": [
+        23
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "23     assert out[0].text == \"long\"\n24     assert out[1].text == \"\"  # text not duplicated\n25     assert all(s.duration <= 20.0 + 1e-6 for s in out)\n",
+      "col_offset": 4,
+      "end_col_offset": 28,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_segmentation.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 24,
+      "line_range": [
+        24
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "24     assert out[1].text == \"\"  # text not duplicated\n25     assert all(s.duration <= 20.0 + 1e-6 for s in out)\n26 \n",
+      "col_offset": 4,
+      "end_col_offset": 54,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_segmentation.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 25,
+      "line_range": [
+        25
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "30     out = normalize_segments(segs, min_length=0.5, max_length=20.0, padding=1.0, total_duration=2.5)\n31     assert out[0].start == 0.0           # clamped at 0\n32     assert out[0].end == 2.5             # clamped at total_duration\n",
+      "col_offset": 4,
+      "end_col_offset": 30,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_segmentation.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 31,
+      "line_range": [
+        31
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "31     assert out[0].start == 0.0           # clamped at 0\n32     assert out[0].end == 2.5             # clamped at total_duration\n33 \n",
+      "col_offset": 4,
+      "end_col_offset": 28,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_segmentation.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 32,
+      "line_range": [
+        32
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "40 \n41     assert [p.name for p, _ in results] == [\"000001.wav\", \"000002.wav\"]\n42     samples, sr = load_wav(results[0][0])\n",
+      "col_offset": 4,
+      "end_col_offset": 71,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_segmentation.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 41,
+      "line_range": [
+        41
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "42     samples, sr = load_wav(results[0][0])\n43     assert sr == 16000\n44     assert abs(samples.shape[0] - 16000) < 10  # ~1 second\n",
+      "col_offset": 4,
+      "end_col_offset": 22,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_segmentation.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 43,
+      "line_range": [
+        43
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "43     assert sr == 16000\n44     assert abs(samples.shape[0] - 16000) < 10  # ~1 second\n45 \n",
+      "col_offset": 4,
+      "end_col_offset": 45,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_segmentation.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 44,
+      "line_range": [
+        44
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "51     r1 = segmenter.segment_file(sine_wav, segs, out_dir, start_index=5)\n52     assert r1[0][0].name == \"000005.wav\"\n",
+      "col_offset": 4,
+      "end_col_offset": 40,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/tests/test_segmentation.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 52,
+      "line_range": [
+        52
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "111     tokenizer = Wav2Vec2CTCTokenizer(\n112         str(vocab_path), unk_token=\"[UNK]\", pad_token=\"[PAD]\", word_delimiter_token=\"|\"\n113     )\n114     feature_extractor = Wav2Vec2FeatureExtractor(\n115         feature_size=1, sampling_rate=16000, padding_value=0.0,\n",
+      "col_offset": 16,
+      "end_col_offset": 5,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/training/train_wav2vec2.py",
+      "issue_confidence": "MEDIUM",
+      "issue_cwe": {
+        "id": 259,
+        "link": "https://cwe.mitre.org/data/definitions/259.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Possible hardcoded password: '[UNK]'",
+      "line_number": 112,
+      "line_range": [
+        111,
+        112,
+        113
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b106_hardcoded_password_funcarg.html",
+      "test_id": "B106",
+      "test_name": "hardcoded_password_funcarg"
+    },
+    {
+      "code": "169     # --- model -----------------------------------------------------------------\n170     model = Wav2Vec2ForCTC.from_pretrained(\n171         args.model_name,\n172         ctc_loss_reduction=\"mean\",\n173         pad_token_id=processor.tokenizer.pad_token_id,\n174         vocab_size=len(processor.tokenizer),\n175         ignore_mismatched_sizes=True,\n176     )\n177     model.freeze_feature_encoder()\n",
+      "col_offset": 12,
+      "end_col_offset": 5,
+      "filename": "/private/tmp/claude-501/-Users-warre/170c048e-eea5-439f-a2e9-df3262f8d0ab/scratchpad/corpus/k9cli__video-vec2wav2-tokenizer/training/train_wav2vec2.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 494,
+        "link": "https://cwe.mitre.org/data/definitions/494.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Unsafe Hugging Face Hub download without revision pinning in from_pretrained()",
+      "line_number": 170,
+      "line_range": [
+        170,
+        171,
+        172,
+        173,
+        174,
+        175,
+        176
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b615_huggingface_unsafe_download.html",
+      "test_id": "B615",
+      "test_name": "huggingface_unsafe_download"
+    }
+  ]
+}
