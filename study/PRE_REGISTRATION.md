@@ -49,12 +49,15 @@ This is the population TrustLens's declared-vs-reachable claim is most about, an
 where all three comparison tools have something to say (they scan ML artifacts / the Python
 that loads them).
 
-**Why not IaC/Terraform/K8s repos in this first study:** the named comparison tools
-(picklescan, ProtectAI, Bandit) do not address infrastructure-as-code — the coherent
-comparators there are checkov/tfsec, a different pairing. Mixing them would produce a corpus
-where half the rows have no meaningful comparison. The credential-mapper evaluation against
-checkov/tfsec is a **separate study, explicitly out of scope here** and named as future work.
-This is a scoping decision made now, not after seeing results.
+**Why not IaC/Terraform/K8s repos in this first study:** two reasons. (1) The named comparison
+tools (picklescan, ProtectAI, Bandit) do not address infrastructure-as-code — the coherent
+comparators there are checkov/tfsec, a different pairing, and mixing them would produce a
+corpus where half the rows have no meaningful comparison. (2) A first external evaluation
+should test **one claim cleanly**: mixing dataset repos with infrastructure configs makes an
+ambiguous result unattributable — a mixed signal could not be traced to either the scanner or
+the mapper. The credential-mapper evaluation against **checkov and tfsec** is therefore a
+**separate planned study**, recorded here as deliberate future work, **not an omission**. This
+scoping decision was made now, before any results.
 
 ### Sampling method (deterministic; not random, so stated exactly)
 
@@ -129,7 +132,7 @@ which is the point. Corpus n = 8 (Stratum A = 6, Stratum B = 2).
 | **False positives** (flagged construct confers no capability on any path a competent reviewer accepts) | **1–3 across the corpus** — from known over-reporting rules (bare method names, string-in-prose) | Refuted by 0 (cleaner than the known blind spots suggest) or by many (a systematic FP source) |
 | **Comparison divergence, TrustLens-only** | most Stratum-A repos: TrustLens surfaces a declared-vs-reachable gap that picklescan/modelscan (no malicious pickle) report clean on | — |
 | **Comparison divergence, comparison-tool-only** (the symmetric result) | **≥1** repo where Bandit or picklescan/modelscan flags something material that TrustLens does not model | If this is 0, I state it — but I *expect* ≥1 and will report it as prominently as the reverse |
-| **Phase 2 end-to-end case exists** | **uncertain — 40–70%** that ≥1 qualifying case is present in n=8 | Requires a repo where the card underclaims, picklescan/modelscan are clean, AND execution reaches a credential/network sink. If absent, reported as absent — not manufactured |
+| **Phase 2 end-to-end case exists** | **uncertain — 40–70%** that ≥1 qualifying case is present in n=8 | Requires a repo where the card underclaims, picklescan/modelscan are clean, AND execution reaches a credential/network sink. If absent, **its absence is itself a reported finding** (see below), not a manufactured case and not a study failure |
 
 **Stated limitation baked into these predictions:** because Stratum A is *selected on having
 code*, near-zero code-bearing repos will be "clean," so the clean-count is dominated by the
@@ -201,12 +204,13 @@ For each repo, a row records:
 
 **No aggregate score. No "winner."** The output is a divergence catalogue.
 
-**On the comparison tools, stated now:** picklescan (pip), Bandit (pip), and **modelscan**
-(ProtectAI's open-source model scanner, pip) are the concrete comparators. **ProtectAI
-Guardian the hosted platform is not runnable here**; modelscan is its open-source analog and
-is named as such — I will not present modelscan's output as Guardian's. If any comparator
-cannot be installed or run on a given repo, that is recorded as "not run: reason," never
-silently omitted.
+**On the comparison tools, stated now:** the concrete comparators are **picklescan** (pip),
+**Bandit** (pip), and **modelscan (ProtectAI's open-source scanner)** (pip). modelscan is
+evaluated **as a comparator in its own right**, under that exact label throughout. **ProtectAI
+Guardian — the hosted commercial platform — was not evaluated in this study, and no claim of
+any kind is made about it.** modelscan is not a stand-in for Guardian and its results are never
+presented as Guardian's. If any comparator cannot be installed or run on a given repo, that is
+recorded as "not run: reason," never silently omitted.
 
 **Adjudication of "which is correct" is manual and by the study author** — a real limitation
 (single, unblinded analyst). Mitigations: every divergence shows the code excerpt so a reader
@@ -246,6 +250,15 @@ before data.
   refusing that measure is the point, not a gap.
 - **No dynamic observation** (§5), so blast-radius paths in this study are composed
   inferences, never observed reachability.
+- **Structural confidence ceiling, stated before results.** Because the sandbox is excluded by
+  construction (§5), **no blast-radius path in this study can reach the `OBSERVED` tier** under
+  the weakest-link rule — a path is `OBSERVED` only if *every* edge is `dynamically_observed`,
+  and no edge in this study is. Every path this study produces is therefore at best
+  `configuration_derived` or `statically_derived`, and most will be `inferred`. This bounds
+  what the study can establish: it can show that a *composed, evidence-labelled* reachability
+  path exists and what its weakest link is, but it cannot demonstrate that any path is actually
+  traversed. A reader must not read a blast-radius path here as observed behaviour; by design,
+  none is.
 
 ---
 
@@ -279,9 +292,35 @@ whether that account flatters the tool or not. "TrustLens found a gap every scan
 "TrustLens PARTIALed on half the corpus and Bandit was more useful" are equally publishable,
 and the write-up commitment in the header covers both.
 
+**The Phase 2 end-to-end case, specifically.** It is the only deliverable without a committed
+numeric prediction and the most interesting one, which is exactly where the temptation to
+manufacture lives. So it is pre-committed that **the absence of such a case is a finding in its
+own right** — reported as "the corpus contained no case where the full evidence chain (static
+finding → credential reachability → blast radius) changed what a reasonable engineer would
+conclude relative to the card plus an existing scanner's verdict." That sentence is a
+publishable result. A found case must meet the §7 bar against the actual repo; a case that
+requires inventing an environment description the repo does not itself declare **does not
+count** and is reported as absence.
+
 ---
 
 ## 9. Amendments log
 
-*(empty at pre-registration; every post-commit protocol change is appended here with date and
-reason.)*
+Every post-commit protocol change is appended here with date and reason. The entries below
+were made **after the seal commit but before any repository was fetched or scanned** — the
+no-data-before-pre-registration invariant is intact; these are review refinements, not
+post-hoc reactions to results.
+
+- **A1 (2026-07-23, pre-scan, from human review).** §2/§8: the **absence** of a Phase 2
+  end-to-end case is now explicitly a reported finding in its own right, not a study failure —
+  removing the incentive to manufacture one. A case requiring an invented environment
+  description the repo does not itself declare does not count.
+- **A2 (2026-07-23, pre-scan, from human review).** §6: added the **structural confidence
+  ceiling** — with the sandbox excluded, no path can reach `OBSERVED`; every path is at best
+  configuration/statically-derived, most inferred. Stated in limitations, before results.
+- **A3 (2026-07-23, pre-scan, from human review).** §1: IaC recorded as a **separate planned
+  study** against checkov/tfsec (one-clean-claim rationale added), not an omission. §4:
+  modelscan labelled "modelscan (ProtectAI's open-source scanner)" throughout and evaluated as
+  a comparator in its own right; **Guardian-the-platform explicitly not evaluated, no claim
+  made**; both negative controls retained (selecting on execution surface would otherwise make
+  the result tautological).
