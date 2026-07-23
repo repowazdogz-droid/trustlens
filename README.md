@@ -32,6 +32,16 @@ that raise). The **mapper** models credential reachability from offline configur
 spawns nothing. The **sandbox** observes execution inside gVisor and is `EXPERIMENTAL`. The
 **blast-radius** simulator composes all three offline into reachability paths.
 
+> **Scope — what the full pipeline needs.** The four-component workflow assumes access to
+> **both the artifact and its deployment environment.** The mapper, sandbox, and blast-radius
+> layers require a description of the credential topology the artifact would run against —
+> Terraform/Kubernetes-RBAC manifests or an environment description — which lives in the
+> deploying organisation's infrastructure, not in the artifact. **Analysing a public artifact
+> alone, with no environment supplied, exercises only the scanner** (this is a measured result
+> — see [`study/WRITEUP.md`](study/WRITEUP.md), Finding 3: 0 of 8 public repos shipped
+> ingestible environment config). TrustLens is aimed at an analyst working on their *own*
+> infrastructure with both halves in hand.
+
 **Illustrative invocation forms — not a copy-paste sequence.** The paths below are
 placeholders (`./some-dataset-repo`, `scan.json`, a remote URL) to replace with your own;
 copied verbatim they will error. `rbac` additionally needs the optional Go helper built

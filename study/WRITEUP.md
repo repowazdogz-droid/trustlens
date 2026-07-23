@@ -8,11 +8,12 @@ outcome, as pre-committed.
 
 ---
 
-## Headline: two defects found on real input that fixtures could not surface
+## Headline: two defects, and a scope finding — all from leaving the fixtures behind
 
-The single most important result of this study is that running TrustLens on real-world
-repositories — rather than on inputs written to be parseable — surfaced **two genuine defects**
-that every prior test had missed, because every prior test used clean, hand-written fixtures.
+Three findings lead this study: two defects surfaced by real input, and a scope result that
+bounds what the tool can do on a public artifact at all. The first two are about correctness;
+the third is about applicability, and it is the most consequential for anyone deciding to use
+the tool.
 
 ### Defect 1 — false positive on a `FOUND`: `re.compile` flagged as dynamic code evaluation
 
@@ -36,14 +37,34 @@ this is TrustLens's defect, not inherent un-parseability. **This is a robustness
 notably, TrustLens *failed closed* (PARTIAL, never a false-clean), so its central honesty
 guarantee held even as the robustness gap bit.
 
-**Why this is the study's headline.** Neither defect could appear on the project's own
-fixtures: fixtures were written parseable and BOM-free, and none happened to use `re.compile`
-where an eval was not intended. Two defects, one of each kind (soundness, robustness), found the
-first time the tool met code it did not author, is the strongest evidence that this external
-evaluation was worth running.
+### Finding 3 — scope: three of four components had no input; TrustLens reduced to its scanner
 
-**Neither has been fixed.** Fixing mid-study would invalidate the pre-registered run. Both are
-recorded as post-study actions in the last section.
+**Zero of the 8 repositories shipped mapper-ingestible environment configuration** — no
+Terraform plan, no Kubernetes RBAC, no credential/environment description — and not a single
+credential, cloud, or environment capability was FOUND anywhere in the corpus. TrustLens is four
+components (scanner, credential mapper, sandbox, blast-radius) over one evidence model, but
+**three of the four had nothing to operate on.** The credential mapper builds edges only from a
+deployment environment description; the sandbox was off by construction and, in any case, is not
+signed off for arbitrary untrusted public artifacts; and the blast-radius simulator composes the
+other three, so with no credential edges it had nothing to compose.
+
+Stated plainly: **for public-artifact analysis without a deployment environment, TrustLens
+reduces to its static scanner.** The mapper, sandbox, and blast-radius layers require an analyst
+working on *their own infrastructure* — with access to both the artifact **and** the credential
+topology it would run against, which lives in the deploying organisation, not in the artifact.
+This is not a defect; it is the operating envelope of the tool, made concrete by real data, and
+it is the single most important thing for a prospective user to know before running the full
+pipeline and finding three components idle.
+
+**Why these three lead.** Neither defect could appear on the project's own fixtures — they were
+written parseable, BOM-free, and without an `re.compile` standing in for an eval — so both were
+invisible until the tool met code it did not author. And the scope result could not appear in
+any test at all, because every prior test supplied a fabricated environment; only real public
+artifacts, which carry no deployment environment, could reveal that three of four components sit
+idle without one. All three are products of leaving the fixtures behind.
+
+**Neither defect has been fixed.** Fixing mid-study would invalidate the pre-registered run.
+Both are recorded as post-study actions in the last section.
 
 ---
 
@@ -80,8 +101,16 @@ much TrustLens would find: the two headline "how much did it flag" predictions b
 | Comparator-only divergence (bandit right where TL silent) | ≥ 1 | ≥ 1 (weak MD5, unpinned download, XML) | HIT |
 | End-to-end case exists | 40–70% | **NONE** | **MISS — reported as a finding per A1, below** |
 
-Three of seven predictions missed, two of them on the headline "how much does TrustLens find"
-metrics. The tool flags **less** than its own author predicted.
+**The prediction bias is itself a finding: three of seven predictions missed, and all three
+missed in the same direction — the author over-predicted the tool's yield** (declared-vs-reachable
+gaps predicted 4–6, got 2; PARTIAL predicted 2–4, got 1; end-to-end predicted 40–70%, got none).
+A directionally consistent miss is more informative than any single one: it says the person who
+built and pre-registered the study systematically expected TrustLens to find more than it did.
+That is the pre-registration working exactly as intended — it recorded an honest prior *before*
+the data, so the data could contradict it, and it did. Had these predictions been written after
+seeing the results, the write-up would report a tool that performs as expected; because they were
+written before, it reports a tool that flags less than its own author believed it would, and that
+is the more trustworthy result.
 
 ## The divergence catalogue, in brief
 

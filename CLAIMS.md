@@ -65,6 +65,20 @@ leave `EXPERIMENTAL` on a gVisor-only configuration, so no edit to this file can
   library entirely and writes JSON by hand is caught only by validation, and only if
   validation is run.
 
+## Scope — the full pipeline needs the artifact *and* its deployment environment
+
+The four-component workflow assumes access to both. The **scanner** works on the artifact
+alone. The **mapper**, **sandbox**, and **blast-radius** layers require the credential topology
+the artifact would run against — Terraform/Kubernetes-RBAC manifests or an environment
+description — which lives in the deploying organisation's infrastructure, not in the artifact.
+**Analysing a public artifact with no environment supplied exercises only the scanner; the other
+three components have no input.** This is measured, not asserted: in the first external
+evaluation, 0 of 8 public repositories shipped ingestible environment configuration, and no
+credential/cloud/environment capability was found in any of them (`study/WRITEUP.md`, Finding 3).
+TrustLens is aimed at an analyst working on their own infrastructure with both halves in hand; a
+reader assessing a public artifact alone gets the static scanner and nothing composed on top of
+it.
+
 ## What the built tool establishes
 
 Whole-tool summary. Each component's file states these in full, with its controls.
