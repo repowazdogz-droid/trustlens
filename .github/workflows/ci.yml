@@ -5,15 +5,21 @@
 #
 # It does NOT reproduce the gVisor ground-truth validation of the Phase 3 sandbox. That
 # validation (probes run uncontained -> 8/12 deviate; run inside gVisor -> 12/12 conform,
-# docs/PROBE_SUITE_REVIEW.md) requires a real gVisor sandbox, which needs:
-#   * /dev/kvm or gVisor's systrap platform on a Linux host, and
-#   * runsc installed and the run performed inside a privileged container.
-# Standard GitHub-hosted runners expose neither by default. So everything DOWNSTREAM of
-# "launch a real gVisor sandbox" is verified by hand in a container and recorded, NOT here
-# (docs/COVERAGE_GAPS.md CG-2). This CI covers the Python engine, the evidence model, the
-# process-boundary guard, the count discipline, and the EXPERIMENTAL-lock gate tests — the
-# parts that are reproducible on a stock runner. It is not a substitute for the sandbox
-# ground-truth run, and a green check here does not assert that the sandbox was exercised.
+# docs/PROBE_SUITE_REVIEW.md) requires a real gVisor sandbox: runsc installed, and the run
+# performed inside a privileged container.
+#
+# To be precise about why this CI skips it — gVisor's systrap platform needs NO /dev/kvm
+# (that is the documented platform finding, docs/PHASE3_PLATFORM_CONSTRAINT.md), so a stock
+# Linux runner is not hard-blocked from running it. What is missing is deliberate: runsc is
+# not installed on the runner and the privileged-container ground-truth harness is not wired
+# here. This CI does not set that up, by choice.
+#
+# So everything DOWNSTREAM of "launch a real gVisor sandbox" is verified by hand in a
+# container and recorded, NOT here (docs/COVERAGE_GAPS.md CG-2). This CI covers the Python
+# engine, the evidence model, the process-boundary guard, the count discipline, and the
+# EXPERIMENTAL-lock gate tests — the parts reproducible without setting up runsc. It is not a
+# substitute for the sandbox ground-truth run, and a green check here does not assert that
+# the sandbox was exercised.
 # ---------------------------------------------------------------------------------------
 
 name: ci

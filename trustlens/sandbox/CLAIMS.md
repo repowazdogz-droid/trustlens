@@ -17,13 +17,18 @@ document edit and no review record can widen the boundary while the mechanism is
 ## What it establishes
 
 - For **one execution, under one operator-supplied profile, inside gVisor with
-  `--network=none`**, it records what the artifact did: imports executed, files touched,
-  network attempted, subprocesses spawned — each as a `DIRECT_OBSERVATION` or a
-  `dynamic_blocked_observation`.
+  `--network=none`**, it records the run reproducibly: the profile command's stdout/stderr and
+  exit status, the observed sandbox kernel, the termination reason, and the pinned isolation
+  mechanism version and sha256 (`runsc.run` → `runsc.sandbox_block`).
 - Via the **conformance suite**, whether the configured boundary held against twelve
   prohibited-operation probes (host filesystem read/write, host PID visibility, signalling
   host processes, privilege confinement, blocked outbound, cloud metadata, device access,
   resource limits, DNS policy, mount isolation, environment sanitisation).
+- **What the built code does not yet do:** classify an arbitrary artifact's execution into
+  structured `filesystem.*`/`network.*`/`process.*` findings. The per-behaviour findings in
+  `examples/records/sandbox_record.json` are illustrative of the evidence schema, hand-authored
+  in `examples/generate_examples.py`; no general behavioural tracer is built. The run record
+  and the conformance result are what the code emits.
 - **The runsc version, its sha256, and the observed sandbox kernel** are recorded in every
   sandbox record. A containment claim about an unpinned binary is not a claim about anything.
 - **No artifact-derived value reaches the sandbox launch configuration** (mounts, limits,

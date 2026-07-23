@@ -81,12 +81,16 @@ condition — with each edge carrying the capture time of the description it res
 spawns nothing; the optional `rbac` helper wraps the upstream Kubernetes authorizer as a
 separate, explicit command.
 
-**Sandbox (Phase 3).** For one execution under one operator profile, inside gVisor with
-`--network=none`, it records what the artifact did — files touched, network attempted,
-subprocesses spawned — and, via the conformance suite, whether the configured boundary held
-against twelve prohibited-operation probes. It is `EXPERIMENTAL` and gVisor-scoped (see the
-boundary section above); an all-conform run is `NOT_FOUND_WITHIN_ANALYSED_SCOPE`, the weakest
-of the five states.
+**Sandbox (Phase 3).** It executes an artifact under one operator profile inside gVisor with
+`--network=none`, and records the run reproducibly: the command's output and exit status, the
+observed sandbox kernel, the termination reason, and the pinned isolation mechanism version
+and sha256. Separately, the **conformance suite** runs twelve prohibited-operation probes
+inside the sandbox and records whether the configured boundary held (an all-conform run is
+`NOT_FOUND_WITHIN_ANALYSED_SCOPE`, the weakest of the five states). It is `EXPERIMENTAL` and
+gVisor-scoped (see the boundary section above). **What the built code does not yet include** is
+a general behavioural tracer that classifies an arbitrary artifact's syscalls into
+`filesystem.*`/`network.*`/`process.*` findings; the per-behaviour findings shown in
+`examples/records/sandbox_record.json` illustrate the evidence schema, not a built observer.
 
 **Blast-radius (Phase 4).** Offline, it composes the three sources into reachability paths
 from an entry principal to an asset, **every edge labelled by how it was established**
