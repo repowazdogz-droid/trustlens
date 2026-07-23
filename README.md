@@ -32,15 +32,25 @@ that raise). The **mapper** models credential reachability from offline configur
 spawns nothing. The **sandbox** observes execution inside gVisor and is `EXPERIMENTAL`. The
 **blast-radius** simulator composes all three offline into reachability paths.
 
+**Illustrative invocation forms — not a copy-paste sequence.** The paths below are
+placeholders (`./some-dataset-repo`, `scan.json`, a remote URL) to replace with your own;
+copied verbatim they will error. `rbac` additionally needs the optional Go helper built
+first, and `plan`/`acquire` reach a real remote. For something that runs as-is, use the
+[**Try it**](#try-it) block below, and `examples/repos/` ships repositories you can point
+`scan` at directly (e.g. `trustlens scan examples/repos/unsafe_dataset_loader`).
+
 ```bash
 pip install -e .
-trustlens scan ./some-dataset-repo                 # static analysis; 0 clean · 1 findings · 2 did not complete
-trustlens map-credentials ./env-description.json   # offline credential reachability; spawns nothing
+trustlens scan ./some-dataset-repo                 # static analysis; exit 0 clean · 1 findings · 2 did not complete
+trustlens map-credentials ./env-description.yaml   # offline credential reachability; spawns nothing
 trustlens rbac ./k8s-manifests                     # OPTIONAL: upstream Kubernetes authorizer (Go helper), explicit
 trustlens plan  https://host/org/repo              # dry run; writes nothing, pins a commit
 trustlens acquire https://host/org/repo ./dest --i-am-authorised   # explicit fetch at a pinned commit
 trustlens blast-radius --scan scan.json --env env.json   # offline composition of the above into paths
 ```
+
+The `scan` exit codes above are verified against the bundled examples: `clean_tabular` → 0,
+`unsafe_dataset_loader` → 1, `partial_encoding` → 2.
 
 The sandbox has no CLI subcommand: running untrusted code is gated behind the `EXPERIMENTAL`
 lock and a human sign-off, so it is a library surface, not a one-command entry point.
